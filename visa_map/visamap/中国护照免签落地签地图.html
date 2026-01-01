@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>最新中国护照签证政策地图</title>
+
+  <!-- 引入现代字体 -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --color-free: #059669;    /* 免签 - 深绿 */
+      --color-arrival: #34D399; /* 落地签 - 中浅绿 */
+      --color-evisa: #A7F3D0;   /* 电子签 - 青绿 */
+      --bg-main: #f1f5f9;
+      --card-bg: #ffffff;
+    }
+
+    body {
+      font-family: 'Inter', 'Noto Sans SC', sans-serif;
+      background-color: var(--bg-main);
+      margin: 0;
+      padding: 20px;
+      color: #1e293b;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      border-radius: 20px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+      overflow: hidden;
+      padding: 30px;
+      position: relative;
+    }
+
+    .header {
+      margin-bottom: 25px;
+      text-align: center;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 24px;
+      font-weight: 700;
+      color: #0f172a;
+      letter-spacing: -0.025em;
+    }
+
+    .header p {
+      margin: 5px 0 0;
+      color: #64748b;
+      font-size: 14px;
+    }
+
+    #chartdiv {
+      width: 100%;
+      height: 600px;
+      background-color: #ffffff;
+      border-radius: 12px;
+    }
+
+    /* 水印样式 */
+    .watermark {
+      position: absolute;
+      bottom: 80px;
+      left: 50px;
+      font-size: 14px;
+      color: #0f172a;
+      opacity: 0.9;
+      z-index: 9999;
+      pointer-events: none;
+      font-family: 'Inter', 'Noto Sans SC', sans-serif;
+      font-weight: 600;
+      text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+    }
+
+    /* 自定义导出按钮样式 */
+    .amcharts-export-menu {
+      top: 10px !important;
+      right: 10px !important;
+    }
+
+    /* 响应式调整 */
+    @media (max-width: 768px) {
+      .container {
+        padding: 15px;
+      }
+      #chartdiv {
+        height: 400px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="header">
+      <h1>中国护照全球签证政策地图</h1>
+      <p>实时更新 · 免签 / 落地签 / 电子签政策分布</p>
+    </div>
+    
+    <div id="chartdiv"></div>
+    <div class="watermark">小红书@无花果先生</div>
+  </div>
+
+  <script src="https://www.amcharts.com/lib/3/ammap.js"></script>
+  <script src="https://www.amcharts.com/lib/3/maps/js/worldHigh.js"></script>
+  <script src="https://www.amcharts.com/lib/3/plugins/export/export.min.js"></script>
+  <link rel="stylesheet" href="https://www.amcharts.com/lib/3/plugins/export/export.css" type="text/css" media="all" />
+  <script src="https://www.amcharts.com/lib/3/themes/light.js"></script>
+
+  <script>
+    // 定义颜色常量以便复用
+    const COLORS = {
+      china: "#ef4444",   // 中国 - 红色
+      free: "#059669",    // 免签
+      arrival: "#34D399", // 落地签
+      evisa: "#A7F3D0"   // 电子签
+    };
+
+    var map = AmCharts.makeChart("chartdiv", {
+      "type": "map",
+      "theme": "light",
+      "projection": "miller",
+      "dataProvider": {
+        "map": "worldHigh",
+        "zoomLevel": 1.2,
+        "zoomLongitude": 10,
+        "zoomLatitude": 20,
+        "areas": [
+          // 中国 (#ef4444)
+          { "id": "CN", "title": "中国大陆", "customData": "中国护照签发国", "color": COLORS.china },
+          // 免签 (#059669)
+          { "id": "RU", "title": "俄罗斯", "customData": "免签", "color": COLORS.free },
+          { "id": "KH", "title": "柬埔寨", "customData": "免签", "color": COLORS.free },
+          { "id": "TR", "title": "土耳其", "customData": "免签", "color": COLORS.free },
+          { "id": "BR", "title": "巴西", "customData": "免签", "color": COLORS.free },
+          
+          { "id": "AE", "title": "阿联酋", "customData": "免签", "color": COLORS.free },
+          { "id": "BB", "title": "巴巴多斯", "customData": "免签", "color": COLORS.free },
+          { "id": "BS", "title": "巴哈马", "customData": "免签", "color": COLORS.free },
+          { "id": "BA", "title": "波黑", "customData": "免签", "color": COLORS.free },
+          { "id": "FJ", "title": "斐济", "customData": "免签", "color": COLORS.free },
+          { "id": "GD", "title": "格林纳达", "customData": "免签", "color": COLORS.free },
+          { "id": "MU", "title": "毛里求斯", "customData": "免签", "color": COLORS.free },
+          { "id": "SM", "title": "圣马力诺", "customData": "免签", "color": COLORS.free },
+          { "id": "SC", "title": "塞舌尔", "customData": "免签", "color": COLORS.free },
+          { "id": "RS", "title": "塞尔维亚", "customData": "免签", "color": COLORS.free },
+          { "id": "TO", "title": "汤加", "customData": "免签", "color": COLORS.free },
+          { "id": "BY", "title": "白俄罗斯", "customData": "免签", "color": COLORS.free },
+          { "id": "QA", "title": "卡塔尔", "customData": "免签", "color": COLORS.free },
+          { "id": "AM", "title": "亚美尼亚", "customData": "免签", "color": COLORS.free },
+          { "id": "UZ", "title": "乌兹别克斯坦", "customData": "免签", "color": COLORS.free },
+          { "id": "OM", "title": "阿曼", "customData": "免签", "color": COLORS.free },
+          { "id": "AL", "title": "阿尔巴尼亚", "customData": "免签", "color": COLORS.free },
+          { "id": "MA", "title": "摩洛哥", "customData": "免签", "color": COLORS.free },
+          { "id": "RE", "title": "法属留尼汪", "customData": "免签", "color": COLORS.free },
+          { "id": "TN", "title": "突尼斯", "customData": "免签", "color": COLORS.free },
+          { "id": "AG", "title": "安提瓜和巴布达", "customData": "免签", "color": COLORS.free },
+          { "id": "HT", "title": "海地", "customData": "免签", "color": COLORS.free },
+          { "id": "GS", "title": "南乔治亚和南桑威奇群岛", "customData": "免签", "color": COLORS.free },
+          { "id": "KN", "title": "圣基茨和尼维斯", "customData": "免签", "color": COLORS.free },
+          { "id": "TC", "title": "特克斯和凯科斯群岛", "customData": "免签", "color": COLORS.free },
+          { "id": "JM", "title": "牙买加", "customData": "免签", "color": COLORS.free },
+          { "id": "DM", "title": "多米尼克", "customData": "免签", "color": COLORS.free },
+          { "id": "MP", "title": "塞班岛", "customData": "免签", "color": COLORS.free },
+          { "id": "WS", "title": "萨摩亚", "customData": "免签", "color": COLORS.free },
+          { "id": "PF", "title": "法属波利尼西亚", "customData": "免签", "color": COLORS.free },
+          { "id": "LC", "title": "圣卢西亚", "customData": "免签", "color": COLORS.free },
+          { "id": "CK", "title": "库克群岛", "customData": "免签", "color": COLORS.free },
+          { "id": "NU", "title": "纽埃", "customData": "免签", "color": COLORS.free },
+          { "id": "IR", "title": "伊朗", "customData": "免签", "color": COLORS.free },
+          { "id": "ZM", "title": "赞比亚", "customData": "免签", "color": COLORS.free },
+          { "id": "SR", "title": "苏里南", "customData": "免签", "color": COLORS.free },
+          { "id": "MV", "title": "马尔代夫", "customData": "免签", "color": COLORS.free },
+          { "id": "KZ", "title": "哈萨克斯坦", "customData": "免签", "color": COLORS.free },
+          { "id": "GA", "title": "加蓬", "customData": "免签", "color": COLORS.free },
+          { "id": "MZ", "title": "莫桑比克", "customData": "免签", "color": COLORS.free },
+          { "id": "BJ", "title": "贝宁", "customData": "免签", "color": COLORS.free },
+          { "id": "AO", "title": "安哥拉", "customData": "免签", "color": COLORS.free },
+          { "id": "GE", "title": "格鲁吉亚", "customData": "免签", "color": COLORS.free },
+          { "id": "PS", "title": "巴勒斯坦", "customData": "免签", "color": COLORS.free },
+          { "id": "TH", "title": "泰国", "customData": "免签", "color": COLORS.free },
+          { "id": "MY", "title": "马来西亚", "customData": "免签", "color": COLORS.free },
+          { "id": "SG", "title": "新加坡", "customData": "免签", "color": COLORS.free },
+          { "id": "LK", "title": "斯里兰卡", "customData": "免签", "color": COLORS.free },
+          { "id": "CU", "title": "古巴", "customData": "免签", "color": COLORS.free },
+          { "id": "AZ", "title": "阿塞拜疆", "customData": "免签", "color": COLORS.free },
+          { "id": "PK", "title": "巴基斯坦", "customData": "免签", "color": COLORS.free },
+          { "id": "VU", "title": "瓦努阿图", "customData": "免签", "color": COLORS.free },
+          { "id": "SB", "title": "所罗门群岛", "customData": "免签", "color": COLORS.free },
+          { "id": "SJ", "title": "斯瓦尔巴群岛", "customData": "免签", "color": COLORS.free },
+          { "id": "AX", "title": "奥兰群岛", "customData": "免签", "color": COLORS.free },
+
+          // 落地签 (#34D399)
+          { "id": "BN", "title": "文莱", "customData": "落地签", "color": COLORS.arrival },
+          { "id": "TL", "title": "东帝汶", "customData": "落地签", "color": COLORS.arrival },
+          { "id": "LA", "title": "老挝", "customData": "落地签", "color": COLORS.arrival },
+          { "id": "LB", "title": "黎巴嫩", "customData": "落地签", "color": COLORS.arrival },
+          { "id": "MM", "title": "缅甸", "customData": "落地签", "color": COLORS.arrival },
+          { "id": "NP", "title": "尼泊尔", "customData": "落地签", "color": COLORS.arrival },
+          { "id": "JO", "title": "约旦", "customData": "落地签", "color": COLORS.arrival },
+          { "id": "BD", "title": "孟加拉国", "customData": "落地签", "color": COLORS.arrival },
+          { "id": "EG", "title": "埃及", "customData": "落地签", "color": COLORS.arrival },
+          { "id": "TG", "title": "多哥", "customData": "落地签", "color": COLORS.arrival },
+          { "id": "CV", "title": "佛得角", "customData": "落地签", "color": COLORS.arrival },
+          { "id": "KM", "title": "科摩罗", "customData": "落地签", "color": COLORS.arrival },
+          { "id": "RW", "title": "卢旺达", "customData": "落地签", "color": COLORS.arrival },
+          { "id": "MG", "title": "马达加斯加", "customData": "落地签", "color": COLORS.arrival },
+          { "id": "MW", "title": "马拉维", "customData": "落地签", "color": COLORS.arrival },
+          { "id": "MR", "title": "毛里塔尼亚", "customData": "落地签", "color": COLORS.arrival },
+          { "id": "ST", "title": "圣多美和普林西比", "customData": "落地签", "color": COLORS.arrival },
+          { "id": "TZ", "title": "坦桑尼亚", "customData": "落地签", "color": COLORS.arrival },
+          { "id": "UG", "title": "乌干达", "customData": "落地签", "color": COLORS.arrival },
+          { "id": "ZW", "title": "津巴布韦", "customData": "落地签", "color": COLORS.arrival },
+          { "id": "SH", "title": "圣赫勒拿", "customData": "落地签", "color": COLORS.arrival },
+          { "id": "PW", "title": "帕劳", "customData": "落地签", "color": COLORS.arrival },
+          { "id": "TV", "title": "图瓦卢", "customData": "落地签", "color": COLORS.arrival },
+          { "id": "PG", "title": "巴布亚新几内亚", "customData": "落地签", "color": COLORS.arrival },
+          { "id": "SA", "title": "沙特阿拉伯", "customData": "落地签", "color": COLORS.arrival },
+          { "id": "KE", "title": "肯尼亚", "customData": "落地签", "color": COLORS.arrival },
+          { "id": "GW", "title": "几内亚比绍", "customData": "落地签", "color": COLORS.arrival },
+          { "id": "SL", "title": "塞拉利昂", "customData": "落地签", "color": COLORS.arrival },
+          { "id": "ET", "title": "埃塞俄比亚", "customData": "落地签", "color": COLORS.arrival },
+          { "id": "DJ", "title": "吉布提", "customData": "落地签", "color": COLORS.arrival },
+          { "id": "SO", "title": "索马里", "customData": "落地签", "color": COLORS.arrival },
+          { "id": "BO", "title": "玻利维亚", "customData": "落地签", "color": COLORS.arrival },
+          { "id": "ID", "title": "印度尼西亚", "customData": "落地签", "color": COLORS.arrival },
+          { "id": "IQ", "title": "伊拉克", "customData": "落地签", "color": COLORS.arrival },
+          { "id": "SN", "title": "塞内加尔", "customData": "落地签", "color": COLORS.arrival },
+          { "id": "BI", "title": "布隆迪", "customData": "落地签", "color": COLORS.arrival },
+          { "id": "NR", "title": "瑙鲁", "customData": "落地签", "color": COLORS.arrival },
+
+          // 电子签 (#A7F3D0)
+          { "id": "KG", "title": "吉尔吉斯斯坦", "customData": "电子签", "color": COLORS.evisa },
+          { "id": "TJ", "title": "塔吉克斯坦", "customData": "电子签", "color": COLORS.evisa },
+          { "id": "BH", "title": "巴林", "customData": "电子签", "color": COLORS.evisa },
+          { "id": "GN", "title": "几内亚", "customData": "电子签", "color": COLORS.evisa },
+          { "id": "LS", "title": "莱索托", "customData": "电子签", "color": COLORS.evisa },
+          { "id": "MS", "title": "蒙特塞拉特", "customData": "电子签", "color": COLORS.evisa },
+          { "id": "VN", "title": "越南", "customData": "电子签", "color": COLORS.evisa },
+          { "id": "MN", "title": "蒙古", "customData": "电子签", "color": COLORS.evisa },
+          { "id": "SS", "title": "南苏丹", "customData": "电子签", "color": COLORS.evisa },
+          { "id": "CD", "title": "刚果(金)", "customData": "电子签", "color": COLORS.evisa },
+          { "id": "NG", "title": "尼日利亚", "customData": "电子签", "color": COLORS.evisa },
+          { "id": "GQ", "title": "赤道几内亚", "customData": "电子签", "color": COLORS.evisa },
+          { "id": "CI", "title": "科特迪瓦", "customData": "电子签", "color": COLORS.evisa },
+          { "id": "CM", "title": "喀麦隆", "customData": "电子签", "color": COLORS.evisa },
+          { "id": "ZA", "title": "南非", "customData": "电子签", "color": COLORS.evisa },
+          { "id": "BT", "title": "不丹", "customData": "电子签", "color": COLORS.evisa },
+          { "id": "BW", "title": "博茨瓦纳", "customData": "电子签", "color": COLORS.evisa },
+          { "id": "UA", "title": "乌克兰", "customData": "电子签", "color": COLORS.evisa }
+        ]
+      },
+
+      "areasSettings": {
+        "autoZoom": true,
+        "rollOverOutlineColor": "#FFFFFF",
+        "rollOverColor": "#334155",
+        "rollOverAlpha": 1,
+        "alpha": 0.9,
+        "unlistedAreasAlpha": 0.1,
+        "unlistedAreasColor": "#cbd5e1",
+        "balloonText": "<div style='padding:8px; font-family: Inter, sans-serif;'><b>[[title]]</b><br/><span style='font-size:12px; opacity:0.8;'>[[customData]]</span></div>"
+      },
+
+      "balloon": {
+        "adjustBorderColor": false,
+        "color": "#ffffff",
+        "cornerRadius": 8,
+        "fillColor": "#1e293b",
+        "fillAlpha": 0.95,
+        "borderThickness": 0,
+        "shadowAlpha": 0.15
+      },
+
+      "legend": {
+        "width": "100%",
+        "equalWidths": false,
+        "backgroundAlpha": 0,
+        "borderAlpha": 0,
+        "verticalGap": 12,
+        "horizontalGap": 20,
+        "bottom": 20,
+        "left": 0,
+        "align": "center",
+        "data": [
+          { "title": "中国", "color": COLORS.china },
+          { "title": "免签 (互免/单方面)", "color": COLORS.free },
+          { "title": "落地签", "color": COLORS.arrival },
+          { "title": "电子签", "color": COLORS.evisa }
+        ]
+      },
+
+      "export": {
+        "enabled": true,
+        "menu": [ {
+          "class": "export-main",
+          "menu": [ {
+            "label": "导出地图",
+            "menu": [ "PNG", "JPG", "PDF" ]
+          } ]
+        } ]
+      }
+    });
+  </script>
+</body>
+</html>
