@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>持美国签证可免签全球的国家和地区(2026版)</title>
+
+  <!-- 引入现代字体 -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --color-us: #1e40af;        /* 美国 - 深蓝 */
+      --color-visa-free: #059669;  /* 持美签免签 - 深绿 */
+      --color-transit: #3b82f6;    /* 过境免签 - 蓝色 */
+      --bg-main: #f1f5f9;
+      --card-bg: #ffffff;
+    }
+
+    body {
+      font-family: 'Inter', 'Noto Sans SC', sans-serif;
+      background-color: var(--bg-main);
+      margin: 0;
+      padding: 20px;
+      color: #1e293b;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      border-radius: 20px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+      overflow: hidden;
+      padding: 30px;
+      position: relative;
+    }
+
+    .header {
+      margin-bottom: 25px;
+      text-align: center;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 24px;
+      font-weight: 700;
+      color: #0f172a;
+      letter-spacing: -0.025em;
+    }
+
+    .header p {
+      margin: 5px 0 0;
+      color: #64748b;
+      font-size: 14px;
+    }
+
+    #chartdiv {
+      width: 100%;
+      height: 600px;
+      background-color: #ffffff;
+      border-radius: 12px;
+    }
+
+    /* 水印样式 */
+    .watermark {
+      position: absolute;
+      bottom: 80px;
+      left: 50px;
+      font-size: 14px;
+      color: #0f172a;
+      opacity: 0.9;
+      z-index: 9999;
+      pointer-events: none;
+      font-family: 'Inter', 'Noto Sans SC', sans-serif;
+      font-weight: 600;
+      text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+    }
+
+    /* 自定义导出按钮样式 */
+    .amcharts-export-menu {
+      top: 10px !important;
+      right: 10px !important;
+    }
+
+    /* 响应式调整 */
+    @media (max-width: 768px) {
+      .container {
+        padding: 15px;
+      }
+      #chartdiv {
+        height: 400px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="header">
+      <h1>持美国签证可免签全球的国家和地区</h1>
+      <p>2026版 · 免签国家 / 过境免签政策分布</p>
+    </div>
+    
+    <div id="chartdiv"></div>
+    <div class="watermark">小红书@无花果先生</div>
+  </div>
+
+  <script src="https://www.amcharts.com/lib/3/ammap.js"></script>
+  <script src="https://www.amcharts.com/lib/3/maps/js/worldHigh.js"></script>
+  <script src="https://www.amcharts.com/lib/3/plugins/export/export.min.js"></script>
+  <link rel="stylesheet" href="https://www.amcharts.com/lib/3/plugins/export/export.css" type="text/css" media="all" />
+  <script src="https://www.amcharts.com/lib/3/themes/light.js"></script>
+
+  <script>
+    // 定义颜色常量
+    const COLORS = {
+      us: "#1e40af",        // 美国
+      visa_free: "#059669",  // 持美签免签
+      transit: "#3b82f6"    // 过境免签
+    };
+
+    var map = AmCharts.makeChart("chartdiv", {
+      "type": "map",
+      "theme": "light",
+      "projection": "miller",
+      "dataProvider": {
+        "map": "worldHigh",
+        "zoomLevel": 1.2,
+        "zoomLongitude": -100,
+        "zoomLatitude": 30,
+        "areas": [
+          // 美国
+          { "id": "US", "title": "美国", "customData": "美签签发国", "color": COLORS.us },
+          
+          // 持美签免签国家 - 美洲 (#059669)
+          { "id": "MX", "title": "墨西哥", "customData": "持美签免签180天", "color": COLORS.visa_free },
+          { "id": "PA", "title": "巴拿马", "customData": "持美签免签30天", "color": COLORS.visa_free },
+          { "id": "CR", "title": "哥斯达黎加", "customData": "持美签免签30天", "color": COLORS.visa_free },
+          { "id": "CL", "title": "智利", "customData": "持美签免签90天", "color": COLORS.visa_free },
+          { "id": "PE", "title": "秘鲁", "customData": "持美签免签180天", "color": COLORS.visa_free },
+          { "id": "UY", "title": "乌拉圭", "customData": "持美签免签90天", "color": COLORS.visa_free },
+          { "id": "CO", "title": "哥伦比亚", "customData": "持美签免签90天", "color": COLORS.visa_free },
+          { "id": "DO", "title": "多米尼加", "customData": "持美签免签30天", "color": COLORS.visa_free },
+          { "id": "HN", "title": "洪都拉斯", "customData": "持美签免签30天", "color": COLORS.visa_free },
+          { "id": "SV", "title": "萨尔瓦多", "customData": "持美签免签90天", "color": COLORS.visa_free },
+          { "id": "BZ", "title": "伯利兹", "customData": "持美签免签30天", "color": COLORS.visa_free },
+          { "id": "AR", "title": "阿根廷", "customData": "持美签免签30天", "color": COLORS.visa_free },
+          { "id": "BM", "title": "百慕大", "customData": "持美签免签90天", "color": COLORS.visa_free },
+          { "id": "KY", "title": "开曼群岛", "customData": "持美签免签30天", "color": COLORS.visa_free },
+          { "id": "ST", "title": "圣多美和普林西比", "customData": "持美签免签15天", "color": COLORS.visa_free },
+          { "id": "MD", "title": "摩尔多瓦", "customData": "持美签免签90天", "color": COLORS.visa_free },
+
+          // 持美签免签国家 - 亚洲 (#059669)
+          { "id": "PH", "title": "菲律宾", "customData": "持美签免签7天", "color": COLORS.visa_free },
+          { "id": "MK", "title": "北马其顿", "customData": "持美签免签15天", "color": COLORS.visa_free },
+
+          // 持美签免签国家 - 欧洲 (#059669)
+          { "id": "ME", "title": "黑山", "customData": "持美签免签30天", "color": COLORS.visa_free },
+
+          // 过境免签国家 (#3b82f6)
+          { "id": "KR", "title": "韩国", "customData": "持美签过境免签30天", "color": COLORS.transit },
+          { "id": "JP", "title": "日本", "customData": "持美签过境免签72小时", "color": COLORS.transit },
+          { "id": "GB", "title": "英国", "customData": "持美签过境免签24小时", "color": COLORS.transit },
+
+          // 荷属加勒比地区
+          { "id": "CW", "title": "库拉索", "customData": "持美签免签90天", "color": COLORS.visa_free },
+          { "id": "AW", "title": "阿鲁巴", "customData": "持美签免签90天", "color": COLORS.visa_free },
+          { "id": "SX", "title": "荷属圣马丁", "customData": "持美签免签90天", "color": COLORS.visa_free },
+          { "id": "BQ", "title": "荷属加勒比", "customData": "持美签免签90天", "color": COLORS.visa_free }
+        ]
+      },
+
+      "areasSettings": {
+        "autoZoom": true,
+        "rollOverOutlineColor": "#FFFFFF",
+        "rollOverColor": "#334155",
+        "rollOverAlpha": 1,
+        "alpha": 0.9,
+        "unlistedAreasAlpha": 0.1,
+        "unlistedAreasColor": "#cbd5e1",
+        "balloonText": "<div style='padding:8px; font-family: Inter, sans-serif;'><b>[[title]]</b><br/><span style='font-size:12px; opacity:0.8;'>[[customData]]</span></div>"
+      },
+
+      "balloon": {
+        "adjustBorderColor": false,
+        "color": "#ffffff",
+        "cornerRadius": 8,
+        "fillColor": "#1e293b",
+        "fillAlpha": 0.95,
+        "borderThickness": 0,
+        "shadowAlpha": 0.15
+      },
+
+      "legend": {
+        "width": "100%",
+        "equalWidths": false,
+        "backgroundAlpha": 0,
+        "borderAlpha": 0,
+        "verticalGap": 12,
+        "horizontalGap": 20,
+        "bottom": 20,
+        "left": 0,
+        "align": "center",
+        "data": [
+          { "title": "美签签发国", "color": COLORS.us },
+          { "title": "持美签免签", "color": COLORS.visa_free },
+          { "title": "过境免签", "color": COLORS.transit }
+        ]
+      },
+
+      "export": {
+        "enabled": true,
+        "menu": [ {
+          "class": "export-main",
+          "menu": [ {
+            "label": "导出地图",
+            "menu": [ "PNG", "JPG", "PDF" ]
+          } ]
+        } ]
+      }
+    });
+  </script>
+</body>
+</html>
