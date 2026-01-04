@@ -1031,10 +1031,11 @@
 
     // 美国签证地图
     function initUSMap() {
-      const defaultColors = { us: "#3b82f6", visa_free: "#14b8a6", transit: "#60a5fa", china: "#ef4444", cn_free: "#059669", cn_arrival: "#34D399", cn_evisa: "#A7F3D0" };
+      const defaultColors = { us: "#3b82f6", visa_free: "#14b8a6", transit: "#60a5fa", china: "#ef4444", cn_free: "#059669", cn_arrival: "#34D399", cn_evisa: "#A7F3D0", hmt_pass: "#ff9999" };
       const COLORS = {};
       const legendTitleToColorKey = {
         "中国大陆": "china",
+        "需办理港澳台通行证": "hmt_pass",
         "美签签发国": "us",
         "持美签免签": "visa_free",
         "有条件过境免签": "transit",
@@ -1050,6 +1051,9 @@
         "type": "map", "theme": "light", "projection": "miller",
         "dataProvider": { "map": "worldHigh", "zoomLevel": 1.2, "zoomLongitude": 20, "zoomLatitude": 30, "areas": [
           { "id": "CN", "title": "中国大陆", "customData": "中国大陆", "color": COLORS.china },
+          { "id": "HK", "title": "中国香港", "customData": "需办理港澳台通行证", "color": COLORS.hmt_pass },
+          { "id": "MO", "title": "中国澳门", "customData": "需办理港澳台通行证", "color": COLORS.hmt_pass },
+          { "id": "TW", "title": "中国台湾", "customData": "需办理港澳台通行证", "color": COLORS.hmt_pass },
           { "id": "US", "title": "美国", "customData": "美签签发国", "color": COLORS.us },
           { "id": "MX", "title": "墨西哥", "customData": "持美签免签180天", "color": COLORS.visa_free },
           { "id": "PA", "title": "巴拿马", "customData": "持美签免签30天", "color": COLORS.visa_free },
@@ -1204,10 +1208,11 @@
 
     // 英国签证地图
     function initUKMap() {
-      const defaultColors = { uk: "#3b82f6", visa_free: "#14b8a6", transit: "#60a5fa", china: "#ef4444", cn_free: "#059669", cn_arrival: "#34D399", cn_evisa: "#A7F3D0" };
+      const defaultColors = { uk: "#3b82f6", visa_free: "#14b8a6", transit: "#60a5fa", china: "#ef4444", cn_free: "#059669", cn_arrival: "#34D399", cn_evisa: "#A7F3D0", hmt_pass: "#ff9999" };
       const COLORS = {};
       const legendTitleToColorKey = {
         "中国大陆": "china",
+        "需办理港澳台通行证": "hmt_pass",
         "英签签发国": "uk",
         "持英签免签": "visa_free",
         "有条件过境免签": "transit",
@@ -1223,6 +1228,9 @@
         "type": "map", "theme": "light", "projection": "miller",
         "dataProvider": { "map": "worldHigh", "zoomLevel": 1.2, "zoomLongitude": 20, "zoomLatitude": 30, "areas": [
           { "id": "CN", "title": "中国大陆", "customData": "中国大陆", "color": COLORS.china },
+          { "id": "HK", "title": "中国香港", "customData": "需办理港澳台通行证", "color": COLORS.hmt_pass },
+          { "id": "MO", "title": "中国澳门", "customData": "需办理港澳台通行证", "color": COLORS.hmt_pass },
+          { "id": "TW", "title": "中国台湾", "customData": "需办理港澳台通行证", "color": COLORS.hmt_pass },
           { "id": "GB", "title": "英国", "customData": "英签签发国", "color": COLORS.uk },
           { "id": "IE", "title": "爱尔兰", "customData": "持英签免签(需已使用)", "color": COLORS.visa_free },
           { "id": "GI", "title": "直布罗陀", "customData": "持英签免签(需1年以上有效期)", "color": COLORS.visa_free },
@@ -1368,10 +1376,11 @@
 
     // 日本签证地图
     function initJapanMap() {
-      const defaultColors = { japan: "#3b82f6", visa_free: "#14b8a6", china: "#ef4444", cn_free: "#059669", cn_arrival: "#34D399", cn_evisa: "#A7F3D0" };
+      const defaultColors = { japan: "#3b82f6", visa_free: "#14b8a6", china: "#ef4444", cn_free: "#059669", cn_arrival: "#34D399", cn_evisa: "#A7F3D0", hmt_pass: "#ff9999" };
       const COLORS = {};
       const legendTitleToColorKey = {
         "中国大陆": "china",
+        "需办理港澳台通行证": "hmt_pass",
         "日签签发国": "japan",
         "持日签免签": "visa_free",
         "中国护照免签": "cn_free",
@@ -1386,6 +1395,9 @@
         "type": "map", "theme": "light", "projection": "miller",
         "dataProvider": { "map": "worldHigh", "zoomLevel": 1.2, "zoomLongitude": 20, "zoomLatitude": 30, "areas": [
           { "id": "CN", "title": "中国大陆", "customData": "中国大陆", "color": COLORS.china },
+          { "id": "HK", "title": "中国香港", "customData": "需办理港澳台通行证", "color": COLORS.hmt_pass },
+          { "id": "MO", "title": "中国澳门", "customData": "需办理港澳台通行证", "color": COLORS.hmt_pass },
+          { "id": "TW", "title": "中国台湾", "customData": "需办理港澳台通行证", "color": COLORS.hmt_pass },
           { "id": "JP", "title": "日本", "customData": "日签签发国", "color": COLORS.japan },
           { "id": "PH", "title": "菲律宾", "customData": "持单次或多次日签免签7天", "color": COLORS.visa_free },
           { "id": "MX", "title": "墨西哥", "customData": "持日签免签180天", "color": COLORS.visa_free },
@@ -1518,10 +1530,11 @@
 
     // 澳洲签证地图
     function initAustraliaMap() {
-      const defaultColors = { australia: "#3b82f6", visa_free: "#14b8a6", transit: "#60a5fa", china: "#ef4444", cn_free: "#059669", cn_arrival: "#34D399", cn_evisa: "#A7F3D0" };
+      const defaultColors = { australia: "#3b82f6", visa_free: "#14b8a6", transit: "#60a5fa", china: "#ef4444", cn_free: "#059669", cn_arrival: "#34D399", cn_evisa: "#A7F3D0", hmt_pass: "#ff9999" };
       const COLORS = {};
       const legendTitleToColorKey = {
         "中国大陆": "china",
+        "需办理港澳台通行证": "hmt_pass",
         "澳签签发国": "australia",
         "持澳签免签": "visa_free",
         "有条件过境免签": "transit",
@@ -1537,6 +1550,9 @@
         "type": "map", "theme": "light", "projection": "miller",
         "dataProvider": { "map": "worldHigh", "zoomLevel": 1.2, "zoomLongitude": 20, "zoomLatitude": 30, "areas": [
           { "id": "CN", "title": "中国大陆", "customData": "中国大陆", "color": COLORS.china },
+          { "id": "HK", "title": "中国香港", "customData": "需办理港澳台通行证", "color": COLORS.hmt_pass },
+          { "id": "MO", "title": "中国澳门", "customData": "需办理港澳台通行证", "color": COLORS.hmt_pass },
+          { "id": "TW", "title": "中国台湾", "customData": "需办理港澳台通行证", "color": COLORS.hmt_pass },
           { "id": "AU", "title": "澳大利亚", "customData": "澳签签发国", "color": COLORS.australia },
           { "id": "NZ", "title": "新西兰", "customData": "持澳签免签(需先从澳洲入境，申请NZeTA)", "color": COLORS.visa_free },
           { "id": "PA", "title": "巴拿马", "customData": "持澳签免签(需已使用1次以上)", "color": COLORS.visa_free },
@@ -1671,10 +1687,11 @@
 
     // 申根签证地图
     function initSchengenMap() {
-      const defaultColors = { schengen: "#3b82f6", visa_free: "#14b8a6", transit: "#60a5fa", china: "#ef4444", cn_free: "#059669", cn_arrival: "#34D399", cn_evisa: "#A7F3D0" };
+      const defaultColors = { schengen: "#3b82f6", visa_free: "#14b8a6", transit: "#60a5fa", china: "#ef4444", cn_free: "#059669", cn_arrival: "#34D399", cn_evisa: "#A7F3D0", hmt_pass: "#ff9999" };
       const COLORS = {};
       const legendTitleToColorKey = {
         "中国大陆": "china",
+        "需办理港澳台通行证": "hmt_pass",
         "申根国": "schengen",
         "持申根签免签": "visa_free",
         "有条件过境免签": "transit",
@@ -1690,6 +1707,9 @@
         "type": "map", "theme": "light", "projection": "miller",
         "dataProvider": { "map": "worldHigh", "zoomLevel": 1.2, "zoomLongitude": 20, "zoomLatitude": 30, "areas": [
           { "id": "CN", "title": "中国大陆", "customData": "中国大陆", "color": COLORS.china },
+          { "id": "HK", "title": "中国香港", "customData": "需办理港澳台通行证", "color": COLORS.hmt_pass },
+          { "id": "MO", "title": "中国澳门", "customData": "需办理港澳台通行证", "color": COLORS.hmt_pass },
+          { "id": "TW", "title": "中国台湾", "customData": "需办理港澳台通行证", "color": COLORS.hmt_pass },
           { "id": "AT", "title": "奥地利", "customData": "申根国", "color": COLORS.schengen },
           { "id": "BE", "title": "比利时", "customData": "申根国", "color": COLORS.schengen },
           { "id": "CZ", "title": "捷克", "customData": "申根国", "color": COLORS.schengen },
