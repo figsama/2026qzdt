@@ -393,8 +393,8 @@
     function initGlobalMap() {
       const COLORS = {
         china: "#ef4444",
-        issuer: "#60a5fa",
-        major_issuer: "#60a5fa",
+        issuer: "#3b82f6",
+        major_issuer: "#3b82f6",
         conditional: "#93c5fd",
         transit: "#bfdbfe",
         cn_free: "#10b981",
@@ -406,10 +406,10 @@
 
       const countryData = {
         "CN": { title: "中国大陆", visas: ["中国大陆"], color: COLORS.china },
-        "US": { title: "美国", visas: ["美签签发国"], color: "#60a5fa" },
-        "GB": { title: "英国", visas: ["英签签发国"], color: "#60a5fa" },
-        "JP": { title: "日本", visas: ["日签签发国"], color: "#60a5fa" },
-        "AU": { title: "澳大利亚", visas: ["澳签签发国"], color: "#60a5fa" },
+        "US": { title: "美国", visas: ["美签签发国"], color: "#3b82f6" },
+        "GB": { title: "英国", visas: ["英签签发国"], color: "#3b82f6" },
+        "JP": { title: "日本", visas: ["日签签发国"], color: "#3b82f6" },
+        "AU": { title: "澳大利亚", visas: ["澳签签发国"], color: "#3b82f6" },
         "AT": { title: "奥地利", visas: ["申根国"], color: COLORS.issuer },
         "BE": { title: "比利时", visas: ["申根国"], color: COLORS.issuer },
         "CZ": { title: "捷克", visas: ["申根国"], color: COLORS.issuer },
@@ -791,7 +791,7 @@
 
     // 美国签证地图
     function initUSMap() {
-      const COLORS = { us: "#60a5fa", visa_free: "#93c5fd", transit: "#bfdbfe" };
+      const COLORS = { us: "#3b82f6", visa_free: "#93c5fd", transit: "#bfdbfe" };
       maps['us'] = AmCharts.makeChart("chartdiv-us", {
         "type": "map", "theme": "light", "projection": "miller",
         "dataProvider": { "map": "worldHigh", "zoomLevel": 1.2, "zoomLongitude": -100, "zoomLatitude": 30, "areas": [
@@ -836,7 +836,7 @@
 
     // 英国签证地图
     function initUKMap() {
-      const COLORS = { uk: "#60a5fa", visa_free: "#93c5fd", transit: "#bfdbfe" };
+      const COLORS = { uk: "#3b82f6", visa_free: "#93c5fd", transit: "#bfdbfe" };
       maps['uk'] = AmCharts.makeChart("chartdiv-uk", {
         "type": "map", "theme": "light", "projection": "miller",
         "dataProvider": { "map": "worldHigh", "zoomLevel": 1.2, "zoomLongitude": 0, "zoomLatitude": 50, "areas": [
@@ -873,7 +873,7 @@
 
     // 日本签证地图
     function initJapanMap() {
-      const COLORS = { japan: "#60a5fa", visa_free: "#059669" };
+      const COLORS = { japan: "#3b82f6", visa_free: "#059669" };
       maps['japan'] = AmCharts.makeChart("chartdiv-japan", {
         "type": "map", "theme": "light", "projection": "miller",
         "dataProvider": { "map": "worldHigh", "zoomLevel": 1.2, "zoomLongitude": 140, "zoomLatitude": 30, "areas": [
@@ -895,7 +895,7 @@
 
     // 澳洲签证地图
     function initAustraliaMap() {
-      const COLORS = { australia: "#60a5fa", visa_free: "#93c5fd", transit: "#bfdbfe" };
+      const COLORS = { australia: "#3b82f6", visa_free: "#93c5fd", transit: "#bfdbfe" };
       maps['australia'] = AmCharts.makeChart("chartdiv-australia", {
         "type": "map", "theme": "light", "projection": "miller",
         "dataProvider": { "map": "worldHigh", "zoomLevel": 1.2, "zoomLongitude": 140, "zoomLatitude": -25, "areas": [
@@ -920,7 +920,7 @@
 
     // 申根签证地图
     function initSchengenMap() {
-      const COLORS = { schengen: "#60a5fa", visa_free: "#93c5fd", transit: "#bfdbfe" };
+      const COLORS = { schengen: "#3b82f6", visa_free: "#93c5fd", transit: "#bfdbfe" };
       maps['schengen'] = AmCharts.makeChart("chartdiv-schengen", {
         "type": "map", "theme": "light", "projection": "miller",
         "dataProvider": { "map": "worldHigh", "zoomLevel": 1.2, "zoomLongitude": 10, "zoomLatitude": 50, "areas": [
