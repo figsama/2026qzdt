@@ -553,7 +553,7 @@
     });
 
     // 添加水印到地图容器（用于导出时包含水印）
-    function addWatermarkForExport(mapType) {
+    function addWatermarkForExport(mapType, show = false) {
       const chartDiv = document.getElementById(`chartdiv-${mapType}`);
       if (!chartDiv) return;
       
@@ -563,7 +563,12 @@
         watermark.className = 'map-watermark';
         watermark.innerHTML = '小红书@无花果先生<br>https://figsama.github.io/2026qzdt/';
         watermark.style.cssText = 'position: absolute; bottom: 380px; left: 50px; font-size: 14px; color: #0f172a; opacity: 0.9; z-index: 9999; pointer-events: none; font-family: Inter, sans-serif; font-weight: 600; text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);';
+        if (!show) {
+          watermark.style.display = 'none';
+        }
         chartDiv.appendChild(watermark);
+      } else {
+        watermark.style.display = show ? 'block' : 'none';
       }
     }
 
@@ -872,14 +877,11 @@
           "enabled": true, 
           "menu": [{ "class": "export-main", "menu": [{ "label": "导出地图", "menu": ["PNG", "JPG", "PDF"] }] }],
           "capture": function() {
-            addWatermarkForExport('global');
+            addWatermarkForExport('global', true);
             return document.getElementById("chartdiv-global");
           }
         }
       });
-      
-      // 添加水印文本到地图（用于显示）
-      addWatermarkForExport('global');
       
       // 初始化调色盘
       colorCustomizer.initColorPalette('global', legendTitleToColorKey, COLORS);
@@ -1029,14 +1031,11 @@
           "enabled": true, 
           "menu": [{ "class": "export-main", "menu": [{ "label": "导出地图", "menu": ["PNG", "JPG", "PDF"] }] }],
           "capture": function() {
-            addWatermarkForExport('china');
+            addWatermarkForExport('china', true);
             return document.getElementById("chartdiv-china");
           }
         }
       });
-      
-      // 添加水印文本到地图（用于显示）
-      addWatermarkForExport('china');
       
       // 初始化调色盘
       colorCustomizer.initColorPalette('china', legendTitleToColorKey, COLORS);
@@ -1216,14 +1215,11 @@
           "enabled": true, 
           "menu": [{ "class": "export-main", "menu": [{ "label": "导出地图", "menu": ["PNG", "JPG", "PDF"] }] }],
           "capture": function() {
-            addWatermarkForExport('us');
+            addWatermarkForExport('us', true);
             return document.getElementById("chartdiv-us");
           }
         }
       });
-      
-      // 添加水印文本到地图（用于显示）
-      addWatermarkForExport('us');
       
       // 初始化调色盘
       colorCustomizer.initColorPalette('us', legendTitleToColorKey, COLORS);
@@ -1394,14 +1390,11 @@
           "enabled": true, 
           "menu": [{ "class": "export-main", "menu": [{ "label": "导出地图", "menu": ["PNG", "JPG", "PDF"] }] }],
           "capture": function() {
-            addWatermarkForExport('uk');
+            addWatermarkForExport('uk', true);
             return document.getElementById("chartdiv-uk");
           }
         }
       });
-      
-      // 添加水印文本到地图（用于显示）
-      addWatermarkForExport('uk');
       
       // 初始化调色盘
       colorCustomizer.initColorPalette('uk', legendTitleToColorKey, COLORS);
@@ -1558,14 +1551,11 @@
           "enabled": true, 
           "menu": [{ "class": "export-main", "menu": [{ "label": "导出地图", "menu": ["PNG", "JPG", "PDF"] }] }],
           "capture": function() {
-            addWatermarkForExport('japan');
+            addWatermarkForExport('japan', true);
             return document.getElementById("chartdiv-japan");
           }
         }
       });
-      
-      // 添加水印文本到地图（用于显示）
-      addWatermarkForExport('japan');
       
       // 初始化调色盘
       colorCustomizer.initColorPalette('japan', legendTitleToColorKey, COLORS);
@@ -1725,14 +1715,11 @@
           "enabled": true, 
           "menu": [{ "class": "export-main", "menu": [{ "label": "导出地图", "menu": ["PNG", "JPG", "PDF"] }] }],
           "capture": function() {
-            addWatermarkForExport('australia');
+            addWatermarkForExport('australia', true);
             return document.getElementById("chartdiv-australia");
           }
         }
       });
-      
-      // 添加水印文本到地图（用于显示）
-      addWatermarkForExport('australia');
       
       // 初始化调色盘
       colorCustomizer.initColorPalette('australia', legendTitleToColorKey, COLORS);
@@ -1933,14 +1920,11 @@
           "enabled": true, 
           "menu": [{ "class": "export-main", "menu": [{ "label": "导出地图", "menu": ["PNG", "JPG", "PDF"] }] }],
           "capture": function() {
-            addWatermarkForExport('schengen');
+            addWatermarkForExport('schengen', true);
             return document.getElementById("chartdiv-schengen");
           }
         }
       });
-      
-      // 添加水印文本到地图（用于显示）
-      addWatermarkForExport('schengen');
       
       // 初始化调色盘
       colorCustomizer.initColorPalette('schengen', legendTitleToColorKey, COLORS);
