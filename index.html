@@ -547,6 +547,71 @@
           mapContainer.classList.add('active');
         }
         initMap(mapType);
+      },
+      
+      // 为图例项添加点击事件监听器（使用DOM事件）
+      setupLegendClickListeners(mapInstance, mapType, legendTitleToColorKey, COLORS) {
+        // 等待地图渲染完成
+        setTimeout(() => {
+          const chartDiv = document.getElementById(`chartdiv-${mapType}`);
+          if (!chartDiv) return;
+          
+          // 查找图例容器
+          const legend = chartDiv.querySelector('.amcharts-legend');
+          if (!legend) return;
+          
+          // 使用事件委托监听图例容器的点击事件
+          legend.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            // 查找被点击的图例项
+            let target = e.target;
+            let legendItem = null;
+            
+            // 向上查找图例项容器
+            while (target && target !== legend) {
+              if (target.classList.contains('amcharts-legend-item') || 
+                  target.parentElement && target.parentElement.classList.contains('amcharts-legend-item')) {
+                legendItem = target.classList.contains('amcharts-legend-item') ? target : target.parentElement;
+                break;
+              }
+              target = target.parentElement;
+            }
+            
+            if (!legendItem) {
+              // 如果没找到，尝试查找包含文本的元素
+              target = e.target;
+              while (target && target !== legend) {
+                const label = target.querySelector('.amcharts-legend-label');
+                if (label) {
+                  legendItem = target;
+                  break;
+                }
+                target = target.parentElement;
+              }
+            }
+            
+            if (!legendItem) return;
+            
+            // 获取图例标题
+            const labelElement = legendItem.querySelector('.amcharts-legend-label');
+            if (!labelElement) return;
+            
+            const legendTitle = labelElement.textContent.trim();
+            const colorKey = legendTitleToColorKey[legendTitle];
+            
+            if (colorKey && COLORS[colorKey]) {
+              colorCustomizer.showColorPicker(mapType, legendTitle, COLORS[colorKey], colorKey);
+            }
+          });
+          
+          // 为所有图例项添加鼠标悬停样式
+          const legendItems = legend.querySelectorAll('.amcharts-legend-item');
+          legendItems.forEach((item) => {
+            item.style.cursor = 'pointer';
+          });
+        }, 800);
       }
     };
     
@@ -904,13 +969,7 @@
       });
       
       // 添加图例点击事件监听器
-      maps['global'].addListener("clickLegendItem", function(event) {
-        const legendTitle = event.dataItem.title;
-        const colorKey = legendTitleToColorKey[legendTitle];
-        if (colorKey) {
-          colorCustomizer.showColorPicker('global', legendTitle, COLORS[colorKey], colorKey);
-        }
-      });
+      colorCustomizer.setupLegendClickListeners(maps['global'], 'global', legendTitleToColorKey, COLORS);
     }
 
     // 中国护照地图
@@ -1056,13 +1115,7 @@
       });
       
       // 添加图例点击事件监听器
-      maps['china'].addListener("clickLegendItem", function(event) {
-        const legendTitle = event.dataItem.title;
-        const colorKey = legendTitleToColorKey[legendTitle];
-        if (colorKey) {
-          colorCustomizer.showColorPicker('china', legendTitle, COLORS[colorKey], colorKey);
-        }
-      });
+      colorCustomizer.setupLegendClickListeners(maps['china'], 'china', legendTitleToColorKey, COLORS);
     }
 
     // 美国签证地图
@@ -1244,13 +1297,7 @@
       });
       
       // 添加图例点击事件监听器
-      maps['us'].addListener("clickLegendItem", function(event) {
-        const legendTitle = event.dataItem.title;
-        const colorKey = legendTitleToColorKey[legendTitle];
-        if (colorKey) {
-          colorCustomizer.showColorPicker('us', legendTitle, COLORS[colorKey], colorKey);
-        }
-      });
+      colorCustomizer.setupLegendClickListeners(maps['us'], 'us', legendTitleToColorKey, COLORS);
     }
 
     // 英国签证地图
@@ -1423,13 +1470,7 @@
       });
       
       // 添加图例点击事件监听器
-      maps['uk'].addListener("clickLegendItem", function(event) {
-        const legendTitle = event.dataItem.title;
-        const colorKey = legendTitleToColorKey[legendTitle];
-        if (colorKey) {
-          colorCustomizer.showColorPicker('uk', legendTitle, COLORS[colorKey], colorKey);
-        }
-      });
+      colorCustomizer.setupLegendClickListeners(maps['uk'], 'uk', legendTitleToColorKey, COLORS);
     }
 
     // 日本签证地图
@@ -1587,13 +1628,7 @@
       });
       
       // 添加图例点击事件监听器
-      maps['japan'].addListener("clickLegendItem", function(event) {
-        const legendTitle = event.dataItem.title;
-        const colorKey = legendTitleToColorKey[legendTitle];
-        if (colorKey) {
-          colorCustomizer.showColorPicker('japan', legendTitle, COLORS[colorKey], colorKey);
-        }
-      });
+      colorCustomizer.setupLegendClickListeners(maps['japan'], 'japan', legendTitleToColorKey, COLORS);
     }
 
     // 澳洲签证地图
@@ -1755,13 +1790,7 @@
       });
       
       // 添加图例点击事件监听器
-      maps['australia'].addListener("clickLegendItem", function(event) {
-        const legendTitle = event.dataItem.title;
-        const colorKey = legendTitleToColorKey[legendTitle];
-        if (colorKey) {
-          colorCustomizer.showColorPicker('australia', legendTitle, COLORS[colorKey], colorKey);
-        }
-      });
+      colorCustomizer.setupLegendClickListeners(maps['australia'], 'australia', legendTitleToColorKey, COLORS);
     }
 
     // 申根签证地图
@@ -1964,13 +1993,7 @@
       });
       
       // 添加图例点击事件监听器
-      maps['schengen'].addListener("clickLegendItem", function(event) {
-        const legendTitle = event.dataItem.title;
-        const colorKey = legendTitleToColorKey[legendTitle];
-        if (colorKey) {
-          colorCustomizer.showColorPicker('schengen', legendTitle, COLORS[colorKey], colorKey);
-        }
-      });
+      colorCustomizer.setupLegendClickListeners(maps['schengen'], 'schengen', legendTitleToColorKey, COLORS);
     }
 
     // 初始化默认显示的地图
