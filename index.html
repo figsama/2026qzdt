@@ -597,7 +597,7 @@
       maps['global'] = AmCharts.makeChart("chartdiv-global", {
         "type": "map", "theme": "light", "projection": "miller",
         "dataProvider": { "map": "worldHigh", "zoomLevel": 1.2, "zoomLongitude": 20, "zoomLatitude": 30, "areas": areas },
-        "areasSettings": { "autoZoom": true, "rollOverOutlineColor": "#FFFFFF", "rollOverColor": "#334155", "rollOverAlpha": 1, "alpha": 0.9, "unlistedAreasAlpha": 0.1, "unlistedAreasColor": "#cbd5e1", "balloonText": "<div style='padding:10px; font-family: Inter, sans-serif; line-height:1.6;'><b style='font-size:14px;'>[[title]]</b><br/><span style='font-size:12px; opacity:0.9; margin-top:5px; display:block;'>[[customData]]</span></div>" },
+        "areasSettings": { "autoZoom": true, "rollOverOutlineColor": "#FFFFFF", "rollOverColor": "#334155", "rollOverAlpha": 1, "alpha": 0.9, "unlistedAreasAlpha": 0.6, "unlistedAreasColor": "#94a3b8", "unlistedAreasText": "需要额外办理签证等手续", "balloonText": "<div style='padding:10px; font-family: Inter, sans-serif; line-height:1.6;'><b style='font-size:14px;'>[[title]]</b><br/><span style='font-size:12px; opacity:0.9; margin-top:5px; display:block;'>[[customData]]</span></div>" },
         "balloon": { "adjustBorderColor": false, "color": "#ffffff", "cornerRadius": 8, "fillColor": "#1e293b", "fillAlpha": 0.95, "borderThickness": 0, "shadowAlpha": 0.15 },
         "legend": { "width": "100%", "equalWidths": false, "backgroundAlpha": 0, "borderAlpha": 0, "verticalGap": 12, "horizontalGap": 20, "bottom": 20, "left": 0, "align": "center",           "data": [
           { "title": "签证签发国", "color": COLORS.issuer },
@@ -605,7 +605,8 @@
           { "title": "过境免签", "color": COLORS.transit },
           { "title": "中国护照免签", "color": COLORS.cn_free },
           { "title": "中国护照落地签", "color": COLORS.cn_arrival },
-          { "title": "中国护照电子签", "color": COLORS.cn_evisa }
+          { "title": "中国护照电子签", "color": COLORS.cn_evisa },
+          { "title": "需办理签证", "color": "#94a3b8" }
         ]},
         "export": { "enabled": true, "menu": [{ "class": "export-main", "menu": [{ "label": "导出地图", "menu": ["PNG", "JPG", "PDF"] }] }] }
       });
