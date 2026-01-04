@@ -458,9 +458,6 @@
             <div id="stat-top-cities" style="font-size: 14px; line-height: 2;"></div>
           </div>
         </div>
-        <div style="margin-top: 15px; text-align: center;">
-          <button id="clear-stats-btn" style="padding: 10px 20px; background: #ef4444; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 500;">清除所有统计数据</button>
-        </div>
       </div>
     </div>
   </div>
@@ -2171,16 +2168,6 @@
       } else {
         topCitiesDiv.innerHTML = '<div style="color: #64748b;">暂无数据</div>';
       }
-      
-      // 清除统计数据按钮
-      document.getElementById('clear-stats-btn').addEventListener('click', function() {
-        if (confirm('确定要清除所有统计数据吗？此操作不可恢复。')) {
-          visitTracker.clearVisits();
-          // 重新初始化地图
-          delete maps['analytics'];
-          initAnalyticsMap();
-        }
-      });
       
       // 创建访问分布地图
       if (visits.length === 0) {
