@@ -279,7 +279,7 @@
     <div id="us" class="map-container">
       <div class="map-header">
         <h2>持美国签证可免签全球的国家和地区</h2>
-        <p>2026版 · 免签国家 / 过境免签政策分布</p>
+        <p>2026版 · 免签国家 / 有条件过境免签政策分布</p>
       </div>
       <div id="chartdiv-us" class="chartdiv"></div>
       <div class="watermark">小红书@无花果先生<br>https://figsama.github.io/2026qzdt/</div>
@@ -289,7 +289,7 @@
     <div id="uk" class="map-container">
       <div class="map-header">
         <h2>持英国签证可免签全球的国家和地区</h2>
-        <p>2026版 · 免签国家 / 过境免签政策分布</p>
+        <p>2026版 · 免签国家 / 有条件过境免签政策分布</p>
       </div>
       <div id="chartdiv-uk" class="chartdiv"></div>
       <div class="watermark">小红书@无花果先生<br>https://figsama.github.io/2026qzdt/</div>
@@ -309,7 +309,7 @@
     <div id="australia" class="map-container">
       <div class="map-header">
         <h2>持澳洲签证可免签全球的国家和地区</h2>
-        <p>2026版 · 免签国家 / 过境免签政策分布</p>
+        <p>2026版 · 免签国家 / 有条件过境免签政策分布</p>
       </div>
       <div id="chartdiv-australia" class="chartdiv"></div>
       <div class="watermark">小红书@无花果先生<br>https://figsama.github.io/2026qzdt/</div>
@@ -319,7 +319,7 @@
     <div id="schengen" class="map-container">
       <div class="map-header">
         <h2>持申根签证可免签全球的国家和地区</h2>
-        <p>2026版 · 申根区 / 免签国家 / 过境免签政策分布</p>
+        <p>2026版 · 申根区 / 免签国家 / 有条件过境免签政策分布</p>
       </div>
       <div id="chartdiv-schengen" class="chartdiv"></div>
       <div class="watermark">小红书@无花果先生<br>https://figsama.github.io/2026qzdt/</div>
@@ -395,7 +395,7 @@
         china: "#ef4444",
         issuer: "#3b82f6",
         major_issuer: "#3b82f6",
-        conditional: "#93c5fd",
+        conditional: "#14b8a6",
         transit: "#bfdbfe",
         cn_free: "#10b981",
         cn_arrival: "#34d399",
@@ -645,7 +645,7 @@
           { "title": "中国大陆", "color": COLORS.china },
           { "title": "签证签发国", "color": COLORS.issuer },
           { "title": "有条件免签", "color": COLORS.conditional },
-          { "title": "过境免签", "color": COLORS.transit },
+          { "title": "有条件过境免签", "color": COLORS.transit },
           { "title": "中国护照免签", "color": COLORS.cn_free },
           { "title": "中国护照落地签", "color": COLORS.cn_arrival },
           { "title": "中国护照电子签", "color": COLORS.cn_evisa },
@@ -791,7 +791,7 @@
 
     // 美国签证地图
     function initUSMap() {
-      const COLORS = { us: "#3b82f6", visa_free: "#93c5fd", transit: "#bfdbfe", china: "#ef4444", cn_free: "#059669", cn_arrival: "#34D399", cn_evisa: "#A7F3D0" };
+      const COLORS = { us: "#3b82f6", visa_free: "#14b8a6", transit: "#bfdbfe", china: "#ef4444", cn_free: "#059669", cn_arrival: "#34D399", cn_evisa: "#A7F3D0" };
       maps['us'] = AmCharts.makeChart("chartdiv-us", {
         "type": "map", "theme": "light", "projection": "miller",
         "dataProvider": { "map": "worldHigh", "zoomLevel": 1.2, "zoomLongitude": -100, "zoomLatitude": 30, "areas": [
@@ -816,9 +816,9 @@
           { "id": "PH", "title": "菲律宾", "customData": "持美签免签7天", "color": COLORS.visa_free },
           { "id": "MK", "title": "北马其顿", "customData": "持美签免签15天", "color": COLORS.visa_free },
           { "id": "ME", "title": "黑山", "customData": "持美签免签30天", "color": COLORS.visa_free },
-          { "id": "KR", "title": "韩国", "customData": "持美签过境免签30天", "color": COLORS.transit },
-          { "id": "JP", "title": "日本", "customData": "持美签过境免签72小时", "color": COLORS.transit },
-          { "id": "GB", "title": "英国", "customData": "持美签过境免签24小时", "color": COLORS.transit },
+          { "id": "KR", "title": "韩国", "customData": "持美签有条件过境免签30天", "color": COLORS.transit },
+          { "id": "JP", "title": "日本", "customData": "持美签有条件过境免签72小时", "color": COLORS.transit },
+          { "id": "GB", "title": "英国", "customData": "持美签有条件过境免签24小时", "color": COLORS.transit },
           { "id": "CW", "title": "库拉索", "customData": "持美签免签90天", "color": COLORS.visa_free },
           { "id": "AW", "title": "阿鲁巴", "customData": "持美签免签90天", "color": COLORS.visa_free },
           { "id": "SX", "title": "荷属圣马丁", "customData": "持美签免签90天", "color": COLORS.visa_free },
@@ -945,7 +945,7 @@
           { "title": "中国大陆", "color": COLORS.china },
           { "title": "美签签发国", "color": COLORS.us },
           { "title": "持美签免签", "color": COLORS.visa_free },
-          { "title": "过境免签", "color": COLORS.transit },
+          { "title": "有条件过境免签", "color": COLORS.transit },
           { "title": "中国护照免签", "color": COLORS.cn_free },
           { "title": "中国护照落地签", "color": COLORS.cn_arrival },
           { "title": "中国护照电子签", "color": COLORS.cn_evisa }
@@ -956,7 +956,7 @@
 
     // 英国签证地图
     function initUKMap() {
-      const COLORS = { uk: "#3b82f6", visa_free: "#93c5fd", transit: "#bfdbfe", china: "#ef4444", cn_free: "#059669", cn_arrival: "#34D399", cn_evisa: "#A7F3D0" };
+      const COLORS = { uk: "#3b82f6", visa_free: "#14b8a6", transit: "#bfdbfe", china: "#ef4444", cn_free: "#059669", cn_arrival: "#34D399", cn_evisa: "#A7F3D0" };
       maps['uk'] = AmCharts.makeChart("chartdiv-uk", {
         "type": "map", "theme": "light", "projection": "miller",
         "dataProvider": { "map": "worldHigh", "zoomLevel": 1.2, "zoomLongitude": 0, "zoomLatitude": 50, "areas": [
@@ -979,7 +979,7 @@
           { "id": "AI", "title": "安圭拉", "customData": "持英签免签(需有效)", "color": COLORS.visa_free },
           { "id": "MD", "title": "摩尔多瓦", "customData": "持英签免签", "color": COLORS.visa_free },
           { "id": "FJ", "title": "斐济", "customData": "持英签免签4个月(需6个月有效期)", "color": COLORS.visa_free },
-          { "id": "KR", "title": "韩国", "customData": "持英签过境免签30天", "color": COLORS.transit },
+          { "id": "KR", "title": "韩国", "customData": "持英签有条件过境免签30天", "color": COLORS.transit },
           { "id": "RU", "title": "俄罗斯", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "KH", "title": "柬埔寨", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "TR", "title": "土耳其", "customData": "中国护照免签", "color": COLORS.cn_free },
@@ -1101,7 +1101,7 @@
           { "title": "中国大陆", "color": COLORS.china },
           { "title": "英签签发国", "color": COLORS.uk },
           { "title": "持英签免签", "color": COLORS.visa_free },
-          { "title": "过境免签", "color": COLORS.transit },
+          { "title": "有条件过境免签", "color": COLORS.transit },
           { "title": "中国护照免签", "color": COLORS.cn_free },
           { "title": "中国护照落地签", "color": COLORS.cn_arrival },
           { "title": "中国护照电子签", "color": COLORS.cn_evisa }
@@ -1254,7 +1254,7 @@
 
     // 澳洲签证地图
     function initAustraliaMap() {
-      const COLORS = { australia: "#3b82f6", visa_free: "#93c5fd", transit: "#bfdbfe", china: "#ef4444", cn_free: "#059669", cn_arrival: "#34D399", cn_evisa: "#A7F3D0" };
+      const COLORS = { australia: "#3b82f6", visa_free: "#14b8a6", transit: "#bfdbfe", china: "#ef4444", cn_free: "#059669", cn_arrival: "#34D399", cn_evisa: "#A7F3D0" };
       maps['australia'] = AmCharts.makeChart("chartdiv-australia", {
         "type": "map", "theme": "light", "projection": "miller",
         "dataProvider": { "map": "worldHigh", "zoomLevel": 1.2, "zoomLongitude": 140, "zoomLatitude": -25, "areas": [
@@ -1264,8 +1264,8 @@
           { "id": "PA", "title": "巴拿马", "customData": "持澳签免签(需已使用1次以上)", "color": COLORS.visa_free },
           { "id": "PH", "title": "菲律宾", "customData": "持澳签免签7天", "color": COLORS.visa_free },
           { "id": "PE", "title": "秘鲁", "customData": "持澳签免签180天", "color": COLORS.visa_free },
-          { "id": "KR", "title": "韩国", "customData": "持澳签过境免签30天", "color": COLORS.transit },
-          { "id": "JP", "title": "日本", "customData": "持澳签过境免签72小时(需预订大航司机票)", "color": COLORS.transit },
+          { "id": "KR", "title": "韩国", "customData": "持澳签有条件过境免签30天", "color": COLORS.transit },
+          { "id": "JP", "title": "日本", "customData": "持澳签有条件过境免签72小时(需预订大航司机票)", "color": COLORS.transit },
           { "id": "RU", "title": "俄罗斯", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "KH", "title": "柬埔寨", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "TR", "title": "土耳其", "customData": "中国护照免签", "color": COLORS.cn_free },
@@ -1388,7 +1388,7 @@
           { "title": "中国大陆", "color": COLORS.china },
           { "title": "澳签签发国", "color": COLORS.australia },
           { "title": "持澳签免签", "color": COLORS.visa_free },
-          { "title": "过境免签", "color": COLORS.transit },
+          { "title": "有条件过境免签", "color": COLORS.transit },
           { "title": "中国护照免签", "color": COLORS.cn_free },
           { "title": "中国护照落地签", "color": COLORS.cn_arrival },
           { "title": "中国护照电子签", "color": COLORS.cn_evisa }
@@ -1399,7 +1399,7 @@
 
     // 申根签证地图
     function initSchengenMap() {
-      const COLORS = { schengen: "#3b82f6", visa_free: "#93c5fd", transit: "#bfdbfe", china: "#ef4444", cn_free: "#059669", cn_arrival: "#34D399", cn_evisa: "#A7F3D0" };
+      const COLORS = { schengen: "#3b82f6", visa_free: "#14b8a6", transit: "#bfdbfe", china: "#ef4444", cn_free: "#059669", cn_arrival: "#34D399", cn_evisa: "#A7F3D0" };
       maps['schengen'] = AmCharts.makeChart("chartdiv-schengen", {
         "type": "map", "theme": "light", "projection": "miller",
         "dataProvider": { "map": "worldHigh", "zoomLevel": 1.2, "zoomLongitude": 10, "zoomLatitude": 50, "areas": [
@@ -1447,7 +1447,7 @@
           { "id": "XK", "title": "科索沃", "customData": "持申根签免签(需多次)", "color": COLORS.visa_free },
           { "id": "CY", "title": "塞浦路斯", "customData": "持申根签免签(需有效签证)", "color": COLORS.visa_free },
           { "id": "PH", "title": "菲律宾", "customData": "持申根签免签7天", "color": COLORS.visa_free },
-          { "id": "KR", "title": "韩国", "customData": "持申根签过境免签30天", "color": COLORS.transit },
+          { "id": "KR", "title": "韩国", "customData": "持申根签有条件过境免签30天", "color": COLORS.transit },
           { "id": "CW", "title": "库拉索", "customData": "持申根签免签(需多次入境)", "color": COLORS.visa_free },
           { "id": "AW", "title": "阿鲁巴", "customData": "持申根签免签(需多次入境)", "color": COLORS.visa_free },
           { "id": "SX", "title": "荷属圣马丁", "customData": "持申根签免签(需多次入境)", "color": COLORS.visa_free },
@@ -1574,7 +1574,7 @@
           { "title": "中国大陆", "color": COLORS.china },
           { "title": "申根国", "color": COLORS.schengen },
           { "title": "持申根签免签", "color": COLORS.visa_free },
-          { "title": "过境免签", "color": COLORS.transit },
+          { "title": "有条件过境免签", "color": COLORS.transit },
           { "title": "中国护照免签", "color": COLORS.cn_free },
           { "title": "中国护照落地签", "color": COLORS.cn_arrival },
           { "title": "中国护照电子签", "color": COLORS.cn_evisa }
