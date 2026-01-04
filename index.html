@@ -392,17 +392,19 @@
     // 全球汇总地图
     function initGlobalMap() {
       const COLORS = {
-        china: "#ef4444",
+        china: "#006400",
         issuer: "#1e40af",
         major_issuer: "#1e40af",
         conditional: "#f59e0b",
         transit: "#fde047",
         cn_free: "#10b981",
         cn_arrival: "#34d399",
-        cn_evisa: "#a7f3d0"
+        cn_evisa: "#a7f3d0",
+        hmt_pass: "#00CED1"
       };
 
       const countryData = {
+        "CN": { title: "中国", visas: ["中国"], color: COLORS.china },
         "US": { title: "美国", visas: ["美签签发国"], color: "#ef4444" },
         "GB": { title: "英国", visas: ["英签签发国"], color: "#ef4444" },
         "JP": { title: "日本", visas: ["日签签发国"], color: COLORS.issuer },
@@ -463,6 +465,9 @@
         "RS": { title: "塞尔维亚", visas: ["中国护照免签"], color: COLORS.cn_free },
         "BA": { title: "波黑", visas: ["中国护照免签"], color: COLORS.cn_free },
         "XK": { title: "科索沃", visas: ["申根签免签(需多次)"], color: COLORS.conditional },
+        "HK": { title: "香港", visas: ["需办理港澳台通行证"], color: COLORS.hmt_pass },
+        "MO": { title: "澳门", visas: ["需办理港澳台通行证"], color: COLORS.hmt_pass },
+        "TW": { title: "台湾", visas: ["需办理港澳台通行证"], color: COLORS.hmt_pass },
         "CY": { title: "塞浦路斯", visas: ["申根签(需有效签证)"], color: COLORS.conditional },
         "IE": { title: "爱尔兰", visas: ["英签(已使用)"], color: COLORS.conditional },
         "GI": { title: "直布罗陀", visas: ["英签(1年以上)"], color: COLORS.conditional },
@@ -600,12 +605,14 @@
         "areasSettings": { "autoZoom": true, "rollOverOutlineColor": "#FFFFFF", "rollOverColor": "#334155", "rollOverAlpha": 1, "alpha": 0.9, "unlistedAreasAlpha": 0.6, "unlistedAreasColor": "#94a3b8", "unlistedAreasBalloonText": "<div style='padding:10px; font-family: Inter, sans-serif; line-height:1.6;'><b style='font-size:14px;'>[[title]]</b><br/><span style='font-size:12px; opacity:0.9; margin-top:5px; display:block;'>需要额外办理签证等手续</span></div>", "balloonText": "<div style='padding:10px; font-family: Inter, sans-serif; line-height:1.6;'><b style='font-size:14px;'>[[title]]</b><br/><span style='font-size:12px; opacity:0.9; margin-top:5px; display:block;'>[[customData]]</span></div>" },
         "balloon": { "adjustBorderColor": false, "color": "#ffffff", "cornerRadius": 8, "fillColor": "#1e293b", "fillAlpha": 0.95, "borderThickness": 0, "shadowAlpha": 0.15 },
         "legend": { "width": "100%", "equalWidths": false, "backgroundAlpha": 0, "borderAlpha": 0, "verticalGap": 12, "horizontalGap": 20, "bottom": 20, "left": 0, "align": "center",           "data": [
+          { "title": "中国", "color": COLORS.china },
           { "title": "签证签发国", "color": COLORS.issuer },
           { "title": "有条件免签", "color": COLORS.conditional },
           { "title": "过境免签", "color": COLORS.transit },
           { "title": "中国护照免签", "color": COLORS.cn_free },
           { "title": "中国护照落地签", "color": COLORS.cn_arrival },
           { "title": "中国护照电子签", "color": COLORS.cn_evisa },
+          { "title": "需办理港澳台通行证", "color": COLORS.hmt_pass },
           { "title": "需办理签证", "color": "#94a3b8" }
         ]},
         "export": { "enabled": true, "menu": [{ "class": "export-main", "menu": [{ "label": "导出地图", "menu": ["PNG", "JPG", "PDF"] }] }] }
