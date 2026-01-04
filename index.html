@@ -403,10 +403,10 @@
       };
 
       const countryData = {
-        "US": { title: "美国", visas: ["美签签发国"], color: COLORS.issuer },
-        "GB": { title: "英国", visas: ["英签签发国"], color: COLORS.issuer },
+        "US": { title: "美国", visas: ["美签签发国"], color: "#ef4444" },
+        "GB": { title: "英国", visas: ["英签签发国"], color: "#ef4444" },
         "JP": { title: "日本", visas: ["日签签发国"], color: COLORS.issuer },
-        "AU": { title: "澳大利亚", visas: ["澳签签发国"], color: COLORS.issuer },
+        "AU": { title: "澳大利亚", visas: ["澳签签发国"], color: "#ef4444" },
         "AT": { title: "奥地利", visas: ["申根国"], color: COLORS.issuer },
         "BE": { title: "比利时", visas: ["申根国"], color: COLORS.issuer },
         "CZ": { title: "捷克", visas: ["申根国"], color: COLORS.issuer },
@@ -746,7 +746,7 @@
 
     // 美国签证地图
     function initUSMap() {
-      const COLORS = { us: "#1e40af", visa_free: "#059669", transit: "#3b82f6" };
+      const COLORS = { us: "#ef4444", visa_free: "#f59e0b", transit: "#3b82f6" };
       maps['us'] = AmCharts.makeChart("chartdiv-us", {
         "type": "map", "theme": "light", "projection": "miller",
         "dataProvider": { "map": "worldHigh", "zoomLevel": 1.2, "zoomLongitude": -100, "zoomLatitude": 30, "areas": [
@@ -791,7 +791,7 @@
 
     // 英国签证地图
     function initUKMap() {
-      const COLORS = { uk: "#1e40af", visa_free: "#059669", transit: "#3b82f6" };
+      const COLORS = { uk: "#ef4444", visa_free: "#f59e0b", transit: "#3b82f6" };
       maps['uk'] = AmCharts.makeChart("chartdiv-uk", {
         "type": "map", "theme": "light", "projection": "miller",
         "dataProvider": { "map": "worldHigh", "zoomLevel": 1.2, "zoomLongitude": 0, "zoomLatitude": 50, "areas": [
@@ -850,7 +850,7 @@
 
     // 澳洲签证地图
     function initAustraliaMap() {
-      const COLORS = { australia: "#1e40af", visa_free: "#059669", transit: "#3b82f6" };
+      const COLORS = { australia: "#ef4444", visa_free: "#f59e0b", transit: "#3b82f6" };
       maps['australia'] = AmCharts.makeChart("chartdiv-australia", {
         "type": "map", "theme": "light", "projection": "miller",
         "dataProvider": { "map": "worldHigh", "zoomLevel": 1.2, "zoomLongitude": 140, "zoomLatitude": -25, "areas": [
