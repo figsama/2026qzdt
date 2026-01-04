@@ -467,6 +467,25 @@
   <script src="https://www.amcharts.com/lib/3/plugins/export/export.min.js"></script>
   <link rel="stylesheet" href="https://www.amcharts.com/lib/3/plugins/export/export.css" type="text/css" media="all" />
   <script src="https://www.amcharts.com/lib/3/themes/light.js"></script>
+  
+  <!-- Firebase SDK -->
+  <!-- 请先到 https://firebase.google.com/ 创建项目，然后替换下面的配置 -->
+  <!--
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_PROJECT_ID.appspot.com",
+      messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+  </script>
+  -->
 
   <script>
     // 存储所有地图实例
@@ -646,8 +665,8 @@
         }
       },
       
-      // 保存访问数据到localStorage
-      saveVisit(visitData) {
+      // 保存访问数据到localStorage和Firebase
+      async saveVisit(visitData) {
         const visits = this.getVisits();
         
         // 检查是否已存在相同IP的访问（避免重复记录）
@@ -661,13 +680,62 @@
             visits.shift();
           }
           localStorage.setItem('visa_map_visits', JSON.stringify(visits));
+          
+          // 如果Firebase已配置，同时保存到云端
+          if (typeof db !== 'undefined') {
+            try {
+              await db.collection('visits').add({
+                ...visitData,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+              });
+            } catch (error) {
+              console.error('保存到Firebase失败:', error);
+            }
+          }
         }
       },
       
-      // 获取所有访问记录
+      // 获取所有访问记录（从localStorage）
       getVisits() {
         const visitsJson = localStorage.getItem('visa_map_visits');
         return visitsJson ? JSON.parse(visitsJson) : [];
+      },
+      
+      // 从Firebase获取所有访问记录（需要管理员权限）
+      async getVisitsFromFirebase() {
+        if (typeof db === 'undefined') {
+          console.warn('Firebase未配置，无法从云端获取数据');
+          return [];
+        }
+        
+        try {
+          const snapshot = await db.collection('visits')
+            .orderBy('createdAt', 'desc')
+            .limit(1000)
+            .get();
+          
+          return snapshot.docs.map(doc => {
+            const data = doc.data();
+            return {
+              ...data,
+              id: doc.id
+            };
+          });
+        } catch (error) {
+          console.error('从Firebase获取数据失败:', error);
+          return [];
+        }
+      },
+      
+      // 获取所有访问记录（优先从Firebase，如果未配置则从localStorage）
+      async getAllVisits() {
+        if (typeof db !== 'undefined') {
+          const firebaseVisits = await this.getVisitsFromFirebase();
+          if (firebaseVisits.length > 0) {
+            return firebaseVisits;
+          }
+        }
+        return this.getVisits();
       },
       
       // 获取访问统计
@@ -694,6 +762,47 @@
           
           // 统计日期
           const date = new Date(visit.timestamp).toDateString();
+          stats.visitsByDate[date] = (stats.visitsByDate[date] || 0) + 1;
+        });
+        
+        // 获取访问最多的国家
+        stats.topCountries = Object.entries(stats.countries)
+          .sort((a, b) => b[1] - a[1])
+          .slice(0, 10)
+          .map(([country, count]) => ({ country, count }));
+        
+        // 获取访问最多的城市
+        stats.topCities = Object.entries(stats.cities)
+          .sort((a, b) => b[1] - a[1])
+          .slice(0, 10)
+          .map(([city, count]) => ({ city, count }));
+        
+        return stats;
+      },
+      
+      // 从指定的访问数据数组计算统计（用于Firebase数据）
+      getStatsFromVisits(visits) {
+        const stats = {
+          totalVisits: visits.length,
+          uniqueIPs: new Set(visits.map(v => v.ip)).size,
+          countries: {},
+          cities: {},
+          visitsByDate: {},
+          topCountries: [],
+          topCities: []
+        };
+        
+        visits.forEach(visit => {
+          // 统计国家
+          const country = visit.country || 'Unknown';
+          stats.countries[country] = (stats.countries[country] || 0) + 1;
+          
+          // 统计城市
+          const city = visit.city || 'Unknown';
+          stats.cities[city] = (stats.cities[city] || 0) + 1;
+          
+          // 统计日期
+          const date = new Date(visit.timestamp || visit.createdAt?.toDate?.() || visit.createdAt).toDateString();
           stats.visitsByDate[date] = (stats.visitsByDate[date] || 0) + 1;
         });
         
@@ -2128,15 +2237,18 @@
     }
 
     // 访问统计地图
-    function initAnalyticsMap() {
+    async function initAnalyticsMap() {
       // 清除旧的地图实例
       if (maps['analytics']) {
         maps['analytics'].clear();
         delete maps['analytics'];
       }
       
-      const visits = visitTracker.getVisits();
-      const stats = visitTracker.getStats();
+      // 优先从Firebase获取数据（如果已配置），否则从localStorage获取
+      const visits = await visitTracker.getAllVisits();
+      
+      // 使用获取到的访问数据计算统计
+      const stats = visitTracker.getStatsFromVisits(visits);
       
       // 更新统计数据显示
       document.getElementById('stat-total').textContent = stats.totalVisits;
