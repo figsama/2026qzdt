@@ -1255,7 +1255,21 @@
 
     // 英国签证地图
     function initUKMap() {
-      const COLORS = { uk: "#3b82f6", visa_free: "#14b8a6", transit: "#60a5fa", china: "#ef4444", cn_free: "#059669", cn_arrival: "#34D399", cn_evisa: "#A7F3D0" };
+      const defaultColors = { uk: "#3b82f6", visa_free: "#14b8a6", transit: "#60a5fa", china: "#ef4444", cn_free: "#059669", cn_arrival: "#34D399", cn_evisa: "#A7F3D0" };
+      const COLORS = {};
+      const legendTitleToColorKey = {
+        "中国大陆": "china",
+        "英签签发国": "uk",
+        "持英签免签": "visa_free",
+        "有条件过境免签": "transit",
+        "中国护照免签": "cn_free",
+        "中国护照落地签": "cn_arrival",
+        "中国护照电子签": "cn_evisa"
+      };
+      
+      for (const [key, value] of Object.entries(defaultColors)) {
+        COLORS[key] = colorCustomizer.loadColor('uk', key, value);
+      }
       maps['uk'] = AmCharts.makeChart("chartdiv-uk", {
         "type": "map", "theme": "light", "projection": "miller",
         "dataProvider": { "map": "worldHigh", "zoomLevel": 1.2, "zoomLongitude": 0, "zoomLatitude": 50, "areas": [
@@ -1407,11 +1421,33 @@
         ]},
         "export": { "enabled": true, "menu": [{ "class": "export-main", "menu": [{ "label": "导出地图", "menu": ["PNG", "JPG", "PDF"] }] }] }
       });
+      
+      // 添加图例点击事件监听器
+      maps['uk'].addListener("clickLegendItem", function(event) {
+        const legendTitle = event.dataItem.title;
+        const colorKey = legendTitleToColorKey[legendTitle];
+        if (colorKey) {
+          colorCustomizer.showColorPicker('uk', legendTitle, COLORS[colorKey], colorKey);
+        }
+      });
     }
 
     // 日本签证地图
     function initJapanMap() {
-      const COLORS = { japan: "#3b82f6", visa_free: "#14b8a6", china: "#ef4444", cn_free: "#059669", cn_arrival: "#34D399", cn_evisa: "#A7F3D0" };
+      const defaultColors = { japan: "#3b82f6", visa_free: "#14b8a6", china: "#ef4444", cn_free: "#059669", cn_arrival: "#34D399", cn_evisa: "#A7F3D0" };
+      const COLORS = {};
+      const legendTitleToColorKey = {
+        "中国大陆": "china",
+        "日签签发国": "japan",
+        "持日签免签": "visa_free",
+        "中国护照免签": "cn_free",
+        "中国护照落地签": "cn_arrival",
+        "中国护照电子签": "cn_evisa"
+      };
+      
+      for (const [key, value] of Object.entries(defaultColors)) {
+        COLORS[key] = colorCustomizer.loadColor('japan', key, value);
+      }
       maps['japan'] = AmCharts.makeChart("chartdiv-japan", {
         "type": "map", "theme": "light", "projection": "miller",
         "dataProvider": { "map": "worldHigh", "zoomLevel": 1.2, "zoomLongitude": 140, "zoomLatitude": 30, "areas": [
@@ -1549,11 +1585,34 @@
         ]},
         "export": { "enabled": true, "menu": [{ "class": "export-main", "menu": [{ "label": "导出地图", "menu": ["PNG", "JPG", "PDF"] }] }] }
       });
+      
+      // 添加图例点击事件监听器
+      maps['japan'].addListener("clickLegendItem", function(event) {
+        const legendTitle = event.dataItem.title;
+        const colorKey = legendTitleToColorKey[legendTitle];
+        if (colorKey) {
+          colorCustomizer.showColorPicker('japan', legendTitle, COLORS[colorKey], colorKey);
+        }
+      });
     }
 
     // 澳洲签证地图
     function initAustraliaMap() {
-      const COLORS = { australia: "#3b82f6", visa_free: "#14b8a6", transit: "#60a5fa", china: "#ef4444", cn_free: "#059669", cn_arrival: "#34D399", cn_evisa: "#A7F3D0" };
+      const defaultColors = { australia: "#3b82f6", visa_free: "#14b8a6", transit: "#60a5fa", china: "#ef4444", cn_free: "#059669", cn_arrival: "#34D399", cn_evisa: "#A7F3D0" };
+      const COLORS = {};
+      const legendTitleToColorKey = {
+        "中国大陆": "china",
+        "澳签签发国": "australia",
+        "持澳签免签": "visa_free",
+        "有条件过境免签": "transit",
+        "中国护照免签": "cn_free",
+        "中国护照落地签": "cn_arrival",
+        "中国护照电子签": "cn_evisa"
+      };
+      
+      for (const [key, value] of Object.entries(defaultColors)) {
+        COLORS[key] = colorCustomizer.loadColor('australia', key, value);
+      }
       maps['australia'] = AmCharts.makeChart("chartdiv-australia", {
         "type": "map", "theme": "light", "projection": "miller",
         "dataProvider": { "map": "worldHigh", "zoomLevel": 1.2, "zoomLongitude": 140, "zoomLatitude": -25, "areas": [
@@ -1694,11 +1753,34 @@
         ]},
         "export": { "enabled": true, "menu": [{ "class": "export-main", "menu": [{ "label": "导出地图", "menu": ["PNG", "JPG", "PDF"] }] }] }
       });
+      
+      // 添加图例点击事件监听器
+      maps['australia'].addListener("clickLegendItem", function(event) {
+        const legendTitle = event.dataItem.title;
+        const colorKey = legendTitleToColorKey[legendTitle];
+        if (colorKey) {
+          colorCustomizer.showColorPicker('australia', legendTitle, COLORS[colorKey], colorKey);
+        }
+      });
     }
 
     // 申根签证地图
     function initSchengenMap() {
-      const COLORS = { schengen: "#3b82f6", visa_free: "#14b8a6", transit: "#60a5fa", china: "#ef4444", cn_free: "#059669", cn_arrival: "#34D399", cn_evisa: "#A7F3D0" };
+      const defaultColors = { schengen: "#3b82f6", visa_free: "#14b8a6", transit: "#60a5fa", china: "#ef4444", cn_free: "#059669", cn_arrival: "#34D399", cn_evisa: "#A7F3D0" };
+      const COLORS = {};
+      const legendTitleToColorKey = {
+        "中国大陆": "china",
+        "申根国": "schengen",
+        "持申根签免签": "visa_free",
+        "有条件过境免签": "transit",
+        "中国护照免签": "cn_free",
+        "中国护照落地签": "cn_arrival",
+        "中国护照电子签": "cn_evisa"
+      };
+      
+      for (const [key, value] of Object.entries(defaultColors)) {
+        COLORS[key] = colorCustomizer.loadColor('schengen', key, value);
+      }
       maps['schengen'] = AmCharts.makeChart("chartdiv-schengen", {
         "type": "map", "theme": "light", "projection": "miller",
         "dataProvider": { "map": "worldHigh", "zoomLevel": 1.2, "zoomLongitude": 10, "zoomLatitude": 50, "areas": [
@@ -1879,6 +1961,15 @@
           { "title": "中国护照电子签", "color": COLORS.cn_evisa }
         ]},
         "export": { "enabled": true, "menu": [{ "class": "export-main", "menu": [{ "label": "导出地图", "menu": ["PNG", "JPG", "PDF"] }] }] }
+      });
+      
+      // 添加图例点击事件监听器
+      maps['schengen'].addListener("clickLegendItem", function(event) {
+        const legendTitle = event.dataItem.title;
+        const colorKey = legendTitleToColorKey[legendTitle];
+        if (colorKey) {
+          colorCustomizer.showColorPicker('schengen', legendTitle, COLORS[colorKey], colorKey);
+        }
       });
     }
 
