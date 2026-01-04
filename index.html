@@ -167,21 +167,6 @@
       border-radius: 12px;
     }
 
-    /* 水印样式 */
-    .watermark {
-      position: absolute;
-      bottom: 380px;
-      left: 50px;
-      font-size: 14px;
-      color: #0f172a;
-      opacity: 0.9;
-      z-index: 9999;
-      pointer-events: none;
-      font-family: 'Inter', 'Noto Sans SC', sans-serif;
-      font-weight: 600;
-      text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
-    }
-
     /* 自定义导出按钮样式 */
     .amcharts-export-menu {
       top: 10px !important;
@@ -348,7 +333,6 @@
         <p>2026版 · 汇总中国护照免签/落地签/电子签及美签/申根签/日签/英签/澳签免签政策</p>
       </div>
       <div id="chartdiv-global" class="chartdiv"></div>
-      <div class="watermark">小红书@无花果先生<br>https://figsama.github.io/2026qzdt/</div>
       <div id="color-palette-global" class="color-palette"></div>
     </div>
 
@@ -359,7 +343,6 @@
         <p>实时更新 · 免签 / 落地签 / 电子签政策分布</p>
       </div>
       <div id="chartdiv-china" class="chartdiv"></div>
-      <div class="watermark">小红书@无花果先生<br>https://figsama.github.io/2026qzdt/</div>
       <div id="color-palette-china" class="color-palette"></div>
     </div>
 
@@ -370,7 +353,6 @@
         <p>2026版 · 免签国家 / 有条件过境免签政策分布</p>
       </div>
       <div id="chartdiv-us" class="chartdiv"></div>
-      <div class="watermark">小红书@无花果先生<br>https://figsama.github.io/2026qzdt/</div>
       <div id="color-palette-us" class="color-palette"></div>
     </div>
 
@@ -381,7 +363,6 @@
         <p>2026版 · 免签国家 / 有条件过境免签政策分布</p>
       </div>
       <div id="chartdiv-uk" class="chartdiv"></div>
-      <div class="watermark">小红书@无花果先生<br>https://figsama.github.io/2026qzdt/</div>
       <div id="color-palette-uk" class="color-palette"></div>
     </div>
 
@@ -392,7 +373,6 @@
         <p>2026版 · 多次日本签证免签政策分布</p>
       </div>
       <div id="chartdiv-japan" class="chartdiv"></div>
-      <div class="watermark">小红书@无花果先生<br>https://figsama.github.io/2026qzdt/</div>
       <div id="color-palette-japan" class="color-palette"></div>
     </div>
 
@@ -403,7 +383,6 @@
         <p>2026版 · 免签国家 / 有条件过境免签政策分布</p>
       </div>
       <div id="chartdiv-australia" class="chartdiv"></div>
-      <div class="watermark">小红书@无花果先生<br>https://figsama.github.io/2026qzdt/</div>
       <div id="color-palette-australia" class="color-palette"></div>
     </div>
 
@@ -414,7 +393,6 @@
         <p>2026版 · 申根区 / 免签国家 / 有条件过境免签政策分布</p>
       </div>
       <div id="chartdiv-schengen" class="chartdiv"></div>
-      <div class="watermark">小红书@无花果先生<br>https://figsama.github.io/2026qzdt/</div>
       <div id="color-palette-schengen" class="color-palette"></div>
     </div>
   </div>
@@ -573,6 +551,23 @@
         }
       });
     });
+
+    // 添加水印到地图
+    function addWatermarkToMap(mapInstance, mapType) {
+      mapInstance.addListener("rendered", function() {
+        const chartDiv = document.getElementById(`chartdiv-${mapType}`);
+        if (chartDiv) {
+          let watermark = chartDiv.querySelector('.map-watermark');
+          if (!watermark) {
+            watermark = document.createElement('div');
+            watermark.className = 'map-watermark';
+            watermark.innerHTML = '小红书@无花果先生<br>https://figsama.github.io/2026qzdt/';
+            watermark.style.cssText = 'position: absolute; bottom: 380px; left: 50px; font-size: 14px; color: #0f172a; opacity: 0.9; z-index: 9999; pointer-events: none; font-family: Inter, sans-serif; font-weight: 600; text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);';
+            chartDiv.appendChild(watermark);
+          }
+        }
+      });
+    }
 
     // 初始化地图函数
     function initMap(mapType) {
@@ -878,6 +873,9 @@
         "export": { "enabled": true, "menu": [{ "class": "export-main", "menu": [{ "label": "导出地图", "menu": ["PNG", "JPG", "PDF"] }] }] }
       });
       
+      // 添加水印文本到地图
+      addWatermarkToMap(maps['global'], 'global');
+      
       // 初始化调色盘
       colorCustomizer.initColorPalette('global', legendTitleToColorKey, COLORS);
     }
@@ -1024,6 +1022,9 @@
         "balloon": { "adjustBorderColor": false, "color": "#ffffff", "cornerRadius": 8, "fillColor": "#1e293b", "fillAlpha": 0.95, "borderThickness": 0, "shadowAlpha": 0.15 },
         "export": { "enabled": true, "menu": [{ "class": "export-main", "menu": [{ "label": "导出地图", "menu": ["PNG", "JPG", "PDF"] }] }] }
       });
+      
+      // 添加水印文本到地图
+      addWatermarkToMap(maps['china'], 'china');
       
       // 初始化调色盘
       colorCustomizer.initColorPalette('china', legendTitleToColorKey, COLORS);
@@ -1202,6 +1203,9 @@
         "export": { "enabled": true, "menu": [{ "class": "export-main", "menu": [{ "label": "导出地图", "menu": ["PNG", "JPG", "PDF"] }] }] }
       });
       
+      // 添加水印文本到地图
+      addWatermarkToMap(maps['us'], 'us');
+      
       // 初始化调色盘
       colorCustomizer.initColorPalette('us', legendTitleToColorKey, COLORS);
     }
@@ -1370,6 +1374,9 @@
         "export": { "enabled": true, "menu": [{ "class": "export-main", "menu": [{ "label": "导出地图", "menu": ["PNG", "JPG", "PDF"] }] }] }
       });
       
+      // 添加水印文本到地图
+      addWatermarkToMap(maps['uk'], 'uk');
+      
       // 初始化调色盘
       colorCustomizer.initColorPalette('uk', legendTitleToColorKey, COLORS);
     }
@@ -1523,6 +1530,9 @@
         "balloon": { "adjustBorderColor": false, "color": "#ffffff", "cornerRadius": 8, "fillColor": "#1e293b", "fillAlpha": 0.95, "borderThickness": 0, "shadowAlpha": 0.15 },
         "export": { "enabled": true, "menu": [{ "class": "export-main", "menu": [{ "label": "导出地图", "menu": ["PNG", "JPG", "PDF"] }] }] }
       });
+      
+      // 添加水印文本到地图
+      addWatermarkToMap(maps['japan'], 'japan');
       
       // 初始化调色盘
       colorCustomizer.initColorPalette('japan', legendTitleToColorKey, COLORS);
@@ -1680,6 +1690,9 @@
         "balloon": { "adjustBorderColor": false, "color": "#ffffff", "cornerRadius": 8, "fillColor": "#1e293b", "fillAlpha": 0.95, "borderThickness": 0, "shadowAlpha": 0.15 },
         "export": { "enabled": true, "menu": [{ "class": "export-main", "menu": [{ "label": "导出地图", "menu": ["PNG", "JPG", "PDF"] }] }] }
       });
+      
+      // 添加水印文本到地图
+      addWatermarkToMap(maps['australia'], 'australia');
       
       // 初始化调色盘
       colorCustomizer.initColorPalette('australia', legendTitleToColorKey, COLORS);
@@ -1878,6 +1891,9 @@
         "balloon": { "adjustBorderColor": false, "color": "#ffffff", "cornerRadius": 8, "fillColor": "#1e293b", "fillAlpha": 0.95, "borderThickness": 0, "shadowAlpha": 0.15 },
         "export": { "enabled": true, "menu": [{ "class": "export-main", "menu": [{ "label": "导出地图", "menu": ["PNG", "JPG", "PDF"] }] }] }
       });
+      
+      // 添加水印文本到地图
+      addWatermarkToMap(maps['schengen'], 'schengen');
       
       // 初始化调色盘
       colorCustomizer.initColorPalette('schengen', legendTitleToColorKey, COLORS);
