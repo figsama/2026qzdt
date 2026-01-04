@@ -615,7 +615,22 @@
           { "title": "需办理港澳台通行证", "color": COLORS.hmt_pass },
           { "title": "需办理签证", "color": "#94a3b8" }
         ]},
-        "export": { "enabled": true, "menu": [{ "class": "export-main", "menu": [{ "label": "导出地图", "menu": ["PNG", "JPG", "PDF"] }] }] }
+        "export": { "enabled": true, "menu": [{ "class": "export-main", "menu": [{ "label": "导出地图", "menu": ["PNG", "JPG", "PDF"] }] }] },
+        "listeners": [{
+          "event": "rollOverMapObject",
+          "method": function(event) {
+            const mapObject = event.mapObject;
+            if (mapObject && !countryData[mapObject.id]) {
+              let countryName = mapObject.title;
+              if (!countryName || countryName === mapObject.id) {
+                countryName = mapObject.name || mapObject.id;
+              }
+              if (countryName && countryName !== mapObject.id) {
+                mapObject.balloonText = "<div style='padding:10px; font-family: Inter, sans-serif; line-height:1.6;'><b style='font-size:14px;'>" + countryName + "</b><br/><span style='font-size:12px; opacity:0.9; margin-top:5px; display:block;'>需要额外办理签证等手续</span></div>";
+              }
+            }
+          }
+        }]
       });
     }
 
