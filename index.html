@@ -552,21 +552,19 @@
       });
     });
 
-    // 添加水印到地图
-    function addWatermarkToMap(mapInstance, mapType) {
-      mapInstance.addListener("rendered", function() {
-        const chartDiv = document.getElementById(`chartdiv-${mapType}`);
-        if (chartDiv) {
-          let watermark = chartDiv.querySelector('.map-watermark');
-          if (!watermark) {
-            watermark = document.createElement('div');
-            watermark.className = 'map-watermark';
-            watermark.innerHTML = '小红书@无花果先生<br>https://figsama.github.io/2026qzdt/';
-            watermark.style.cssText = 'position: absolute; bottom: 380px; left: 50px; font-size: 14px; color: #0f172a; opacity: 0.9; z-index: 9999; pointer-events: none; font-family: Inter, sans-serif; font-weight: 600; text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);';
-            chartDiv.appendChild(watermark);
-          }
-        }
-      });
+    // 添加水印到地图容器（用于导出时包含水印）
+    function addWatermarkForExport(mapType) {
+      const chartDiv = document.getElementById(`chartdiv-${mapType}`);
+      if (!chartDiv) return;
+      
+      let watermark = chartDiv.querySelector('.map-watermark');
+      if (!watermark) {
+        watermark = document.createElement('div');
+        watermark.className = 'map-watermark';
+        watermark.innerHTML = '小红书@无花果先生<br>https://figsama.github.io/2026qzdt/';
+        watermark.style.cssText = 'position: absolute; bottom: 380px; left: 50px; font-size: 14px; color: #0f172a; opacity: 0.9; z-index: 9999; pointer-events: none; font-family: Inter, sans-serif; font-weight: 600; text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);';
+        chartDiv.appendChild(watermark);
+      }
     }
 
     // 初始化地图函数
@@ -870,11 +868,18 @@
         "dataProvider": { "map": "worldHigh", "zoomLevel": 1.2, "zoomLongitude": 20, "zoomLatitude": 30, "areas": areas },
         "areasSettings": { "autoZoom": true, "rollOverOutlineColor": "#FFFFFF", "rollOverColor": "#334155", "rollOverAlpha": 1, "alpha": 0.9, "unlistedAreasAlpha": 0.1, "unlistedAreasColor": "#cbd5e1", "balloonText": "<div style='padding:10px; font-family: Inter, sans-serif; line-height:1.6;'><b style='font-size:14px;'>[[title]]</b><br/><span style='font-size:12px; opacity:0.9; margin-top:5px; display:block;'>[[customData]]</span></div>" },
         "balloon": { "adjustBorderColor": false, "color": "#ffffff", "cornerRadius": 8, "fillColor": "#1e293b", "fillAlpha": 0.95, "borderThickness": 0, "shadowAlpha": 0.15 },
-        "export": { "enabled": true, "menu": [{ "class": "export-main", "menu": [{ "label": "导出地图", "menu": ["PNG", "JPG", "PDF"] }] }] }
+        "export": { 
+          "enabled": true, 
+          "menu": [{ "class": "export-main", "menu": [{ "label": "导出地图", "menu": ["PNG", "JPG", "PDF"] }] }],
+          "capture": function() {
+            addWatermarkForExport('global');
+            return document.getElementById("chartdiv-global");
+          }
+        }
       });
       
-      // 添加水印文本到地图
-      addWatermarkToMap(maps['global'], 'global');
+      // 添加水印文本到地图（用于显示）
+      addWatermarkForExport('global');
       
       // 初始化调色盘
       colorCustomizer.initColorPalette('global', legendTitleToColorKey, COLORS);
@@ -1020,11 +1025,18 @@
         ]},
         "areasSettings": { "autoZoom": true, "rollOverOutlineColor": "#FFFFFF", "rollOverColor": "#334155", "rollOverAlpha": 1, "alpha": 0.9, "unlistedAreasAlpha": 0.1, "unlistedAreasColor": "#cbd5e1", "balloonText": "<div style='padding:8px; font-family: Inter, sans-serif;'><b>[[title]]</b><br/><span style='font-size:12px; opacity:0.8;'>[[customData]]</span></div>" },
         "balloon": { "adjustBorderColor": false, "color": "#ffffff", "cornerRadius": 8, "fillColor": "#1e293b", "fillAlpha": 0.95, "borderThickness": 0, "shadowAlpha": 0.15 },
-        "export": { "enabled": true, "menu": [{ "class": "export-main", "menu": [{ "label": "导出地图", "menu": ["PNG", "JPG", "PDF"] }] }] }
+        "export": { 
+          "enabled": true, 
+          "menu": [{ "class": "export-main", "menu": [{ "label": "导出地图", "menu": ["PNG", "JPG", "PDF"] }] }],
+          "capture": function() {
+            addWatermarkForExport('china');
+            return document.getElementById("chartdiv-china");
+          }
+        }
       });
       
-      // 添加水印文本到地图
-      addWatermarkToMap(maps['china'], 'china');
+      // 添加水印文本到地图（用于显示）
+      addWatermarkForExport('china');
       
       // 初始化调色盘
       colorCustomizer.initColorPalette('china', legendTitleToColorKey, COLORS);
@@ -1200,11 +1212,18 @@
         ]},
         "areasSettings": { "autoZoom": true, "rollOverOutlineColor": "#FFFFFF", "rollOverColor": "#334155", "rollOverAlpha": 1, "alpha": 0.9, "unlistedAreasAlpha": 0.1, "unlistedAreasColor": "#cbd5e1", "balloonText": "<div style='padding:8px; font-family: Inter, sans-serif;'><b>[[title]]</b><br/><span style='font-size:12px; opacity:0.8;'>[[customData]]</span></div>" },
         "balloon": { "adjustBorderColor": false, "color": "#ffffff", "cornerRadius": 8, "fillColor": "#1e293b", "fillAlpha": 0.95, "borderThickness": 0, "shadowAlpha": 0.15 },
-        "export": { "enabled": true, "menu": [{ "class": "export-main", "menu": [{ "label": "导出地图", "menu": ["PNG", "JPG", "PDF"] }] }] }
+        "export": { 
+          "enabled": true, 
+          "menu": [{ "class": "export-main", "menu": [{ "label": "导出地图", "menu": ["PNG", "JPG", "PDF"] }] }],
+          "capture": function() {
+            addWatermarkForExport('us');
+            return document.getElementById("chartdiv-us");
+          }
+        }
       });
       
-      // 添加水印文本到地图
-      addWatermarkToMap(maps['us'], 'us');
+      // 添加水印文本到地图（用于显示）
+      addWatermarkForExport('us');
       
       // 初始化调色盘
       colorCustomizer.initColorPalette('us', legendTitleToColorKey, COLORS);
@@ -1371,11 +1390,18 @@
         ]},
         "areasSettings": { "autoZoom": true, "rollOverOutlineColor": "#FFFFFF", "rollOverColor": "#334155", "rollOverAlpha": 1, "alpha": 0.9, "unlistedAreasAlpha": 0.1, "unlistedAreasColor": "#cbd5e1", "balloonText": "<div style='padding:8px; font-family: Inter, sans-serif;'><b>[[title]]</b><br/><span style='font-size:12px; opacity:0.8;'>[[customData]]</span></div>" },
         "balloon": { "adjustBorderColor": false, "color": "#ffffff", "cornerRadius": 8, "fillColor": "#1e293b", "fillAlpha": 0.95, "borderThickness": 0, "shadowAlpha": 0.15 },
-        "export": { "enabled": true, "menu": [{ "class": "export-main", "menu": [{ "label": "导出地图", "menu": ["PNG", "JPG", "PDF"] }] }] }
+        "export": { 
+          "enabled": true, 
+          "menu": [{ "class": "export-main", "menu": [{ "label": "导出地图", "menu": ["PNG", "JPG", "PDF"] }] }],
+          "capture": function() {
+            addWatermarkForExport('uk');
+            return document.getElementById("chartdiv-uk");
+          }
+        }
       });
       
-      // 添加水印文本到地图
-      addWatermarkToMap(maps['uk'], 'uk');
+      // 添加水印文本到地图（用于显示）
+      addWatermarkForExport('uk');
       
       // 初始化调色盘
       colorCustomizer.initColorPalette('uk', legendTitleToColorKey, COLORS);
@@ -1528,11 +1554,18 @@
         ]},
         "areasSettings": { "autoZoom": true, "rollOverOutlineColor": "#FFFFFF", "rollOverColor": "#334155", "rollOverAlpha": 1, "alpha": 0.9, "unlistedAreasAlpha": 0.1, "unlistedAreasColor": "#cbd5e1", "balloonText": "<div style='padding:8px; font-family: Inter, sans-serif;'><b>[[title]]</b><br/><span style='font-size:12px; opacity:0.8;'>[[customData]]</span></div>" },
         "balloon": { "adjustBorderColor": false, "color": "#ffffff", "cornerRadius": 8, "fillColor": "#1e293b", "fillAlpha": 0.95, "borderThickness": 0, "shadowAlpha": 0.15 },
-        "export": { "enabled": true, "menu": [{ "class": "export-main", "menu": [{ "label": "导出地图", "menu": ["PNG", "JPG", "PDF"] }] }] }
+        "export": { 
+          "enabled": true, 
+          "menu": [{ "class": "export-main", "menu": [{ "label": "导出地图", "menu": ["PNG", "JPG", "PDF"] }] }],
+          "capture": function() {
+            addWatermarkForExport('japan');
+            return document.getElementById("chartdiv-japan");
+          }
+        }
       });
       
-      // 添加水印文本到地图
-      addWatermarkToMap(maps['japan'], 'japan');
+      // 添加水印文本到地图（用于显示）
+      addWatermarkForExport('japan');
       
       // 初始化调色盘
       colorCustomizer.initColorPalette('japan', legendTitleToColorKey, COLORS);
@@ -1688,11 +1721,18 @@
         ]},
         "areasSettings": { "autoZoom": true, "rollOverOutlineColor": "#FFFFFF", "rollOverColor": "#334155", "rollOverAlpha": 1, "alpha": 0.9, "unlistedAreasAlpha": 0.1, "unlistedAreasColor": "#cbd5e1", "balloonText": "<div style='padding:8px; font-family: Inter, sans-serif;'><b>[[title]]</b><br/><span style='font-size:12px; opacity:0.8;'>[[customData]]</span></div>" },
         "balloon": { "adjustBorderColor": false, "color": "#ffffff", "cornerRadius": 8, "fillColor": "#1e293b", "fillAlpha": 0.95, "borderThickness": 0, "shadowAlpha": 0.15 },
-        "export": { "enabled": true, "menu": [{ "class": "export-main", "menu": [{ "label": "导出地图", "menu": ["PNG", "JPG", "PDF"] }] }] }
+        "export": { 
+          "enabled": true, 
+          "menu": [{ "class": "export-main", "menu": [{ "label": "导出地图", "menu": ["PNG", "JPG", "PDF"] }] }],
+          "capture": function() {
+            addWatermarkForExport('australia');
+            return document.getElementById("chartdiv-australia");
+          }
+        }
       });
       
-      // 添加水印文本到地图
-      addWatermarkToMap(maps['australia'], 'australia');
+      // 添加水印文本到地图（用于显示）
+      addWatermarkForExport('australia');
       
       // 初始化调色盘
       colorCustomizer.initColorPalette('australia', legendTitleToColorKey, COLORS);
@@ -1889,11 +1929,18 @@
         ]},
         "areasSettings": { "autoZoom": true, "rollOverOutlineColor": "#FFFFFF", "rollOverColor": "#334155", "rollOverAlpha": 1, "alpha": 0.9, "unlistedAreasAlpha": 0.1, "unlistedAreasColor": "#cbd5e1", "balloonText": "<div style='padding:8px; font-family: Inter, sans-serif;'><b>[[title]]</b><br/><span style='font-size:12px; opacity:0.8;'>[[customData]]</span></div>" },
         "balloon": { "adjustBorderColor": false, "color": "#ffffff", "cornerRadius": 8, "fillColor": "#1e293b", "fillAlpha": 0.95, "borderThickness": 0, "shadowAlpha": 0.15 },
-        "export": { "enabled": true, "menu": [{ "class": "export-main", "menu": [{ "label": "导出地图", "menu": ["PNG", "JPG", "PDF"] }] }] }
+        "export": { 
+          "enabled": true, 
+          "menu": [{ "class": "export-main", "menu": [{ "label": "导出地图", "menu": ["PNG", "JPG", "PDF"] }] }],
+          "capture": function() {
+            addWatermarkForExport('schengen');
+            return document.getElementById("chartdiv-schengen");
+          }
+        }
       });
       
-      // 添加水印文本到地图
-      addWatermarkToMap(maps['schengen'], 'schengen');
+      // 添加水印文本到地图（用于显示）
+      addWatermarkForExport('schengen');
       
       // 初始化调色盘
       colorCustomizer.initColorPalette('schengen', legendTitleToColorKey, COLORS);
