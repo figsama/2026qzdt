@@ -170,7 +170,7 @@
     /* 水印样式 */
     .watermark {
       position: absolute;
-      bottom: 80px;
+      bottom: 1280px;
       left: 50px;
       font-size: 14px;
       color: #0f172a;
@@ -875,17 +875,6 @@
         "dataProvider": { "map": "worldHigh", "zoomLevel": 1.2, "zoomLongitude": 20, "zoomLatitude": 30, "areas": areas },
         "areasSettings": { "autoZoom": true, "rollOverOutlineColor": "#FFFFFF", "rollOverColor": "#334155", "rollOverAlpha": 1, "alpha": 0.9, "unlistedAreasAlpha": 0.1, "unlistedAreasColor": "#cbd5e1", "balloonText": "<div style='padding:10px; font-family: Inter, sans-serif; line-height:1.6;'><b style='font-size:14px;'>[[title]]</b><br/><span style='font-size:12px; opacity:0.9; margin-top:5px; display:block;'>[[customData]]</span></div>" },
         "balloon": { "adjustBorderColor": false, "color": "#ffffff", "cornerRadius": 8, "fillColor": "#1e293b", "fillAlpha": 0.95, "borderThickness": 0, "shadowAlpha": 0.15 },
-        "legend": { "width": "100%", "equalWidths": false, "backgroundAlpha": 0, "borderAlpha": 0, "verticalGap": 12, "horizontalGap": 20, "bottom": 20, "left": 0, "align": "center",           "data": [
-          { "title": "中国大陆", "color": COLORS.china },
-          { "title": "签证签发国", "color": COLORS.issuer },
-          { "title": "有条件免签", "color": COLORS.conditional },
-          { "title": "有条件过境免签", "color": COLORS.transit },
-          { "title": "中国护照免签", "color": COLORS.cn_free },
-          { "title": "中国护照落地签", "color": COLORS.cn_arrival },
-          { "title": "中国护照电子签", "color": COLORS.cn_evisa },
-          { "title": "需办理港澳台通行证", "color": COLORS.hmt_pass },
-          { "title": "需办理签证", "color": COLORS.visa_required }
-        ]},
         "export": { "enabled": true, "menu": [{ "class": "export-main", "menu": [{ "label": "导出地图", "menu": ["PNG", "JPG", "PDF"] }] }] }
       });
       
@@ -1027,11 +1016,6 @@
         ]},
         "areasSettings": { "autoZoom": true, "rollOverOutlineColor": "#FFFFFF", "rollOverColor": "#334155", "rollOverAlpha": 1, "alpha": 0.9, "unlistedAreasAlpha": 0.1, "unlistedAreasColor": "#cbd5e1", "balloonText": "<div style='padding:8px; font-family: Inter, sans-serif;'><b>[[title]]</b><br/><span style='font-size:12px; opacity:0.8;'>[[customData]]</span></div>" },
         "balloon": { "adjustBorderColor": false, "color": "#ffffff", "cornerRadius": 8, "fillColor": "#1e293b", "fillAlpha": 0.95, "borderThickness": 0, "shadowAlpha": 0.15 },
-        "legend": { "width": "100%", "equalWidths": false, "backgroundAlpha": 0, "borderAlpha": 0, "verticalGap": 12, "horizontalGap": 20, "bottom": 20, "left": 0, "align": "center",         "data": [
-          { "title": "免签 (互免/单方面)", "color": COLORS.free },
-          { "title": "落地签", "color": COLORS.arrival },
-          { "title": "电子签", "color": COLORS.evisa }
-        ]},
         "export": { "enabled": true, "menu": [{ "class": "export-main", "menu": [{ "label": "导出地图", "menu": ["PNG", "JPG", "PDF"] }] }] }
       });
       
@@ -1205,15 +1189,6 @@
         ]},
         "areasSettings": { "autoZoom": true, "rollOverOutlineColor": "#FFFFFF", "rollOverColor": "#334155", "rollOverAlpha": 1, "alpha": 0.9, "unlistedAreasAlpha": 0.1, "unlistedAreasColor": "#cbd5e1", "balloonText": "<div style='padding:8px; font-family: Inter, sans-serif;'><b>[[title]]</b><br/><span style='font-size:12px; opacity:0.8;'>[[customData]]</span></div>" },
         "balloon": { "adjustBorderColor": false, "color": "#ffffff", "cornerRadius": 8, "fillColor": "#1e293b", "fillAlpha": 0.95, "borderThickness": 0, "shadowAlpha": 0.15 },
-        "legend": { "width": "100%", "equalWidths": false, "backgroundAlpha": 0, "borderAlpha": 0, "verticalGap": 12, "horizontalGap": 20, "bottom": 20, "left": 0, "align": "center", "data": [
-          { "title": "中国大陆", "color": COLORS.china },
-          { "title": "美签签发国", "color": COLORS.us },
-          { "title": "持美签免签", "color": COLORS.visa_free },
-          { "title": "有条件过境免签", "color": COLORS.transit },
-          { "title": "中国护照免签", "color": COLORS.cn_free },
-          { "title": "中国护照落地签", "color": COLORS.cn_arrival },
-          { "title": "中国护照电子签", "color": COLORS.cn_evisa }
-        ]},
         "export": { "enabled": true, "menu": [{ "class": "export-main", "menu": [{ "label": "导出地图", "menu": ["PNG", "JPG", "PDF"] }] }] }
       });
       
@@ -1378,15 +1353,6 @@
         ]},
         "areasSettings": { "autoZoom": true, "rollOverOutlineColor": "#FFFFFF", "rollOverColor": "#334155", "rollOverAlpha": 1, "alpha": 0.9, "unlistedAreasAlpha": 0.1, "unlistedAreasColor": "#cbd5e1", "balloonText": "<div style='padding:8px; font-family: Inter, sans-serif;'><b>[[title]]</b><br/><span style='font-size:12px; opacity:0.8;'>[[customData]]</span></div>" },
         "balloon": { "adjustBorderColor": false, "color": "#ffffff", "cornerRadius": 8, "fillColor": "#1e293b", "fillAlpha": 0.95, "borderThickness": 0, "shadowAlpha": 0.15 },
-        "legend": { "width": "100%", "equalWidths": false, "backgroundAlpha": 0, "borderAlpha": 0, "verticalGap": 12, "horizontalGap": 20, "bottom": 20, "left": 0, "align": "center", "data": [
-          { "title": "中国大陆", "color": COLORS.china },
-          { "title": "英签签发国", "color": COLORS.uk },
-          { "title": "持英签免签", "color": COLORS.visa_free },
-          { "title": "有条件过境免签", "color": COLORS.transit },
-          { "title": "中国护照免签", "color": COLORS.cn_free },
-          { "title": "中国护照落地签", "color": COLORS.cn_arrival },
-          { "title": "中国护照电子签", "color": COLORS.cn_evisa }
-        ]},
         "export": { "enabled": true, "menu": [{ "class": "export-main", "menu": [{ "label": "导出地图", "menu": ["PNG", "JPG", "PDF"] }] }] }
       });
       
@@ -1537,14 +1503,6 @@
         ]},
         "areasSettings": { "autoZoom": true, "rollOverOutlineColor": "#FFFFFF", "rollOverColor": "#334155", "rollOverAlpha": 1, "alpha": 0.9, "unlistedAreasAlpha": 0.1, "unlistedAreasColor": "#cbd5e1", "balloonText": "<div style='padding:8px; font-family: Inter, sans-serif;'><b>[[title]]</b><br/><span style='font-size:12px; opacity:0.8;'>[[customData]]</span></div>" },
         "balloon": { "adjustBorderColor": false, "color": "#ffffff", "cornerRadius": 8, "fillColor": "#1e293b", "fillAlpha": 0.95, "borderThickness": 0, "shadowAlpha": 0.15 },
-        "legend": { "width": "100%", "equalWidths": false, "backgroundAlpha": 0, "borderAlpha": 0, "verticalGap": 12, "horizontalGap": 20, "bottom": 20, "left": 0, "align": "center", "data": [
-          { "title": "中国大陆", "color": COLORS.china },
-          { "title": "日签签发国", "color": COLORS.japan },
-          { "title": "持日签免签", "color": COLORS.visa_free },
-          { "title": "中国护照免签", "color": COLORS.cn_free },
-          { "title": "中国护照落地签", "color": COLORS.cn_arrival },
-          { "title": "中国护照电子签", "color": COLORS.cn_evisa }
-        ]},
         "export": { "enabled": true, "menu": [{ "class": "export-main", "menu": [{ "label": "导出地图", "menu": ["PNG", "JPG", "PDF"] }] }] }
       });
       
@@ -1698,15 +1656,6 @@
         ]},
         "areasSettings": { "autoZoom": true, "rollOverOutlineColor": "#FFFFFF", "rollOverColor": "#334155", "rollOverAlpha": 1, "alpha": 0.9, "unlistedAreasAlpha": 0.1, "unlistedAreasColor": "#cbd5e1", "balloonText": "<div style='padding:8px; font-family: Inter, sans-serif;'><b>[[title]]</b><br/><span style='font-size:12px; opacity:0.8;'>[[customData]]</span></div>" },
         "balloon": { "adjustBorderColor": false, "color": "#ffffff", "cornerRadius": 8, "fillColor": "#1e293b", "fillAlpha": 0.95, "borderThickness": 0, "shadowAlpha": 0.15 },
-        "legend": { "width": "100%", "equalWidths": false, "backgroundAlpha": 0, "borderAlpha": 0, "verticalGap": 12, "horizontalGap": 20, "bottom": 20, "left": 0, "align": "center", "data": [
-          { "title": "中国大陆", "color": COLORS.china },
-          { "title": "澳签签发国", "color": COLORS.australia },
-          { "title": "持澳签免签", "color": COLORS.visa_free },
-          { "title": "有条件过境免签", "color": COLORS.transit },
-          { "title": "中国护照免签", "color": COLORS.cn_free },
-          { "title": "中国护照落地签", "color": COLORS.cn_arrival },
-          { "title": "中国护照电子签", "color": COLORS.cn_evisa }
-        ]},
         "export": { "enabled": true, "menu": [{ "class": "export-main", "menu": [{ "label": "导出地图", "menu": ["PNG", "JPG", "PDF"] }] }] }
       });
       
@@ -1901,15 +1850,6 @@
         ]},
         "areasSettings": { "autoZoom": true, "rollOverOutlineColor": "#FFFFFF", "rollOverColor": "#334155", "rollOverAlpha": 1, "alpha": 0.9, "unlistedAreasAlpha": 0.1, "unlistedAreasColor": "#cbd5e1", "balloonText": "<div style='padding:8px; font-family: Inter, sans-serif;'><b>[[title]]</b><br/><span style='font-size:12px; opacity:0.8;'>[[customData]]</span></div>" },
         "balloon": { "adjustBorderColor": false, "color": "#ffffff", "cornerRadius": 8, "fillColor": "#1e293b", "fillAlpha": 0.95, "borderThickness": 0, "shadowAlpha": 0.15 },
-        "legend": { "width": "100%", "equalWidths": false, "backgroundAlpha": 0, "borderAlpha": 0, "verticalGap": 12, "horizontalGap": 20, "bottom": 20, "left": 0, "align": "center", "data": [
-          { "title": "中国大陆", "color": COLORS.china },
-          { "title": "申根国", "color": COLORS.schengen },
-          { "title": "持申根签免签", "color": COLORS.visa_free },
-          { "title": "有条件过境免签", "color": COLORS.transit },
-          { "title": "中国护照免签", "color": COLORS.cn_free },
-          { "title": "中国护照落地签", "color": COLORS.cn_arrival },
-          { "title": "中国护照电子签", "color": COLORS.cn_evisa }
-        ]},
         "export": { "enabled": true, "menu": [{ "class": "export-main", "menu": [{ "label": "导出地图", "menu": ["PNG", "JPG", "PDF"] }] }] }
       });
       
