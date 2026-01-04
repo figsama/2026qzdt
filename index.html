@@ -58,6 +58,45 @@
       font-size: 14px;
     }
 
+    .header-content {
+      position: relative;
+    }
+
+    .star-button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+      color: white;
+      border: none;
+      border-radius: 25px;
+      padding: 12px 20px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 12px rgba(238, 90, 82, 0.3);
+      transition: all 0.3s ease;
+      text-decoration: none;
+    }
+
+    .star-button:hover {
+      background: linear-gradient(135deg, #ee5a52, #dc4545);
+      box-shadow: 0 6px 16px rgba(238, 90, 82, 0.4);
+      transform: translateY(-2px);
+    }
+
+    .star-button:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 8px rgba(238, 90, 82, 0.3);
+    }
+
+    .star-icon {
+      font-size: 16px;
+    }
+
     .tabs {
       display: flex;
       flex-wrap: wrap;
@@ -196,8 +235,14 @@
 
   <div class="container">
     <div class="header">
-      <h1>全球签证免签政策地图总览</h1>
-      <p>2026版 · 一键切换查看各类签证免签政策地图</p>
+      <div class="header-content">
+        <h1>全球签证免签政策地图总览</h1>
+        <p>2026版 · 一键切换查看各类签证免签政策地图</p>
+        <a href="https://github.com/figsama/2026qzdt" target="_blank" class="star-button">
+          <span class="star-icon">⭐</span>
+          Star on GitHub
+        </a>
+      </div>
     </div>
 
     <div class="tabs">
