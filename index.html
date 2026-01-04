@@ -188,115 +188,89 @@
       right: 10px !important;
     }
 
-    /* 颜色自定义功能样式 */
-    .amcharts-legend-item {
-      cursor: pointer;
-      transition: opacity 0.2s;
-    }
 
-    .amcharts-legend-item:hover {
-      opacity: 0.7;
-    }
-
-    .color-picker-container {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: white;
-      padding: 25px;
+    /* 调色盘样式 */
+    .color-palette {
+      margin-top: 20px;
+      padding: 20px;
+      background: #f8fafc;
       border-radius: 12px;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-      z-index: 10000;
-      min-width: 300px;
-      display: none;
+      border: 1px solid #e2e8f0;
     }
 
-    .color-picker-container.active {
-      display: block;
-    }
-
-    .color-picker-header {
-      font-size: 18px;
+    .color-palette-title {
+      font-size: 16px;
       font-weight: 600;
-      margin-bottom: 15px;
       color: #0f172a;
-    }
-
-    .color-picker-input {
-      width: 100%;
-      height: 50px;
-      border: 2px solid #e2e8f0;
-      border-radius: 8px;
-      cursor: pointer;
       margin-bottom: 15px;
-    }
-
-    .color-picker-buttons {
       display: flex;
+      align-items: center;
       gap: 10px;
-      justify-content: flex-end;
     }
 
-    .color-picker-btn {
-      padding: 10px 20px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: 500;
+    .color-palette-title::before {
+      content: "🎨";
+      font-size: 20px;
+    }
+
+    .color-palette-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+    }
+
+    .color-palette-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px;
+      background: white;
+      border-radius: 8px;
+      border: 1px solid #e2e8f0;
       transition: all 0.2s;
     }
 
-    .color-picker-btn.confirm {
-      background: #3b82f6;
-      color: white;
+    .color-palette-item:hover {
+      border-color: #3b82f6;
+      box-shadow: 0 2px 4px rgba(59, 130, 246, 0.1);
     }
 
-    .color-picker-btn.confirm:hover {
-      background: #2563eb;
+    .color-palette-label {
+      flex: 1;
+      font-size: 14px;
+      color: #1e293b;
+      font-weight: 500;
     }
 
-    .color-picker-btn.cancel {
-      background: #e2e8f0;
-      color: #64748b;
+    .color-palette-input {
+      width: 50px;
+      height: 36px;
+      border: 2px solid #e2e8f0;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
     }
 
-    .color-picker-btn.cancel:hover {
-      background: #cbd5e1;
+    .color-palette-input:hover {
+      border-color: #3b82f6;
+      transform: scale(1.05);
     }
 
-    .color-picker-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.5);
-      z-index: 9999;
-      display: none;
-    }
-
-    .color-picker-overlay.active {
-      display: block;
-    }
-
-    .reset-colors-btn {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      padding: 8px 16px;
+    .color-palette-reset {
+      margin-top: 15px;
+      padding: 10px 20px;
       background: #64748b;
       color: white;
       border: none;
       border-radius: 6px;
       cursor: pointer;
-      font-size: 12px;
+      font-size: 14px;
       font-weight: 500;
       transition: all 0.2s;
-      z-index: 100;
+      width: 100%;
     }
 
-    .reset-colors-btn:hover {
+    .color-palette-reset:hover {
       background: #475569;
     }
 
@@ -375,6 +349,7 @@
       </div>
       <div id="chartdiv-global" class="chartdiv"></div>
       <div class="watermark">小红书@无花果先生<br>https://figsama.github.io/2026qzdt/</div>
+      <div id="color-palette-global" class="color-palette"></div>
     </div>
 
     <!-- 中国护照地图 -->
@@ -385,6 +360,7 @@
       </div>
       <div id="chartdiv-china" class="chartdiv"></div>
       <div class="watermark">小红书@无花果先生<br>https://figsama.github.io/2026qzdt/</div>
+      <div id="color-palette-china" class="color-palette"></div>
     </div>
 
     <!-- 美国签证地图 -->
@@ -395,6 +371,7 @@
       </div>
       <div id="chartdiv-us" class="chartdiv"></div>
       <div class="watermark">小红书@无花果先生<br>https://figsama.github.io/2026qzdt/</div>
+      <div id="color-palette-us" class="color-palette"></div>
     </div>
 
     <!-- 英国签证地图 -->
@@ -405,6 +382,7 @@
       </div>
       <div id="chartdiv-uk" class="chartdiv"></div>
       <div class="watermark">小红书@无花果先生<br>https://figsama.github.io/2026qzdt/</div>
+      <div id="color-palette-uk" class="color-palette"></div>
     </div>
 
     <!-- 日本签证地图 -->
@@ -415,6 +393,7 @@
       </div>
       <div id="chartdiv-japan" class="chartdiv"></div>
       <div class="watermark">小红书@无花果先生<br>https://figsama.github.io/2026qzdt/</div>
+      <div id="color-palette-japan" class="color-palette"></div>
     </div>
 
     <!-- 澳洲签证地图 -->
@@ -425,6 +404,7 @@
       </div>
       <div id="chartdiv-australia" class="chartdiv"></div>
       <div class="watermark">小红书@无花果先生<br>https://figsama.github.io/2026qzdt/</div>
+      <div id="color-palette-australia" class="color-palette"></div>
     </div>
 
     <!-- 申根签证地图 -->
@@ -435,6 +415,7 @@
       </div>
       <div id="chartdiv-schengen" class="chartdiv"></div>
       <div class="watermark">小红书@无花果先生<br>https://figsama.github.io/2026qzdt/</div>
+      <div id="color-palette-schengen" class="color-palette"></div>
     </div>
   </div>
 
@@ -443,17 +424,6 @@
   <script src="https://www.amcharts.com/lib/3/plugins/export/export.min.js"></script>
   <link rel="stylesheet" href="https://www.amcharts.com/lib/3/plugins/export/export.css" type="text/css" media="all" />
   <script src="https://www.amcharts.com/lib/3/themes/light.js"></script>
-
-  <!-- 颜色选择器 -->
-  <div class="color-picker-overlay" id="colorPickerOverlay"></div>
-  <div class="color-picker-container" id="colorPickerContainer">
-    <div class="color-picker-header" id="colorPickerHeader">选择颜色</div>
-    <input type="color" class="color-picker-input" id="colorPickerInput" value="#000000">
-    <div class="color-picker-buttons">
-      <button class="color-picker-btn cancel" id="colorPickerCancel">取消</button>
-      <button class="color-picker-btn confirm" id="colorPickerConfirm">确认</button>
-    </div>
-  </div>
 
   <script>
     // 存储所有地图实例
@@ -466,14 +436,14 @@
       currentColorKey: null,
       
       // 保存颜色到localStorage
-      saveColor(mapType, legendTitle, color) {
-        const key = `visa_map_color_${mapType}_${legendTitle}`;
+      saveColor(mapType, colorKey, color) {
+        const key = `visa_map_color_${mapType}_${colorKey}`;
         localStorage.setItem(key, color);
       },
       
       // 从localStorage加载颜色
-      loadColor(mapType, legendTitle, defaultColor) {
-        const key = `visa_map_color_${mapType}_${legendTitle}`;
+      loadColor(mapType, colorKey, defaultColor) {
+        const key = `visa_map_color_${mapType}_${colorKey}`;
         return localStorage.getItem(key) || defaultColor;
       },
       
@@ -496,46 +466,76 @@
         });
       },
       
-      // 显示颜色选择器
-      showColorPicker(mapType, legendTitle, currentColor, colorKey) {
-        this.currentMap = mapType;
-        this.currentLegendTitle = legendTitle;
-        this.currentColorKey = colorKey;
+      // 初始化调色盘
+      initColorPalette(mapType, legendTitleToColorKey, COLORS) {
+        const paletteContainer = document.getElementById(`color-palette-${mapType}`);
+        if (!paletteContainer) return;
         
-        document.getElementById('colorPickerHeader').textContent = `自定义颜色: ${legendTitle}`;
-        document.getElementById('colorPickerInput').value = currentColor;
-        document.getElementById('colorPickerContainer').classList.add('active');
-        document.getElementById('colorPickerOverlay').classList.add('active');
-      },
-      
-      // 隐藏颜色选择器
-      hideColorPicker() {
-        document.getElementById('colorPickerContainer').classList.remove('active');
-        document.getElementById('colorPickerOverlay').classList.remove('active');
-        this.currentMap = null;
-        this.currentLegendTitle = null;
-        this.currentColorKey = null;
-      },
-      
-      // 应用颜色更改
-      applyColorChange(newColor) {
-        if (!this.currentMap || !this.currentLegendTitle || !this.currentColorKey) return;
+        // 清空容器
+        paletteContainer.innerHTML = '';
         
-        // 保存颜色
-        this.saveColor(this.currentMap, this.currentLegendTitle, newColor);
+        // 创建标题
+        const title = document.createElement('div');
+        title.className = 'color-palette-title';
+        title.textContent = '自定义颜色';
+        paletteContainer.appendChild(title);
         
-        // 确保地图容器是活动的
-        const mapContainer = document.getElementById(this.currentMap);
-        if (mapContainer) {
-          mapContainer.classList.add('active');
+        // 创建颜色网格
+        const grid = document.createElement('div');
+        grid.className = 'color-palette-grid';
+        
+        // 为每个颜色类别创建调色盘项
+        for (const [legendTitle, colorKey] of Object.entries(legendTitleToColorKey)) {
+          if (!COLORS[colorKey]) continue;
+          
+          const item = document.createElement('div');
+          item.className = 'color-palette-item';
+          
+          const label = document.createElement('div');
+          label.className = 'color-palette-label';
+          label.textContent = legendTitle;
+          
+          const colorInput = document.createElement('input');
+          colorInput.type = 'color';
+          colorInput.className = 'color-palette-input';
+          colorInput.value = COLORS[colorKey];
+          
+          // 添加颜色更改事件监听器
+          colorInput.addEventListener('change', function() {
+            const newColor = this.value;
+            colorCustomizer.saveColor(mapType, colorKey, newColor);
+            
+            // 重新初始化地图
+            delete maps[mapType];
+            const mapContainer = document.getElementById(mapType);
+            if (mapContainer) {
+              mapContainer.classList.add('active');
+            }
+            initMap(mapType);
+          });
+          
+          item.appendChild(label);
+          item.appendChild(colorInput);
+          grid.appendChild(item);
         }
         
-        // 重新初始化地图
-        delete maps[this.currentMap];
-        initMap(this.currentMap);
+        paletteContainer.appendChild(grid);
         
-        // 隐藏颜色选择器
-        this.hideColorPicker();
+        // 添加重置按钮
+        const resetBtn = document.createElement('button');
+        resetBtn.className = 'color-palette-reset';
+        resetBtn.textContent = '重置所有颜色';
+        resetBtn.addEventListener('click', function() {
+          colorCustomizer.resetColors(mapType);
+          delete maps[mapType];
+          const mapContainer = document.getElementById(mapType);
+          if (mapContainer) {
+            mapContainer.classList.add('active');
+          }
+          initMap(mapType);
+        });
+        
+        paletteContainer.appendChild(resetBtn);
       },
       
       // 重置当前地图的所有颜色
@@ -547,88 +547,9 @@
           mapContainer.classList.add('active');
         }
         initMap(mapType);
-      },
-      
-      // 为图例项添加点击事件监听器（使用DOM事件）
-      setupLegendClickListeners(mapInstance, mapType, legendTitleToColorKey, COLORS) {
-        // 等待地图渲染完成
-        setTimeout(() => {
-          const chartDiv = document.getElementById(`chartdiv-${mapType}`);
-          if (!chartDiv) return;
-          
-          // 查找图例容器
-          const legend = chartDiv.querySelector('.amcharts-legend');
-          if (!legend) return;
-          
-          // 使用事件委托监听图例容器的点击事件
-          legend.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            
-            // 查找被点击的图例项
-            let target = e.target;
-            let legendItem = null;
-            
-            // 向上查找图例项容器
-            while (target && target !== legend) {
-              if (target.classList.contains('amcharts-legend-item') || 
-                  target.parentElement && target.parentElement.classList.contains('amcharts-legend-item')) {
-                legendItem = target.classList.contains('amcharts-legend-item') ? target : target.parentElement;
-                break;
-              }
-              target = target.parentElement;
-            }
-            
-            if (!legendItem) {
-              // 如果没找到，尝试查找包含文本的元素
-              target = e.target;
-              while (target && target !== legend) {
-                const label = target.querySelector('.amcharts-legend-label');
-                if (label) {
-                  legendItem = target;
-                  break;
-                }
-                target = target.parentElement;
-              }
-            }
-            
-            if (!legendItem) return;
-            
-            // 获取图例标题
-            const labelElement = legendItem.querySelector('.amcharts-legend-label');
-            if (!labelElement) return;
-            
-            const legendTitle = labelElement.textContent.trim();
-            const colorKey = legendTitleToColorKey[legendTitle];
-            
-            if (colorKey && COLORS[colorKey]) {
-              colorCustomizer.showColorPicker(mapType, legendTitle, COLORS[colorKey], colorKey);
-            }
-          });
-          
-          // 为所有图例项添加鼠标悬停样式
-          const legendItems = legend.querySelectorAll('.amcharts-legend-item');
-          legendItems.forEach((item) => {
-            item.style.cursor = 'pointer';
-          });
-        }, 800);
       }
     };
     
-    // 颜色选择器事件监听
-    document.getElementById('colorPickerConfirm').addEventListener('click', function() {
-      const newColor = document.getElementById('colorPickerInput').value;
-      colorCustomizer.applyColorChange(newColor);
-    });
-    
-    document.getElementById('colorPickerCancel').addEventListener('click', function() {
-      colorCustomizer.hideColorPicker();
-    });
-    
-    document.getElementById('colorPickerOverlay').addEventListener('click', function() {
-      colorCustomizer.hideColorPicker();
-    });
-
     // 标签页切换功能
     document.querySelectorAll('.tab-button').forEach(button => {
       button.addEventListener('click', function() {
@@ -968,8 +889,8 @@
         "export": { "enabled": true, "menu": [{ "class": "export-main", "menu": [{ "label": "导出地图", "menu": ["PNG", "JPG", "PDF"] }] }] }
       });
       
-      // 添加图例点击事件监听器
-      colorCustomizer.setupLegendClickListeners(maps['global'], 'global', legendTitleToColorKey, COLORS);
+      // 初始化调色盘
+      colorCustomizer.initColorPalette('global', legendTitleToColorKey, COLORS);
     }
 
     // 中国护照地图
@@ -1114,8 +1035,8 @@
         "export": { "enabled": true, "menu": [{ "class": "export-main", "menu": [{ "label": "导出地图", "menu": ["PNG", "JPG", "PDF"] }] }] }
       });
       
-      // 添加图例点击事件监听器
-      colorCustomizer.setupLegendClickListeners(maps['china'], 'china', legendTitleToColorKey, COLORS);
+      // 初始化调色盘
+      colorCustomizer.initColorPalette('china', legendTitleToColorKey, COLORS);
     }
 
     // 美国签证地图
@@ -1296,8 +1217,8 @@
         "export": { "enabled": true, "menu": [{ "class": "export-main", "menu": [{ "label": "导出地图", "menu": ["PNG", "JPG", "PDF"] }] }] }
       });
       
-      // 添加图例点击事件监听器
-      colorCustomizer.setupLegendClickListeners(maps['us'], 'us', legendTitleToColorKey, COLORS);
+      // 初始化调色盘
+      colorCustomizer.initColorPalette('us', legendTitleToColorKey, COLORS);
     }
 
     // 英国签证地图
@@ -1469,8 +1390,8 @@
         "export": { "enabled": true, "menu": [{ "class": "export-main", "menu": [{ "label": "导出地图", "menu": ["PNG", "JPG", "PDF"] }] }] }
       });
       
-      // 添加图例点击事件监听器
-      colorCustomizer.setupLegendClickListeners(maps['uk'], 'uk', legendTitleToColorKey, COLORS);
+      // 初始化调色盘
+      colorCustomizer.initColorPalette('uk', legendTitleToColorKey, COLORS);
     }
 
     // 日本签证地图
@@ -1627,8 +1548,8 @@
         "export": { "enabled": true, "menu": [{ "class": "export-main", "menu": [{ "label": "导出地图", "menu": ["PNG", "JPG", "PDF"] }] }] }
       });
       
-      // 添加图例点击事件监听器
-      colorCustomizer.setupLegendClickListeners(maps['japan'], 'japan', legendTitleToColorKey, COLORS);
+      // 初始化调色盘
+      colorCustomizer.initColorPalette('japan', legendTitleToColorKey, COLORS);
     }
 
     // 澳洲签证地图
@@ -1789,8 +1710,8 @@
         "export": { "enabled": true, "menu": [{ "class": "export-main", "menu": [{ "label": "导出地图", "menu": ["PNG", "JPG", "PDF"] }] }] }
       });
       
-      // 添加图例点击事件监听器
-      colorCustomizer.setupLegendClickListeners(maps['australia'], 'australia', legendTitleToColorKey, COLORS);
+      // 初始化调色盘
+      colorCustomizer.initColorPalette('australia', legendTitleToColorKey, COLORS);
     }
 
     // 申根签证地图
@@ -1992,8 +1913,8 @@
         "export": { "enabled": true, "menu": [{ "class": "export-main", "menu": [{ "label": "导出地图", "menu": ["PNG", "JPG", "PDF"] }] }] }
       });
       
-      // 添加图例点击事件监听器
-      colorCustomizer.setupLegendClickListeners(maps['schengen'], 'schengen', legendTitleToColorKey, COLORS);
+      // 初始化调色盘
+      colorCustomizer.initColorPalette('schengen', legendTitleToColorKey, COLORS);
     }
 
     // 初始化默认显示的地图
