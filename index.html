@@ -884,10 +884,11 @@
 
     // 中国护照地图
     function initChinaMap() {
-      const defaultColors = { china: "#ef4444", free: "#059669", arrival: "#34D399", evisa: "#A7F3D0" };
+      const defaultColors = { china: "#ef4444", free: "#059669", arrival: "#34D399", evisa: "#A7F3D0", hmt_pass: "#0f8a5c" };
       const COLORS = {};
       const legendTitleToColorKey = {
         "中国大陆": "china",
+        "需办理港澳台通行证": "hmt_pass",
         "免签 (互免/单方面)": "free",
         "落地签": "arrival",
         "电子签": "evisa"
@@ -900,6 +901,9 @@
         "type": "map", "theme": "light", "projection": "miller",
         "dataProvider": { "map": "worldHigh", "zoomLevel": 1.2, "zoomLongitude": 10, "zoomLatitude": 20, "areas": [
           { "id": "CN", "title": "中国大陆", "customData": "中国大陆", "color": COLORS.china },
+          { "id": "HK", "title": "中国香港", "customData": "需办理港澳台通行证", "color": COLORS.hmt_pass },
+          { "id": "MO", "title": "中国澳门", "customData": "需办理港澳台通行证", "color": COLORS.hmt_pass },
+          { "id": "TW", "title": "中国台湾", "customData": "需办理港澳台通行证", "color": COLORS.hmt_pass },
           { "id": "RU", "title": "俄罗斯", "customData": "免签", "color": COLORS.free },
           { "id": "KH", "title": "柬埔寨", "customData": "免签", "color": COLORS.free },
           { "id": "TR", "title": "土耳其", "customData": "免签", "color": COLORS.free },
