@@ -400,7 +400,8 @@
         cn_free: "#10b981",
         cn_arrival: "#34d399",
         cn_evisa: "#a7f3d0",
-        hmt_pass: "#0f8a5c"
+        hmt_pass: "#0f8a5c",
+        visa_required: "#94a3b8"
       };
 
       const countryData = {
@@ -588,7 +589,43 @@
         "BT": { title: "不丹", visas: ["中国护照电子签"], color: COLORS.cn_evisa },
         "BW": { title: "博茨瓦纳", visas: ["中国护照电子签"], color: COLORS.cn_evisa },
         "UA": { title: "乌克兰", visas: ["中国护照电子签"], color: COLORS.cn_evisa },
-        "ZA": { title: "南非", visas: ["中国护照电子签"], color: COLORS.cn_evisa }
+        "ZA": { title: "南非", visas: ["中国护照电子签"], color: COLORS.cn_evisa },
+        "CA": { title: "加拿大", visas: ["需办理签证"], color: COLORS.visa_required },
+        "IN": { title: "印度", visas: ["需办理签证"], color: COLORS.visa_required },
+        "IL": { title: "以色列", visas: ["需办理签证"], color: COLORS.visa_required },
+        "AF": { title: "阿富汗", visas: ["需办理签证"], color: COLORS.visa_required },
+        "DZ": { title: "阿尔及利亚", visas: ["需办理签证"], color: COLORS.visa_required },
+        "AD": { title: "安道尔", visas: ["需办理签证"], color: COLORS.visa_required },
+        "BF": { title: "布基纳法索", visas: ["需办理签证"], color: COLORS.visa_required },
+        "CF": { title: "中非", visas: ["需办理签证"], color: COLORS.visa_required },
+        "TD": { title: "乍得", visas: ["需办理签证"], color: COLORS.visa_required },
+        "CG": { title: "刚果", visas: ["需办理签证"], color: COLORS.visa_required },
+        "EC": { title: "厄瓜多尔", visas: ["需办理签证"], color: COLORS.visa_required },
+        "ER": { title: "厄立特里亚", visas: ["需办理签证"], color: COLORS.visa_required },
+        "SZ": { title: "斯威士兰", visas: ["需办理签证"], color: COLORS.visa_required },
+        "GM": { title: "冈比亚", visas: ["需办理签证"], color: COLORS.visa_required },
+        "GT": { title: "危地马拉", visas: ["需办理签证"], color: COLORS.visa_required },
+        "GY": { title: "圭亚那", visas: ["需办理签证"], color: COLORS.visa_required },
+        "KI": { title: "基里巴斯", visas: ["需办理签证"], color: COLORS.visa_required },
+        "KP": { title: "朝鲜", visas: ["需办理签证"], color: COLORS.visa_required },
+        "KW": { title: "科威特", visas: ["需办理签证"], color: COLORS.visa_required },
+        "LR": { title: "利比里亚", visas: ["需办理签证"], color: COLORS.visa_required },
+        "LY": { title: "利比亚", visas: ["需办理签证"], color: COLORS.visa_required },
+        "ML": { title: "马里", visas: ["需办理签证"], color: COLORS.visa_required },
+        "MH": { title: "马绍尔群岛", visas: ["需办理签证"], color: COLORS.visa_required },
+        "MC": { title: "摩纳哥", visas: ["需办理签证"], color: COLORS.visa_required },
+        "NA": { title: "纳米比亚", visas: ["需办理签证"], color: COLORS.visa_required },
+        "NI": { title: "尼加拉瓜", visas: ["需办理签证"], color: COLORS.visa_required },
+        "NE": { title: "尼日尔", visas: ["需办理签证"], color: COLORS.visa_required },
+        "PY": { title: "巴拉圭", visas: ["需办理签证"], color: COLORS.visa_required },
+        "VC": { title: "圣文森特和格林纳丁斯", visas: ["需办理签证"], color: COLORS.visa_required },
+        "SD": { title: "苏丹", visas: ["需办理签证"], color: COLORS.visa_required },
+        "SY": { title: "叙利亚", visas: ["需办理签证"], color: COLORS.visa_required },
+        "TM": { title: "土库曼斯坦", visas: ["需办理签证"], color: COLORS.visa_required },
+        "TT": { title: "特立尼达和多巴哥", visas: ["需办理签证"], color: COLORS.visa_required },
+        "VA": { title: "梵蒂冈", visas: ["需办理签证"], color: COLORS.visa_required },
+        "VE": { title: "委内瑞拉", visas: ["需办理签证"], color: COLORS.visa_required },
+        "YE": { title: "也门", visas: ["需办理签证"], color: COLORS.visa_required }
       };
 
       const areas = Object.keys(countryData).map(id => {
@@ -602,7 +639,7 @@
       maps['global'] = AmCharts.makeChart("chartdiv-global", {
         "type": "map", "theme": "light", "projection": "miller",
         "dataProvider": { "map": "worldHigh", "zoomLevel": 1.2, "zoomLongitude": 20, "zoomLatitude": 30, "areas": areas },
-        "areasSettings": { "autoZoom": true, "rollOverOutlineColor": "#FFFFFF", "rollOverColor": "#334155", "rollOverAlpha": 1, "alpha": 0.9, "unlistedAreasAlpha": 0.6, "unlistedAreasColor": "#94a3b8", "unlistedAreasBalloonText": "<div style='padding:10px; font-family: Inter, sans-serif; line-height:1.6;'><b style='font-size:14px;'>[[title]]</b><br/><span style='font-size:12px; opacity:0.9; margin-top:5px; display:block;'>需要额外办理签证等手续</span></div>", "balloonText": "<div style='padding:10px; font-family: Inter, sans-serif; line-height:1.6;'><b style='font-size:14px;'>[[title]]</b><br/><span style='font-size:12px; opacity:0.9; margin-top:5px; display:block;'>[[customData]]</span></div>" },
+        "areasSettings": { "autoZoom": true, "rollOverOutlineColor": "#FFFFFF", "rollOverColor": "#334155", "rollOverAlpha": 1, "alpha": 0.9, "unlistedAreasAlpha": 0.1, "unlistedAreasColor": "#cbd5e1", "balloonText": "<div style='padding:10px; font-family: Inter, sans-serif; line-height:1.6;'><b style='font-size:14px;'>[[title]]</b><br/><span style='font-size:12px; opacity:0.9; margin-top:5px; display:block;'>[[customData]]</span></div>" },
         "balloon": { "adjustBorderColor": false, "color": "#ffffff", "cornerRadius": 8, "fillColor": "#1e293b", "fillAlpha": 0.95, "borderThickness": 0, "shadowAlpha": 0.15 },
         "legend": { "width": "100%", "equalWidths": false, "backgroundAlpha": 0, "borderAlpha": 0, "verticalGap": 12, "horizontalGap": 20, "bottom": 20, "left": 0, "align": "center",           "data": [
           { "title": "中国", "color": COLORS.china },
@@ -613,24 +650,9 @@
           { "title": "中国护照落地签", "color": COLORS.cn_arrival },
           { "title": "中国护照电子签", "color": COLORS.cn_evisa },
           { "title": "需办理港澳台通行证", "color": COLORS.hmt_pass },
-          { "title": "需办理签证", "color": "#94a3b8" }
+          { "title": "需办理签证", "color": COLORS.visa_required }
         ]},
-        "export": { "enabled": true, "menu": [{ "class": "export-main", "menu": [{ "label": "导出地图", "menu": ["PNG", "JPG", "PDF"] }] }] },
-        "listeners": [{
-          "event": "rollOverMapObject",
-          "method": function(event) {
-            const mapObject = event.mapObject;
-            if (mapObject && !countryData[mapObject.id]) {
-              let countryName = mapObject.title;
-              if (!countryName || countryName === mapObject.id) {
-                countryName = mapObject.name || mapObject.id;
-              }
-              if (countryName && countryName !== mapObject.id) {
-                mapObject.balloonText = "<div style='padding:10px; font-family: Inter, sans-serif; line-height:1.6;'><b style='font-size:14px;'>" + countryName + "</b><br/><span style='font-size:12px; opacity:0.9; margin-top:5px; display:block;'>需要额外办理签证等手续</span></div>";
-              }
-            }
-          }
-        }]
+        "export": { "enabled": true, "menu": [{ "class": "export-main", "menu": [{ "label": "导出地图", "menu": ["PNG", "JPG", "PDF"] }] }] }
       });
     }
 
