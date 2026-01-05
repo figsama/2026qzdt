@@ -3218,7 +3218,9 @@
       if (!passwordGate || !content) {
         console.warn('Analytics modal elements not found');
         return;
-      }      if (!isAuthenticated) {
+      }
+
+      if (!isAuthenticated) {
         // 显示密码输入界面，隐藏统计内容
         passwordGate.style.display = 'flex';
         content.style.display = 'none';
