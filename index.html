@@ -3398,35 +3398,38 @@
     // 初始化默认显示的地图
     initMap('global');
 
-    // 模态框事件监听器
-    const statsButton = document.getElementById('stats-button');
-    const analyticsModal = document.getElementById('analytics-modal');
-    const modalClose = document.getElementById('modal-close');
+    // 等待DOM完全加载后再绑定模态框事件
+    document.addEventListener('DOMContentLoaded', () => {
+      // 模态框事件监听器
+      const statsButton = document.getElementById('stats-button');
+      const analyticsModal = document.getElementById('analytics-modal');
+      const modalClose = document.getElementById('modal-close');
 
-    // 显示模态框
-    statsButton.addEventListener('click', () => {
-      analyticsModal.style.display = 'flex';
-      // 初始化统计地图
-      initMap('analytics');
-    });
+      // 显示模态框
+      statsButton.addEventListener('click', () => {
+        analyticsModal.style.display = 'flex';
+        // 初始化统计地图
+        initMap('analytics');
+      });
 
-    // 关闭模态框
-    modalClose.addEventListener('click', () => {
-      analyticsModal.style.display = 'none';
-    });
-
-    // 点击模态框外部关闭
-    analyticsModal.addEventListener('click', (e) => {
-      if (e.target === analyticsModal) {
+      // 关闭模态框
+      modalClose.addEventListener('click', () => {
         analyticsModal.style.display = 'none';
-      }
-    });
+      });
 
-    // ESC键关闭模态框
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && analyticsModal.style.display === 'flex') {
-        analyticsModal.style.display = 'none';
-      }
+      // 点击模态框外部关闭
+      analyticsModal.addEventListener('click', (e) => {
+        if (e.target === analyticsModal) {
+          analyticsModal.style.display = 'none';
+        }
+      });
+
+      // ESC键关闭模态框
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && analyticsModal.style.display === 'flex') {
+          analyticsModal.style.display = 'none';
+        }
+      });
     });
   </script>
 
