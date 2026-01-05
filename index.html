@@ -619,8 +619,12 @@
           // 使用 ip-api.com 的 JSONP 接口
           const callbackName = 'ipLocationCallback_' + Date.now();
           const script = document.createElement('script');
+          let completed = false;
           
           window[callbackName] = (data) => {
+            if (completed) return;
+            completed = true;
+            
             delete window[callbackName];
             if (script.parentNode) {
               document.body.removeChild(script);
@@ -640,8 +644,11 @@
             }
           };
           
-          script.src = `https://ip-api.com/json/?callback=${callbackName}&fields=status,query,country,countryCode,city,lat,lon`;
+          script.src = `http://ip-api.com/json/?callback=${callbackName}&fields=status,query,country,countryCode,city,lat,lon`;
           script.onerror = () => {
+            if (completed) return;
+            completed = true;
+            
             delete window[callbackName];
             if (script.parentNode) {
               document.body.removeChild(script);
@@ -651,34 +658,26 @@
           
           document.body.appendChild(script);
           
-          // 10秒超时
+          // 5秒超时（减少等待时间）
           setTimeout(() => {
-            if (window[callbackName]) {
+            if (!completed && window[callbackName]) {
+              completed = true;
               delete window[callbackName];
               if (script.parentNode) {
                 document.body.removeChild(script);
               }
               reject(new Error('请求超时'));
             }
-          }, 10000);
+          }, 5000);
         });
       },
       
       // 使用支持 CORS 的 API 获取IP地理位置（备用方案）
       async getIPLocationCORS() {
         const apis = [
+          // ipapi.co - 免费且稳定
           {
-            url: 'https://ipwhois.app/json/',
-            parser: (data) => ({
-              ip: data.ip,
-              country: data.country,
-              countryCode: data.country_code,
-              city: data.city,
-              latitude: data.latitude,
-              longitude: data.longitude
-            })
-          },
-          {
+            name: 'ipapi.co',
             url: 'https://ipapi.co/json/',
             parser: (data) => ({
               ip: data.ip,
@@ -689,41 +688,73 @@
               longitude: data.longitude
             })
           },
+          // ipwhois.app - 备用
           {
-            url: 'https://api.db-ip.com/v2/free/self',
+            name: 'ipwhois.app',
+            url: 'https://ipwhois.app/json/',
             parser: (data) => ({
-              ip: data.ipAddress,
-              country: data.countryName,
-              countryCode: data.countryCode,
+              ip: data.ip,
+              country: data.country,
+              countryCode: data.country_code,
               city: data.city,
-              latitude: data.latitude || 0,
-              longitude: data.longitude || 0
+              latitude: data.latitude,
+              longitude: data.longitude
             })
+          },
+          // ipify + ipapi - 组合方案
+          {
+            name: 'ipify',
+            url: 'https://api.ipify.org?format=json',
+            parser: async (data) => {
+              // 只获取IP,不获取位置信息(位置由其他API提供)
+              return {
+                ip: data.ip,
+                country: 'Unknown',
+                countryCode: 'XX',
+                city: 'Unknown',
+                latitude: 0,
+                longitude: 0
+              };
+            }
           }
         ];
         
         for (const api of apis) {
           try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 5000);
+            
             const response = await fetch(api.url, {
               method: 'GET',
               headers: {
                 'Accept': 'application/json'
-              }
+              },
+              signal: controller.signal
             });
             
+            clearTimeout(timeoutId);
+            
             if (!response.ok) {
+              console.warn(`API ${api.name} 返回状态 ${response.status}`);
               continue;
             }
             
             const data = await response.json();
-            const parsed = api.parser(data);
+            const parsed = typeof api.parser === 'function' 
+              ? await api.parser(data) 
+              : api.parser(data);
             
             // 检查数据是否有效
-            if (parsed.ip && parsed.ip !== 'unknown' && parsed.country && parsed.country !== 'Unknown') {
+            if (parsed.ip && parsed.ip !== 'unknown') {
+              console.log(`✓ 使用 ${api.name} 成功获取IP信息`);
               return parsed;
             }
           } catch (error) {
-            console.warn(`API ${api.url} 失败:`, error.message);
+            if (error.name === 'AbortError') {
+              console.warn(`API ${api.name} 超时`);
+            } else {
+              console.warn(`API ${api.name} 失败:`, error.message);
+            }
             continue;
           }
         }
@@ -735,25 +766,25 @@
       async trackVisit() {
         let locationData = null;
         
-        // 方案1: 尝试 JSONP（绕过CORS）
+        // 优先尝试 CORS API（更可靠）
         try {
-          locationData = await this.getIPLocationJSONP();
-          console.log('使用 JSONP 获取IP地理位置成功');
+          locationData = await this.getIPLocationCORS();
+          console.log('✓ 获取IP地理位置成功');
         } catch (error) {
-          console.warn('JSONP 获取失败，尝试 CORS API:', error.message);
+          console.warn('⚠ CORS API 失败，尝试 JSONP:', error.message);
           
-          // 方案2: 尝试支持 CORS 的 API
+          // 备用方案: 尝试 JSONP
           try {
-            locationData = await this.getIPLocationCORS();
-            console.log('使用 CORS API 获取IP地理位置成功');
+            locationData = await this.getIPLocationJSONP();
+            console.log('✓ 使用 JSONP 获取IP地理位置成功');
           } catch (error2) {
-            console.warn('CORS API 也失败:', error2.message);
+            console.warn('⚠ JSONP 也失败:', error2.message);
           }
         }
         
         // 如果所有方法都失败，使用基本信息
         if (!locationData) {
-          console.warn('所有IP地理位置获取方法都失败，使用基本信息');
+          console.info('ℹ 使用默认地理位置信息');
           locationData = {
             ip: 'unknown',
             country: 'Unknown',
