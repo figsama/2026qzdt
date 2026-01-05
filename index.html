@@ -3208,12 +3208,16 @@
 
     // 访问统计地图
     async function initAnalyticsMap() {
+      console.log('=== initAnalyticsMap called ===');
       // 检查管理员密码验证状态
       const isAuthenticated = sessionStorage.getItem('analytics_authenticated') === 'true';
+      console.log('isAuthenticated:', isAuthenticated);
 
       // 确保DOM元素存在
       const passwordGate = document.getElementById('analytics-password-gate');
       const content = document.getElementById('analytics-content');
+      console.log('passwordGate:', passwordGate);
+      console.log('content:', content);
 
       if (!passwordGate || !content) {
         console.warn('Analytics modal elements not found');
@@ -3221,9 +3225,11 @@
       }
 
       if (!isAuthenticated) {
+        console.log('User not authenticated, showing password gate');
         // 显示密码输入界面，隐藏统计内容
         passwordGate.style.display = 'flex';
         content.style.display = 'none';
+        console.log('passwordGate display set to:', passwordGate.style.display);
 
         // 设置密码验证事件
         const passwordBtn = document.getElementById('verify-password-btn');
