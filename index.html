@@ -791,7 +791,97 @@
         });
       },
       
-      // 使用支持 CORS 的 API 获取IP地理位置（备用方案）
+      // 使用中国本地API获取IP地理位置（针对中国大陆用户优化）
+      async getIPLocationChina() {
+        const apis = [
+          // 太平洋电脑网 - 免费，中国IP数据准确
+          {
+            name: 'pconline',
+            url: 'https://whois.pconline.com.cn/ipJson.jsp?json=true',
+            parser: (data) => ({
+              ip: data.ip || 'unknown',
+              country: 'China',
+              countryCode: 'CN',
+              city: data.city || data.pro || 'Unknown',
+              latitude: 35.8617,
+              longitude: 104.1954
+            })
+          },
+          // ipip.net - 中国专业IP数据库
+          {
+            name: 'ipip.net',
+            url: 'https://myip.ipip.net/json',
+            parser: (data) => {
+              const location = data.data?.location || [];
+              return {
+                ip: data.data?.ip || 'unknown',
+                country: 'China',
+                countryCode: 'CN',
+                city: location[2] || location[1] || 'Unknown',
+                latitude: 35.8617,
+                longitude: 104.1954
+              };
+            }
+          },
+          // ip.cn - 简单快速
+          {
+            name: 'ip.cn',
+            url: 'https://ip.cn/api/index?ip=&type=0',
+            parser: (data) => ({
+              ip: data.ip || 'unknown',
+              country: 'China',
+              countryCode: 'CN',
+              city: data.address || 'Unknown',
+              latitude: 35.8617,
+              longitude: 104.1954
+            })
+          }
+        ];
+        
+        for (const api of apis) {
+          try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 4000);
+            
+            const response = await fetch(api.url, {
+              method: 'GET',
+              headers: {
+                'Accept': 'application/json'
+              },
+              signal: controller.signal
+            });
+            
+            clearTimeout(timeoutId);
+            
+            if (!response.ok) {
+              console.warn(`中国API ${api.name} 返回状态 ${response.status}`);
+              continue;
+            }
+            
+            const data = await response.json();
+            const parsed = typeof api.parser === 'function' 
+              ? await api.parser(data) 
+              : api.parser(data);
+            
+            // 检查数据是否有效
+            if (parsed.city && parsed.city !== 'Unknown') {
+              console.log(`✓ 使用中国API ${api.name} 成功获取城市信息: ${parsed.city}`);
+              return parsed;
+            }
+          } catch (error) {
+            if (error.name === 'AbortError') {
+              console.warn(`中国API ${api.name} 超时`);
+            } else {
+              console.warn(`中国API ${api.name} 失败:`, error.message);
+            }
+            continue;
+          }
+        }
+        
+        throw new Error('所有中国API都失败');
+      },
+      
+      // 使用支持 CORS 的国际 API 获取IP地理位置（备用方案）
       async getIPLocationCORS() {
         const apis = [
           // ipapi.co - 免费且稳定
@@ -885,19 +975,27 @@
       async trackVisit() {
         let locationData = null;
         
-        // 优先尝试 CORS API（更可靠）
+        // 优先尝试中国本地API（速度更快，准确性更高）
         try {
-          locationData = await this.getIPLocationCORS();
-          console.log('✓ 获取IP地理位置成功');
+          locationData = await this.getIPLocationChina();
+          console.log('✓ 使用中国API获取IP地理位置成功');
         } catch (error) {
-          console.warn('⚠ CORS API 失败，尝试 JSONP:', error.message);
+          console.warn('⚠ 中国API失败，尝试国际CORS API:', error.message);
           
-          // 备用方案: 尝试 JSONP
+          // 备用方案1: 尝试国际 CORS API
           try {
-            locationData = await this.getIPLocationJSONP();
-            console.log('✓ 使用 JSONP 获取IP地理位置成功');
+            locationData = await this.getIPLocationCORS();
+            console.log('✓ 使用国际CORS API获取IP地理位置成功');
           } catch (error2) {
-            console.warn('⚠ JSONP 也失败:', error2.message);
+            console.warn('⚠ CORS API 失败，尝试 JSONP:', error2.message);
+            
+            // 备用方案2: 尝试 JSONP
+            try {
+              locationData = await this.getIPLocationJSONP();
+              console.log('✓ 使用 JSONP 获取IP地理位置成功');
+            } catch (error3) {
+              console.warn('⚠ JSONP 也失败:', error3.message);
+            }
           }
         }
         
