@@ -529,30 +529,60 @@
         <p>访问者IP地理位置分布</p>
         <div class="map-header-watermark">小红书：无花果先生 https://figsama.github.io/2026qzdt/</div>
       </div>
-      <div id="chartdiv-analytics" class="chartdiv"></div>
-      <div id="analytics-stats" style="margin-top: 20px; padding: 20px; background: #f8fafc; border-radius: 12px;">
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px;">
-          <div style="background: white; padding: 15px; border-radius: 8px; text-align: center;">
-            <div style="font-size: 24px; font-weight: 700; color: #3b82f6;" id="stat-total">0</div>
-            <div style="font-size: 14px; color: #64748b; margin-top: 5px;">总访问量</div>
+      
+      <!-- 管理员密码验证 -->
+      <div id="analytics-password-gate" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 400px; padding: 40px; background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); border-radius: 16px; margin-bottom: 20px;">
+        <div style="background: white; padding: 30px; border-radius: 12px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1); max-width: 400px; width: 100%; text-align: center;">
+          <div style="font-size: 24px; font-weight: 600; color: #1e293b; margin-bottom: 8px;">🔒 管理员验证</div>
+          <div style="font-size: 14px; color: #64748b; margin-bottom: 24px;">请输入管理员密码以查看访问统计数据</div>
+          
+          <div style="margin-bottom: 16px;">
+            <input type="password" id="admin-password" placeholder="请输入密码" 
+                   style="width: 100%; padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 16px; outline: none; transition: border-color 0.2s;"
+                   onfocus="this.style.borderColor='#3b82f6'"
+                   onblur="this.style.borderColor='#e2e8f0'">
           </div>
-          <div style="background: white; padding: 15px; border-radius: 8px; text-align: center;">
-            <div style="font-size: 24px; font-weight: 700; color: #10b981;" id="stat-unique">0</div>
-            <div style="font-size: 14px; color: #64748b; margin-top: 5px;">独立IP</div>
-          </div>
-          <div style="background: white; padding: 15px; border-radius: 8px; text-align: center;">
-            <div style="font-size: 24px; font-weight: 700; color: #f59e0b;" id="stat-countries">0</div>
-            <div style="font-size: 14px; color: #64748b; margin-top: 5px;">countries and regions</div>
+          
+          <button id="verify-password-btn" 
+                  style="width: 100%; padding: 12px 24px; background: #3b82f6; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; transition: background-color 0.2s;"
+                  onmouseover="this.style.backgroundColor='#2563eb'"
+                  onmouseout="this.style.backgroundColor='#3b82f6'">
+            验证密码
+          </button>
+          
+          <div id="password-error" style="color: #ef4444; font-size: 14px; margin-top: 12px; display: none;">
+            密码错误，请重试
           </div>
         </div>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px;">
-          <div style="background: white; padding: 15px; border-radius: 8px;">
-            <h3 style="margin: 0 0 15px; font-size: 16px; font-weight: 600;">Most visited countries and regions</h3>
-            <div id="stat-top-countries" style="font-size: 14px; line-height: 2;"></div>
+      </div>
+      
+      <!-- 统计数据内容 -->
+      <div id="analytics-content" style="display: none;">
+        <div id="chartdiv-analytics" class="chartdiv"></div>
+        <div id="analytics-stats" style="margin-top: 20px; padding: 20px; background: #f8fafc; border-radius: 12px;">
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px;">
+            <div style="background: white; padding: 15px; border-radius: 8px; text-align: center;">
+              <div style="font-size: 24px; font-weight: 700; color: #3b82f6;" id="stat-total">0</div>
+              <div style="font-size: 14px; color: #64748b; margin-top: 5px;">总访问量</div>
+            </div>
+            <div style="background: white; padding: 15px; border-radius: 8px; text-align: center;">
+              <div style="font-size: 24px; font-weight: 700; color: #10b981;" id="stat-unique">0</div>
+              <div style="font-size: 14px; color: #64748b; margin-top: 5px;">独立IP</div>
+            </div>
+            <div style="background: white; padding: 15px; border-radius: 8px; text-align: center;">
+              <div style="font-size: 24px; font-weight: 700; color: #f59e0b;" id="stat-countries">0</div>
+              <div style="font-size: 14px; color: #64748b; margin-top: 5px;">countries and regions</div>
+            </div>
           </div>
-          <div style="background: white; padding: 15px; border-radius: 8px;">
-            <h3 style="margin: 0 0 15px; font-size: 16px; font-weight: 600;">访问最多的城市</h3>
-            <div id="stat-top-cities" style="font-size: 14px; line-height: 2;"></div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px;">
+            <div style="background: white; padding: 15px; border-radius: 8px;">
+              <h3 style="margin: 0 0 15px; font-size: 16px; font-weight: 600;">Most visited countries and regions</h3>
+              <div id="stat-top-countries" style="font-size: 14px; line-height: 2;"></div>
+            </div>
+            <div style="background: white; padding: 15px; border-radius: 8px;">
+              <h3 style="margin: 0 0 15px; font-size: 16px; font-weight: 600;">访问最多的城市</h3>
+              <div id="stat-top-cities" style="font-size: 14px; line-height: 2;"></div>
+            </div>
           </div>
         </div>
       </div>
@@ -3056,14 +3086,75 @@
 
     // 访问统计地图
     async function initAnalyticsMap() {
-      // 清除旧的地图实例
-      if (maps['analytics']) {
-        maps['analytics'].clear();
-        delete maps['analytics'];
+      // 检查管理员密码验证状态
+      const isAuthenticated = sessionStorage.getItem('analytics_authenticated') === 'true';
+      
+      if (!isAuthenticated) {
+        // 显示密码输入界面，隐藏统计内容
+        document.getElementById('analytics-password-gate').style.display = 'flex';
+        document.getElementById('analytics-content').style.display = 'none';
+        
+        // 设置密码验证事件
+        const passwordBtn = document.getElementById('verify-password-btn');
+        const passwordInput = document.getElementById('admin-password');
+        const errorDiv = document.getElementById('password-error');
+        
+        // 移除之前的事件监听器（如果存在）
+        passwordBtn.removeEventListener('click', handlePasswordVerification);
+        
+        // 定义密码验证函数
+        function handlePasswordVerification() {
+          const password = passwordInput.value.trim();
+          const correctPassword = 'figsama2026'; // 管理员密码
+          
+          if (password === correctPassword) {
+            // 密码正确，显示统计内容
+            sessionStorage.setItem('analytics_authenticated', 'true');
+            document.getElementById('analytics-password-gate').style.display = 'none';
+            document.getElementById('analytics-content').style.display = 'block';
+            errorDiv.style.display = 'none';
+            
+            // 移除事件监听器
+            passwordBtn.removeEventListener('click', handlePasswordVerification);
+            
+            // 加载统计数据
+            loadAnalyticsData();
+          } else {
+            // 密码错误
+            errorDiv.style.display = 'block';
+            passwordInput.value = '';
+            passwordInput.focus();
+          }
+        }
+        
+        // 添加事件监听器
+        passwordBtn.addEventListener('click', handlePasswordVerification);
+        
+        // 支持回车键验证
+        passwordInput.addEventListener('keypress', function(e) {
+          if (e.key === 'Enter') {
+            handlePasswordVerification();
+          }
+        });
+        
+        return; // 不继续加载数据
+      } else {
+        // 已验证，直接显示内容
+        document.getElementById('analytics-password-gate').style.display = 'none';
+        document.getElementById('analytics-content').style.display = 'block';
+        loadAnalyticsData();
       }
       
-      // 从Firebase获取聚合统计数据
-      const aggregatedData = await visitTracker.getAggregatedStats();
+      // 加载统计数据的内部函数
+      async function loadAnalyticsData() {
+        // 清除旧的地图实例
+        if (maps['analytics']) {
+          maps['analytics'].clear();
+          delete maps['analytics'];
+        }
+        
+        // 从Firebase获取聚合统计数据
+        const aggregatedData = await visitTracker.getAggregatedStats();
       
       if (!aggregatedData) {
         // 如果没有聚合数据，显示提示
@@ -3256,6 +3347,7 @@
       
       // 添加水印文本到地图（用于显示）
       addWatermarkForExport('analytics');
+      }
     }
 
     // 初始化默认显示的地图
