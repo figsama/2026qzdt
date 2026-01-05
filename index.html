@@ -622,10 +622,25 @@
       async trackVisit() {
         try {
           // 使用 Cloud Function 代理获取IP地理位置（解决CORS问题）
-          const functionUrl = window.getIPLocationFunctionUrl || 'https://asia-east1-visitmap-f9bb2.cloudfunctions.net/getIPLocation';
+          const functionUrl = window.getIPLocationFunctionUrl || 'https://asia-east2-visitmap-f9bb2.cloudfunctions.net/getIPLocation';
           
           // 尝试从 Cloud Function 获取
-          const response = await fetch(functionUrl);
+          const response = await fetch(functionUrl, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          });
+          
+          // 检查响应状态
+          if (!response.ok) {
+            if (response.status === 404) {
+              console.warn('Cloud Function 未部署 (404)，请先部署函数: firebase deploy --only functions:getIPLocation');
+              throw new Error('Function not deployed');
+            }
+            throw new Error(`HTTP ${response.status}`);
+          }
+          
           const result = await response.json();
           
           if (result.success && result.data) {
@@ -722,7 +737,13 @@
             await visitsRef.add(visitData);
           }
         } catch (error) {
-          console.error('保存到Firebase失败:', error);
+          if (error.code === 'permission-denied') {
+            console.error('Firestore 权限错误: 请检查安全规则配置');
+            console.error('请参考 FIRESTORE_RULES.md 文件配置安全规则');
+            console.error('错误详情:', error.message);
+          } else {
+            console.error('保存到Firebase失败:', error);
+          }
         }
       },
       
