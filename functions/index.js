@@ -183,3 +183,102 @@ exports.manualAggregateStats = functions.https.onRequest(async (req, res) => {
   }
 });
 
+/**
+ * IP地理位置代理函数
+ * 解决CORS问题，从服务器端获取IP地理位置信息
+ */
+exports.getIPLocation = functions.https.onRequest(async (req, res) => {
+  // 设置CORS头
+  res.set('Access-Control-Allow-Origin', '*');
+  res.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.set('Access-Control-Allow-Headers', 'Content-Type');
+  
+  if (req.method === 'OPTIONS') {
+    res.status(204).send('');
+    return;
+  }
+  
+  const axios = require('axios');
+  const apis = [
+    {
+      url: 'https://ipapi.co/json/',
+      parser: (data) => ({
+        ip: data.ip,
+        country: data.country_name,
+        countryCode: data.country_code,
+        city: data.city,
+        latitude: data.latitude,
+        longitude: data.longitude
+      })
+    },
+    {
+      url: 'https://ip-api.com/json/',
+      parser: (data) => ({
+        ip: data.query,
+        country: data.country,
+        countryCode: data.countryCode,
+        city: data.city,
+        latitude: data.lat,
+        longitude: data.lon
+      })
+    },
+    {
+      url: 'https://ipwhois.app/json/',
+      parser: (data) => ({
+        ip: data.ip,
+        country: data.country,
+        countryCode: data.country_code,
+        city: data.city,
+        latitude: data.latitude,
+        longitude: data.longitude
+      })
+    }
+  ];
+  
+  for (const api of apis) {
+    try {
+      const response = await axios.get(api.url, {
+        timeout: 5000,
+        headers: {
+          'User-Agent': 'Mozilla/5.0'
+        }
+      });
+      
+      if (response.status === 200 && response.data) {
+        const parsed = api.parser(response.data);
+        if (parsed.ip && parsed.ip !== 'unknown' && parsed.country && parsed.country !== 'Unknown') {
+          res.json({
+            success: true,
+            data: {
+              ip: parsed.ip,
+              country: parsed.country,
+              countryCode: parsed.countryCode || 'XX',
+              city: parsed.city || 'Unknown',
+              latitude: parsed.latitude || 0,
+              longitude: parsed.longitude || 0
+            }
+          });
+          return;
+        }
+      }
+    } catch (error) {
+      console.warn(`API ${api.url} 失败:`, error.message);
+      continue;
+    }
+  }
+  
+  // 所有API都失败
+  res.status(500).json({
+    success: false,
+    error: '所有IP地理位置API都失败',
+    data: {
+      ip: 'unknown',
+      country: 'Unknown',
+      countryCode: 'XX',
+      city: 'Unknown',
+      latitude: 0,
+      longitude: 0
+    }
+  });
+});
+
