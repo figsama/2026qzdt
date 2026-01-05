@@ -75,6 +75,98 @@
       position: relative;
     }
 
+    .search-container {
+      margin-top: 20px;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+      position: relative;
+    }
+
+    .search-box {
+      width: 100%;
+      padding: 12px 45px 12px 15px;
+      border: 2px solid #e2e8f0;
+      border-radius: 25px;
+      font-size: 14px;
+      font-family: 'Inter', 'Noto Sans SC', sans-serif;
+      outline: none;
+      transition: all 0.3s ease;
+      background: white;
+    }
+
+    .search-box:focus {
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    .search-button {
+      position: absolute;
+      right: 5px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: #3b82f6;
+      color: white;
+      border: none;
+      border-radius: 20px;
+      padding: 8px 16px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .search-button:hover {
+      background: #2563eb;
+      transform: translateY(-50%) scale(1.05);
+    }
+
+    .search-results {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      margin-top: 8px;
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      max-height: 300px;
+      overflow-y: auto;
+      z-index: 1000;
+      display: none;
+    }
+
+    .search-results.show {
+      display: block;
+    }
+
+    .search-result-item {
+      padding: 12px 15px;
+      cursor: pointer;
+      border-bottom: 1px solid #f1f5f9;
+      transition: background 0.2s;
+    }
+
+    .search-result-item:last-child {
+      border-bottom: none;
+    }
+
+    .search-result-item:hover {
+      background: #f8fafc;
+    }
+
+    .search-result-title {
+      font-weight: 600;
+      color: #0f172a;
+      margin-bottom: 4px;
+    }
+
+    .search-result-info {
+      font-size: 12px;
+      color: #64748b;
+    }
+
     .star-button {
       position: absolute;
       top: 0;
@@ -330,6 +422,11 @@
       <div class="header-content">
         <h1>全球签证免签政策地图总览</h1>
         <p>2026版 · 一键切换查看各类签证免签政策地图</p>
+        <div class="search-container">
+          <input type="text" class="search-box" id="country-search" placeholder="搜索国家或地区..." />
+          <button class="search-button" id="search-btn">搜索</button>
+          <div class="search-results" id="search-results"></div>
+        </div>
         <a href="https://github.com/figsama/2026qzdt" target="_blank" class="star-button">
           <span class="star-icon">⭐</span>
           Star on GitHub
@@ -1006,6 +1103,215 @@
     // 页面加载时追踪访问
     visitTracker.trackVisit();
     
+    // 搜索功能
+    const searchBox = document.getElementById('country-search');
+    const searchBtn = document.getElementById('search-btn');
+    const searchResults = document.getElementById('search-results');
+    
+    // 获取地图类型的中文名称
+    function getMapTypeName(mapType) {
+      const mapNames = {
+        'global': '全球汇总',
+        'china': '中国护照',
+        'us': '美国签证',
+        'uk': '英国签证',
+        'japan': '日本签证',
+        'australia': '澳洲签证',
+        'schengen': '申根签证',
+        'analytics': '访问统计'
+      };
+      return mapNames[mapType] || mapType;
+    }
+    
+    // 存储所有国家数据用于搜索（在初始化地图时收集）
+    const allCountryDataForSearch = {};
+    
+    // 搜索函数
+    function searchCountry(query) {
+      if (!query || query.trim().length === 0) {
+        searchResults.classList.remove('show');
+        return;
+      }
+      
+      const searchTerm = query.trim().toLowerCase();
+      const results = [];
+      
+      // 首先尝试从已初始化的地图中搜索
+      Object.keys(maps).forEach(mapType => {
+        const map = maps[mapType];
+        if (!map || !map.dataProvider || !map.dataProvider.areas) return;
+        
+        map.dataProvider.areas.forEach(area => {
+          const title = area.title || '';
+          const id = area.id || '';
+          
+          // 匹配国家名称或ID
+          if (title.toLowerCase().includes(searchTerm) || 
+              id.toLowerCase() === searchTerm.toLowerCase()) {
+            // 检查是否已经添加过
+            if (!results.find(r => r.id === id && r.mapType === mapType)) {
+              results.push({
+                id: id,
+                title: title,
+                mapType: mapType,
+                customData: area.customData || '',
+                color: area.color || ''
+              });
+            }
+          }
+        });
+      });
+      
+      // 如果已初始化的地图中没有找到，尝试从存储的数据中搜索
+      if (results.length === 0) {
+        Object.keys(allCountryDataForSearch).forEach(mapType => {
+          const countryData = allCountryDataForSearch[mapType];
+          if (!countryData) return;
+          
+          Object.keys(countryData).forEach(id => {
+            const data = countryData[id];
+            const title = data.title || '';
+            
+            if (title.toLowerCase().includes(searchTerm) || 
+                id.toLowerCase() === searchTerm.toLowerCase()) {
+              if (!results.find(r => r.id === id && r.mapType === mapType)) {
+                results.push({
+                  id: id,
+                  title: title,
+                  mapType: mapType,
+                  customData: Array.isArray(data.visas) ? data.visas.join(' / ') : '',
+                  color: data.color || ''
+                });
+              }
+            }
+          });
+        });
+      }
+      
+      // 显示搜索结果
+      displaySearchResults(results);
+    }
+    
+    // 显示搜索结果
+    function displaySearchResults(results) {
+      searchResults.innerHTML = '';
+      
+      if (results.length === 0) {
+        searchResults.innerHTML = '<div class="search-result-item"><div class="search-result-title">未找到匹配的国家或地区</div></div>';
+        searchResults.classList.add('show');
+        return;
+      }
+      
+      // 限制显示前10个结果
+      const displayResults = results.slice(0, 10);
+      
+      displayResults.forEach(result => {
+        const item = document.createElement('div');
+        item.className = 'search-result-item';
+        item.innerHTML = `
+          <div class="search-result-title">${result.title}</div>
+          <div class="search-result-info">${getMapTypeName(result.mapType)} · ${result.customData || '无政策信息'}</div>
+        `;
+        item.addEventListener('click', () => {
+          focusOnCountry(result.id, result.mapType);
+        });
+        searchResults.appendChild(item);
+      });
+      
+      searchResults.classList.add('show');
+    }
+    
+    // 聚焦到指定国家
+    function focusOnCountry(countryId, mapType) {
+      // 切换到对应的地图标签页
+      const tabButton = document.querySelector(`[data-tab="${mapType}"]`);
+      if (tabButton) {
+        tabButton.click();
+      }
+      
+      // 等待地图加载完成
+      setTimeout(() => {
+        const map = maps[mapType];
+        if (!map) {
+          console.warn('地图未初始化:', mapType);
+          // 如果地图未初始化，尝试初始化
+          initMap(mapType);
+          setTimeout(() => focusOnCountry(countryId, mapType), 500);
+          return;
+        }
+        
+        // AmCharts 3 API: 通过 mapObject 属性访问地图对象
+        if (map.mapObject) {
+          const mapObject = map.mapObject.getObjectById(countryId);
+          if (mapObject) {
+            // 聚焦到该国家 (AmCharts 3 使用 zoomToMapObject)
+            map.zoomToMapObject(mapObject, 2, true);
+            
+            // 高亮显示
+            mapObject.isHover = true;
+            mapObject.validate();
+            
+            // 显示气球提示
+            setTimeout(() => {
+              mapObject.showTooltip();
+            }, 500);
+          } else {
+            console.warn('未找到国家:', countryId, '在地图类型:', mapType);
+          }
+        } else {
+          // 如果 mapObject 不存在，尝试直接访问
+          const mapObject = map.getObjectById(countryId);
+          if (mapObject) {
+            map.zoomToMapObject(mapObject, 2, true);
+            mapObject.isHover = true;
+            mapObject.validate();
+            setTimeout(() => {
+              mapObject.showTooltip();
+            }, 500);
+          } else {
+            console.warn('未找到国家:', countryId, '在地图类型:', mapType);
+          }
+        }
+        
+        // 隐藏搜索结果
+        searchResults.classList.remove('show');
+        searchBox.value = '';
+      }, 300);
+    }
+    
+    // 绑定搜索事件
+    if (searchBtn) {
+      searchBtn.addEventListener('click', () => {
+        searchCountry(searchBox.value);
+      });
+    }
+    
+    if (searchBox) {
+      searchBox.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          searchCountry(searchBox.value);
+        }
+      });
+      
+      searchBox.addEventListener('input', () => {
+        if (searchBox.value.length > 0) {
+          searchCountry(searchBox.value);
+        } else {
+          searchResults.classList.remove('show');
+        }
+      });
+    }
+    
+    // 点击外部关闭搜索结果
+    document.addEventListener('click', (e) => {
+      if (searchBox && searchResults && searchBtn &&
+          !searchBox.contains(e.target) && 
+          !searchResults.contains(e.target) && 
+          !searchBtn.contains(e.target)) {
+        searchResults.classList.remove('show');
+      }
+    });
+    
     // 标签页切换功能
     document.querySelectorAll('.tab-button').forEach(button => {
       button.addEventListener('click', function() {
@@ -1371,6 +1677,9 @@
           }
         }
       });
+      
+      // 存储国家数据用于搜索
+      allCountryDataForSearch['global'] = countryData;
       
       // 初始化调色盘
       colorCustomizer.initColorPalette('global', legendTitleToColorKey, COLORS);
