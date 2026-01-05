@@ -3131,19 +3131,21 @@
 
     // 访问统计地图
     async function initAnalyticsMap() {
+      console.log('initAnalyticsMap called');
       // 检查管理员密码验证状态
       const isAuthenticated = sessionStorage.getItem('analytics_authenticated') === 'true';
+      console.log('isAuthenticated:', isAuthenticated);
 
       // 确保DOM元素存在
       const passwordGate = document.getElementById('analytics-password-gate');
       const content = document.getElementById('analytics-content');
+      console.log('passwordGate found:', !!passwordGate);
+      console.log('content found:', !!content);
 
       if (!passwordGate || !content) {
         console.warn('Analytics modal elements not found');
         return;
-      }
-
-      if (!isAuthenticated) {
+      }      if (!isAuthenticated) {
         // 显示密码输入界面，隐藏统计内容
         passwordGate.style.display = 'flex';
         content.style.display = 'none';
@@ -3421,11 +3423,13 @@
 
       // 显示模态框
       statsButton.addEventListener('click', () => {
+        console.log('Stats button clicked');
         analyticsModal.style.display = 'flex';
         // 延迟初始化统计地图，确保模态框完全显示
         setTimeout(() => {
           // 只有当模态框确实可见时才初始化
           if (analyticsModal.style.display === 'flex') {
+            console.log('Initializing analytics map');
             initMap('analytics');
           }
         }, 200);
