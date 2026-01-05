@@ -1157,6 +1157,7 @@
           uniqueIPs: new Set(visits.map(v => v.ip)).size,
           countries: {},
           cities: {},
+          cityLocations: {}, // 新增：存储城市的经纬度信息
           visitsByDate: {},
           topCountries: [],
           topCities: []
@@ -1176,6 +1177,19 @@
             city = 'Other Cities in China';
           }
           stats.cities[city] = (stats.cities[city] || 0) + 1;
+          
+          // 收集城市的经纬度信息（用于地图标注）
+          if (visit.latitude && visit.longitude && city !== 'Unknown' && city !== 'Other Cities in China') {
+            if (!stats.cityLocations[city]) {
+              stats.cityLocations[city] = {
+                latitude: visit.latitude,
+                longitude: visit.longitude,
+                count: 0,
+                country: country
+              };
+            }
+            stats.cityLocations[city].count++;
+          }
           
           // 统计日期
           const date = new Date(visit.timestamp || visit.createdAt?.toDate?.() || visit.createdAt || Date.now()).toDateString();
@@ -2995,6 +3009,34 @@
         };
       });
       
+      // 创建城市标记点数据
+      const cityImages = [];
+      if (aggregatedData.cityLocations && Object.keys(aggregatedData.cityLocations).length > 0) {
+        const maxCityCount = Math.max(...Object.values(aggregatedData.cityLocations).map(d => d.count || 0));
+        
+        Object.keys(aggregatedData.cityLocations).forEach(cityName => {
+          const location = aggregatedData.cityLocations[cityName];
+          if (location.latitude && location.longitude) {
+            // 根据访问次数计算点的大小（8-24像素）
+            const size = Math.max(8, Math.min(24, 8 + (location.count / maxCityCount) * 16));
+            
+            cityImages.push({
+              latitude: location.latitude,
+              longitude: location.longitude,
+              title: cityName,
+              customData: `${location.count} 次访问`,
+              svgPath: "M9,0C4.029,0,0,4.029,0,9s4.029,9,9,9s9-4.029,9-9S13.971,0,9,0z M9,15.93 c-3.83,0-6.93-3.1-6.93-6.93S5.17,2.07,9,2.07s6.93,3.1,6.93,6.93S12.83,15.93,9,15.93 M12.5,9c0,1.933-1.567,3.5-3.5,3.5S5.5,10.933,5.5,9S7.067,5.5,9,5.5 S12.5,7.067,12.5,9z",
+              scale: size / 18, // 归一化缩放
+              color: "#ef4444", // 红色标记点
+              alpha: 0.8,
+              rollOverColor: "#dc2626",
+              value: location.count,
+              country: location.country
+            });
+          }
+        });
+      }
+      
       maps['analytics'] = AmCharts.makeChart("chartdiv-analytics", {
         "type": "map",
         "theme": "light",
@@ -3004,7 +3046,8 @@
           "zoomLevel": 1.2,
           "zoomLongitude": 20,
           "zoomLatitude": 30,
-          "areas": areas
+          "areas": areas,
+          "images": cityImages // 添加城市标记点
         },
         "areasSettings": {
           "autoZoom": true,
@@ -3015,6 +3058,13 @@
           "unlistedAreasAlpha": 0.1,
           "unlistedAreasColor": "#cbd5e1",
           "balloonText": "<div style='padding:10px; font-family: Inter, sans-serif; line-height:1.6;'><b style='font-size:14px;'>[[title]]</b><br/><span style='font-size:12px; opacity:0.9; margin-top:5px; display:block;'>[[customData]]</span></div>"
+        },
+        "imagesSettings": {
+          "alpha": 0.8,
+          "color": "#ef4444",
+          "rollOverColor": "#dc2626",
+          "balloonText": "<div style='padding:10px; font-family: Inter, sans-serif; line-height:1.6;'><b style='font-size:14px; color:#ef4444;'>📍 [[title]]</b><br/><span style='font-size:12px; opacity:0.9; margin-top:5px; display:block;'>[[customData]]</span><br/><span style='font-size:11px; color:#64748b; margin-top:3px; display:block;'>[[country]]</span></div>",
+          "selectedColor": "#dc2626"
         },
         "balloon": {
           "adjustBorderColor": false,
