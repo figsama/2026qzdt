@@ -795,11 +795,18 @@
           };
         }
         
+        // 处理城市名称：如果是中国的 Unknown 城市，显示为 "Unknown city in China"
+        let city = locationData.city || 'Unknown';
+        const country = locationData.country || 'China';
+        if ((country === 'China' || country === '中国') && (city === 'Unknown' || !city)) {
+          city = 'Unknown city in China';
+        }
+        
         const visitData = {
           ip: locationData.ip || 'unknown',
-          country: locationData.country || 'China',
+          country: country,
           countryCode: locationData.countryCode || 'CN',
-          city: locationData.city || 'Unknown',
+          city: city,
           latitude: locationData.latitude || 35.8617,
           longitude: locationData.longitude || 104.1954,
           timestamp: new Date().toISOString(),
@@ -946,8 +953,11 @@
           }
           stats.countries[country] = (stats.countries[country] || 0) + 1;
           
-          // 统计城市
-          const city = visit.city || 'Unknown';
+          // 统计城市（如果是中国的 Unknown 城市，显示为 "Unknown city in China"）
+          let city = visit.city || 'Unknown';
+          if ((country === 'China' || country === '中国') && (city === 'Unknown' || !city)) {
+            city = 'Unknown city in China';
+          }
           stats.cities[city] = (stats.cities[city] || 0) + 1;
           
           // 统计日期
