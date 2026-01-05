@@ -955,24 +955,6 @@
               throw new Error('高德API返回无效数据');
             }
           },
-          // ipip.net - 中国专业IP数据库
-          {
-            name: 'ipip.net',
-            url: 'https://myip.ipip.net/json',
-            parser: (data) => {
-              const location = data.data?.location || [];
-              let city = location[2] || location[1] || 'Unknown';
-              city = this.convertChineseCityToEnglish(city);
-              return {
-                ip: data.data?.ip || 'unknown',
-                country: 'China',
-                countryCode: 'CN',
-                city: city,
-                latitude: 35.8617,
-                longitude: 104.1954
-              };
-            }
-          },
           // 太平洋电脑网 - 免费，中国IP数据准确
           {
             name: 'pconline',
@@ -998,6 +980,24 @@
               latitude: 35.8617,
               longitude: 104.1954
             })
+          },
+          // ipip.net - 中国专业IP数据库
+          {
+            name: 'ipip.net',
+            url: 'https://myip.ipip.net/json',
+            parser: (data) => {
+              const location = data.data?.location || [];
+              let city = location[2] || location[1] || 'Unknown';
+              city = this.convertChineseCityToEnglish(city);
+              return {
+                ip: data.data?.ip || 'unknown',
+                country: 'China',
+                countryCode: 'CN',
+                city: city,
+                latitude: 35.8617,
+                longitude: 104.1954
+              };
+            }
           }
         ];
         
