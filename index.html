@@ -620,53 +620,105 @@
     const visitTracker = {
       // 获取访问者IP和地理位置
       async trackVisit() {
-        try {
-          // 使用免费的IP地理位置API
-          const response = await fetch('https://ipapi.co/json/');
-          const data = await response.json();
-          
-          const visitData = {
-            ip: data.ip || 'unknown',
-            country: data.country_name || 'Unknown',
-            countryCode: data.country_code || 'XX',
-            city: data.city || 'Unknown',
-            latitude: data.latitude || 0,
-            longitude: data.longitude || 0,
-            timestamp: new Date().toISOString(),
-            userAgent: navigator.userAgent,
-            referrer: document.referrer || 'direct'
-          };
-          
-          // 保存访问数据到Firebase
-          await this.saveVisit(visitData);
-          
-          return visitData;
-        } catch (error) {
-          console.error('访问追踪失败:', error);
-          // 如果API失败，尝试备用API
+        const apis = [
+          {
+            url: 'https://ipapi.co/json/',
+            parser: (data) => ({
+              ip: data.ip,
+              country: data.country_name,
+              countryCode: data.country_code,
+              city: data.city,
+              latitude: data.latitude,
+              longitude: data.longitude
+            })
+          },
+          {
+            url: 'https://ip-api.com/json/',
+            parser: (data) => ({
+              ip: data.query,
+              country: data.country,
+              countryCode: data.countryCode,
+              city: data.city,
+              latitude: data.lat,
+              longitude: data.lon
+            })
+          },
+          {
+            url: 'https://api.ipgeolocation.io/ipgeo?apiKey=free',
+            parser: (data) => ({
+              ip: data.ip,
+              country: data.country_name,
+              countryCode: data.country_code2,
+              city: data.city,
+              latitude: data.latitude,
+              longitude: data.longitude
+            })
+          },
+          {
+            url: 'https://freeipapi.com/api/json/',
+            parser: (data) => ({
+              ip: data.ipAddress,
+              country: data.countryName,
+              countryCode: data.countryCode,
+              city: data.cityName,
+              latitude: data.latitude,
+              longitude: data.longitude
+            })
+          }
+        ];
+        
+        for (const api of apis) {
           try {
-            const response = await fetch('https://ip-api.com/json/');
+            const response = await fetch(api.url);
+            if (!response.ok) {
+              throw new Error(`HTTP ${response.status}`);
+            }
             const data = await response.json();
             
+            // 检查数据是否有效
+            const parsed = api.parser(data);
+            if (!parsed.ip || parsed.ip === 'unknown' || parsed.country === 'Unknown') {
+              continue; // 尝试下一个API
+            }
+            
             const visitData = {
-              ip: data.query || 'unknown',
-              country: data.country || 'Unknown',
-              countryCode: data.countryCode || 'XX',
-              city: data.city || 'Unknown',
-              latitude: data.lat || 0,
-              longitude: data.lon || 0,
+              ip: parsed.ip || 'unknown',
+              country: parsed.country || 'Unknown',
+              countryCode: parsed.countryCode || 'XX',
+              city: parsed.city || 'Unknown',
+              latitude: parsed.latitude || 0,
+              longitude: parsed.longitude || 0,
               timestamp: new Date().toISOString(),
               userAgent: navigator.userAgent,
               referrer: document.referrer || 'direct'
             };
             
+            // 保存访问数据到Firebase
             await this.saveVisit(visitData);
+            
             return visitData;
-          } catch (error2) {
-            console.error('备用API也失败:', error2);
-            return null;
+          } catch (error) {
+            console.warn(`API ${api.url} 失败:`, error);
+            continue; // 尝试下一个API
           }
         }
+        
+        // 所有API都失败，保存基本信息
+        console.warn('所有IP地理位置API都失败，保存基本信息');
+        const visitData = {
+          ip: 'unknown',
+          country: 'Unknown',
+          countryCode: 'XX',
+          city: 'Unknown',
+          latitude: 0,
+          longitude: 0,
+          timestamp: new Date().toISOString(),
+          userAgent: navigator.userAgent,
+          referrer: document.referrer || 'direct'
+        };
+        
+        await this.saveVisit(visitData);
+        return visitData;
       },
       
       // 保存访问数据到Firebase
@@ -709,13 +761,23 @@
           const doc = await db.collection('aggregated_stats').doc('current').get();
           
           if (doc.exists) {
-            return doc.data();
+            const data = doc.data();
+            console.log('成功获取聚合统计数据:', {
+              totalVisits: data.totalVisits,
+              uniqueIPs: data.uniqueIPs,
+              countriesCount: data.countriesCount
+            });
+            return data;
           } else {
-            console.warn('聚合统计数据不存在');
+            console.warn('聚合统计数据不存在，请运行 Cloud Functions 来生成聚合数据');
             return null;
           }
         } catch (error) {
           console.error('从Firebase获取聚合数据失败:', error);
+          console.error('错误详情:', {
+            code: error.code,
+            message: error.message
+          });
           return null;
         }
       },
@@ -2186,13 +2248,22 @@
         // 如果没有聚合数据，显示提示
         const chartDiv = document.getElementById('chartdiv-analytics');
         if (chartDiv) {
-          chartDiv.innerHTML = '<div style="display: flex; align-items: center; justify-content: center; height: 100%; font-size: 18px; color: #64748b;">暂无访问数据，访问数据将在您浏览网站时自动收集</div>';
+          chartDiv.innerHTML = `
+            <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; padding: 40px; text-align: center;">
+              <div style="font-size: 18px; color: #64748b; margin-bottom: 10px;">聚合统计数据尚未生成</div>
+              <div style="font-size: 14px; color: #94a3b8; margin-bottom: 20px;">请运行 Cloud Functions 来聚合访问数据</div>
+              <div style="font-size: 12px; color: #cbd5e1; line-height: 1.6;">
+                <div>1. 部署 Cloud Functions: <code style="background: #f1f5f9; padding: 2px 6px; border-radius: 4px;">firebase deploy --only functions</code></div>
+                <div style="margin-top: 8px;">2. 手动触发聚合: 访问 <code style="background: #f1f5f9; padding: 2px 6px; border-radius: 4px;">https://YOUR_REGION-visitmap-f9bb2.cloudfunctions.net/manualAggregateStats</code></div>
+              </div>
+            </div>
+          `;
         }
         document.getElementById('stat-total').textContent = '0';
         document.getElementById('stat-unique').textContent = '0';
         document.getElementById('stat-countries').textContent = '0';
-        document.getElementById('stat-top-countries').innerHTML = '<div style="color: #64748b;">暂无数据</div>';
-        document.getElementById('stat-top-cities').innerHTML = '<div style="color: #64748b;">暂无数据</div>';
+        document.getElementById('stat-top-countries').innerHTML = '<div style="color: #64748b;">等待数据聚合...</div>';
+        document.getElementById('stat-top-cities').innerHTML = '<div style="color: #64748b;">等待数据聚合...</div>';
         return;
       }
       
