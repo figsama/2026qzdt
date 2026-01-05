@@ -622,7 +622,9 @@
           
           window[callbackName] = (data) => {
             delete window[callbackName];
-            document.body.removeChild(script);
+            if (script.parentNode) {
+              document.body.removeChild(script);
+            }
             
             if (data.status === 'success') {
               resolve({
@@ -641,7 +643,9 @@
           script.src = `https://ip-api.com/json/?callback=${callbackName}&fields=status,query,country,countryCode,city,lat,lon`;
           script.onerror = () => {
             delete window[callbackName];
-            document.body.removeChild(script);
+            if (script.parentNode) {
+              document.body.removeChild(script);
+            }
             reject(new Error('JSONP请求失败'));
           };
           
@@ -651,54 +655,131 @@
           setTimeout(() => {
             if (window[callbackName]) {
               delete window[callbackName];
-              document.body.removeChild(script);
+              if (script.parentNode) {
+                document.body.removeChild(script);
+              }
               reject(new Error('请求超时'));
             }
           }, 10000);
         });
       },
       
+      // 使用支持 CORS 的 API 获取IP地理位置（备用方案）
+      async getIPLocationCORS() {
+        const apis = [
+          {
+            url: 'https://ipwhois.app/json/',
+            parser: (data) => ({
+              ip: data.ip,
+              country: data.country,
+              countryCode: data.country_code,
+              city: data.city,
+              latitude: data.latitude,
+              longitude: data.longitude
+            })
+          },
+          {
+            url: 'https://ipapi.co/json/',
+            parser: (data) => ({
+              ip: data.ip,
+              country: data.country_name,
+              countryCode: data.country_code,
+              city: data.city,
+              latitude: data.latitude,
+              longitude: data.longitude
+            })
+          },
+          {
+            url: 'https://api.db-ip.com/v2/free/self',
+            parser: (data) => ({
+              ip: data.ipAddress,
+              country: data.countryName,
+              countryCode: data.countryCode,
+              city: data.city,
+              latitude: data.latitude || 0,
+              longitude: data.longitude || 0
+            })
+          }
+        ];
+        
+        for (const api of apis) {
+          try {
+            const response = await fetch(api.url, {
+              method: 'GET',
+              headers: {
+                'Accept': 'application/json'
+              }
+            });
+            
+            if (!response.ok) {
+              continue;
+            }
+            
+            const data = await response.json();
+            const parsed = api.parser(data);
+            
+            // 检查数据是否有效
+            if (parsed.ip && parsed.ip !== 'unknown' && parsed.country && parsed.country !== 'Unknown') {
+              return parsed;
+            }
+          } catch (error) {
+            console.warn(`API ${api.url} 失败:`, error.message);
+            continue;
+          }
+        }
+        
+        throw new Error('所有CORS API都失败');
+      },
+      
       // 获取访问者IP和地理位置
       async trackVisit() {
+        let locationData = null;
+        
+        // 方案1: 尝试 JSONP（绕过CORS）
         try {
-          // 优先使用 JSONP（免费方案，绕过CORS）
-          const locationData = await this.getIPLocationJSONP();
-          
-          const visitData = {
-            ip: locationData.ip || 'unknown',
-            country: locationData.country || 'Unknown',
-            countryCode: locationData.countryCode || 'XX',
-            city: locationData.city || 'Unknown',
-            latitude: locationData.latitude || 0,
-            longitude: locationData.longitude || 0,
-            timestamp: new Date().toISOString(),
-            userAgent: navigator.userAgent,
-            referrer: document.referrer || 'direct'
-          };
-          
-          // 保存访问数据到Firebase
-          await this.saveVisit(visitData);
-          
-          return visitData;
+          locationData = await this.getIPLocationJSONP();
+          console.log('使用 JSONP 获取IP地理位置成功');
         } catch (error) {
-          console.warn('获取IP地理位置失败:', error);
+          console.warn('JSONP 获取失败，尝试 CORS API:', error.message);
           
-          // 所有方法都失败，保存基本信息
-          const visitData = {
+          // 方案2: 尝试支持 CORS 的 API
+          try {
+            locationData = await this.getIPLocationCORS();
+            console.log('使用 CORS API 获取IP地理位置成功');
+          } catch (error2) {
+            console.warn('CORS API 也失败:', error2.message);
+          }
+        }
+        
+        // 如果所有方法都失败，使用基本信息
+        if (!locationData) {
+          console.warn('所有IP地理位置获取方法都失败，使用基本信息');
+          locationData = {
             ip: 'unknown',
             country: 'Unknown',
             countryCode: 'XX',
             city: 'Unknown',
             latitude: 0,
-            longitude: 0,
-            timestamp: new Date().toISOString(),
-            userAgent: navigator.userAgent,
-            referrer: document.referrer || 'direct'
+            longitude: 0
           };
-          
-          await this.saveVisit(visitData);
-          return visitData;
         }
+        
+        const visitData = {
+          ip: locationData.ip || 'unknown',
+          country: locationData.country || 'Unknown',
+          countryCode: locationData.countryCode || 'XX',
+          city: locationData.city || 'Unknown',
+          latitude: locationData.latitude || 0,
+          longitude: locationData.longitude || 0,
+          timestamp: new Date().toISOString(),
+          userAgent: navigator.userAgent,
+          referrer: document.referrer || 'direct'
+        };
+        
+        // 保存访问数据到Firebase
+        await this.saveVisit(visitData);
+        
+        return visitData;
       },
       
       // 保存访问数据到Firebase
