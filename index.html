@@ -482,8 +482,30 @@
       measurementId: "G-L1102C4EC6"
     };
     
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
+    let db;
+    try {
+      firebase.initializeApp(firebaseConfig);
+      db = firebase.firestore();
+      
+      // 设置Firestore错误处理，避免连接错误影响页面功能
+      db.settings({
+        ignoreUndefinedProperties: true
+      });
+      
+      // 监听Firestore连接错误，静默处理
+      db.enablePersistence().catch((err) => {
+        if (err.code === 'failed-precondition') {
+          console.warn('Firestore持久化失败: 多个标签页可能同时打开');
+        } else if (err.code === 'unimplemented') {
+          console.warn('Firestore持久化不支持: 浏览器可能不支持');
+        } else {
+          console.warn('Firestore连接警告:', err.message);
+        }
+      });
+    } catch (error) {
+      console.warn('Firebase初始化失败，访问统计功能将不可用:', error.message);
+      db = undefined;
+    }
   </script>
 
   <script>
@@ -844,12 +866,14 @@
             await visitsRef.add(visitData);
           }
         } catch (error) {
+          // 静默处理Firebase错误，避免影响页面功能
           if (error.code === 'permission-denied') {
-            console.error('Firestore 权限错误: 请检查安全规则配置');
-            console.error('请参考 FIRESTORE_RULES.md 文件配置安全规则');
-            console.error('错误详情:', error.message);
+            console.warn('Firestore 权限错误: 请检查安全规则配置');
+            console.warn('请参考 FREE_FIRESTORE_RULES.md 文件配置安全规则');
+          } else if (error.code === 'unavailable' || error.code === 'deadline-exceeded') {
+            console.warn('Firestore连接超时或不可用，访问统计功能暂时不可用');
           } else {
-            console.error('保存到Firebase失败:', error);
+            console.warn('保存到Firebase失败:', error.message || error);
           }
         }
       },
@@ -917,16 +941,14 @@
           
           return stats;
         } catch (error) {
-          console.error('从Firebase获取访问数据失败:', error);
-          console.error('错误详情:', {
-            code: error.code,
-            message: error.message
-          });
-          
-          // 如果是权限错误，提示用户配置安全规则
+          // 静默处理Firebase错误，避免影响页面功能
           if (error.code === 'permission-denied') {
-            console.error('权限错误: 请修改 Firestore 安全规则，允许读取 visits 集合');
-            console.error('参考 FREE_FIRESTORE_RULES.md 文件');
+            console.warn('权限错误: 请修改 Firestore 安全规则，允许读取 visits 集合');
+            console.warn('参考 FREE_FIRESTORE_RULES.md 文件');
+          } else if (error.code === 'unavailable' || error.code === 'deadline-exceeded') {
+            console.warn('Firestore连接超时或不可用，访问统计功能暂时不可用');
+          } else {
+            console.warn('从Firebase获取访问数据失败:', error.message || error);
           }
           
           return null;
