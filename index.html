@@ -3504,6 +3504,9 @@
 
       // 显示模态框
       statsButton.addEventListener('click', () => {
+        // 清除认证状态，强制每次都需要验证（可选）
+        // sessionStorage.removeItem('analytics_authenticated');
+        
         analyticsModal.style.display = 'flex';
         // 延迟初始化统计地图，确保模态框完全显示
         setTimeout(() => {
