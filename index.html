@@ -917,7 +917,7 @@
         // 处理城市名称：如果是中国的 Unknown 城市，显示为 "Other Cities in China"
         let city = locationData.city || 'Unknown';
         const country = locationData.country || 'China';
-        if ((country === 'China' || country === '中国') && (city === 'Unknown' || !city)) {
+        if ((country === 'China' || country === '中国') && (city === 'Unknown' || city === 'Unknown city in China' || !city)) {
           city = 'Other Cities in China';
         }
         
@@ -1074,7 +1074,7 @@
           
           // 统计城市（如果是中国的 Unknown 城市，显示为 "Other Cities in China"）
           let city = visit.city || 'Unknown';
-          if ((country === 'China' || country === '中国') && (city === 'Unknown' || !city)) {
+          if ((country === 'China' || country === '中国') && (city === 'Unknown' || city === 'Unknown city in China' || !city)) {
             city = 'Other Cities in China';
           }
           stats.cities[city] = (stats.cities[city] || 0) + 1;
