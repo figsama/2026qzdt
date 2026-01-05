@@ -486,9 +486,8 @@
     const db = firebase.firestore();
     
     // Cloud Functions 配置
-    // 请将 YOUR_REGION 替换为你的 Firebase 项目区域（例如：asia-east1, us-central1）
-    // 可以在 Firebase Console > Functions > 查看函数URL来确定区域
-    const CLOUD_FUNCTION_REGION = 'asia-east1'; // 默认使用 asia-east1，请根据实际情况修改
+    // Firebase 项目区域：asia-east2
+    const CLOUD_FUNCTION_REGION = 'asia-east2';
     window.getIPLocationFunctionUrl = `https://${CLOUD_FUNCTION_REGION}-visitmap-f9bb2.cloudfunctions.net/getIPLocation`;
   </script>
 
