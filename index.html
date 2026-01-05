@@ -170,7 +170,7 @@
     .star-button {
       position: absolute;
       top: 0;
-      right: 0;
+      right: 120px;
       background: linear-gradient(135deg, #ff6b6b, #ee5a52);
       color: white;
       border: none;
@@ -196,6 +196,115 @@
     .star-button:active {
       transform: translateY(0);
       box-shadow: 0 2px 8px rgba(238, 90, 82, 0.3);
+    }
+
+    .stats-button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      background: linear-gradient(135deg, #3b82f6, #2563eb);
+      color: white;
+      border: none;
+      border-radius: 25px;
+      padding: 12px 20px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+      transition: all 0.3s ease;
+    }
+
+    .stats-button:hover {
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
+      transform: translateY(-2px);
+    }
+
+    .stats-button:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+    }
+
+    /* 模态框样式 */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 10000;
+      backdrop-filter: blur(5px);
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 16px;
+      width: 90%;
+      max-width: 1200px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      animation: modalFadeIn 0.3s ease-out;
+    }
+
+    @keyframes modalFadeIn {
+      from {
+        opacity: 0;
+        transform: scale(0.9) translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 24px 30px;
+      border-bottom: 1px solid #e2e8f0;
+      background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+      border-radius: 16px 16px 0 0;
+    }
+
+    .modal-header h2 {
+      margin: 0;
+      font-size: 24px;
+      font-weight: 700;
+      color: #1e293b;
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 28px;
+      color: #64748b;
+      cursor: pointer;
+      padding: 0;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: all 0.2s;
+    }
+
+    .modal-close:hover {
+      background: #e2e8f0;
+      color: #374151;
+    }
+
+    .modal-body {
+      padding: 0;
     }
 
     .star-icon {
@@ -431,6 +540,10 @@
           <span class="star-icon">⭐</span>
           Star on GitHub
         </a>
+        <button class="stats-button" id="stats-button" title="访问统计">
+          <span class="stats-icon">📊</span>
+          统计页面
+        </button>
       </div>
     </div>
 
@@ -442,7 +555,6 @@
       <button class="tab-button" data-tab="japan">日本签证</button>
       <button class="tab-button" data-tab="australia">澳洲签证</button>
       <button class="tab-button" data-tab="schengen">申根签证</button>
-      <button class="tab-button" data-tab="analytics">访问统计</button>
     </div>
 
     <!-- 全球汇总地图 -->
@@ -521,73 +633,6 @@
       <div id="chartdiv-schengen" class="chartdiv"></div>
       <div id="color-palette-schengen" class="color-palette"></div>
     </div>
-
-    <!-- 访问统计地图 -->
-    <div id="analytics" class="map-container">
-      <div class="map-header">
-        <h2>网站访问统计</h2>
-        <p>访问者IP地理位置分布</p>
-        <div class="map-header-watermark">小红书：无花果先生 https://figsama.github.io/2026qzdt/</div>
-      </div>
-      
-      <!-- 管理员密码验证 -->
-      <div id="analytics-password-gate" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 400px; padding: 40px; background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); border-radius: 16px; margin-bottom: 20px;">
-        <div style="background: white; padding: 30px; border-radius: 12px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1); max-width: 400px; width: 100%; text-align: center;">
-          <div style="font-size: 24px; font-weight: 600; color: #1e293b; margin-bottom: 8px;">🔒 管理员验证</div>
-          <div style="font-size: 14px; color: #64748b; margin-bottom: 24px;">请输入管理员密码以查看访问统计数据</div>
-          
-          <div style="margin-bottom: 16px;">
-            <input type="password" id="admin-password" placeholder="请输入密码" 
-                   style="width: 100%; padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 16px; outline: none; transition: border-color 0.2s;"
-                   onfocus="this.style.borderColor='#3b82f6'"
-                   onblur="this.style.borderColor='#e2e8f0'">
-          </div>
-          
-          <button id="verify-password-btn" 
-                  style="width: 100%; padding: 12px 24px; background: #3b82f6; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; transition: background-color 0.2s;"
-                  onmouseover="this.style.backgroundColor='#2563eb'"
-                  onmouseout="this.style.backgroundColor='#3b82f6'">
-            验证密码
-          </button>
-          
-          <div id="password-error" style="color: #ef4444; font-size: 14px; margin-top: 12px; display: none;">
-            密码错误，请重试
-          </div>
-        </div>
-      </div>
-      
-      <!-- 统计数据内容 -->
-      <div id="analytics-content" style="display: none;">
-        <div id="chartdiv-analytics" class="chartdiv"></div>
-        <div id="analytics-stats" style="margin-top: 20px; padding: 20px; background: #f8fafc; border-radius: 12px;">
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px;">
-            <div style="background: white; padding: 15px; border-radius: 8px; text-align: center;">
-              <div style="font-size: 24px; font-weight: 700; color: #3b82f6;" id="stat-total">0</div>
-              <div style="font-size: 14px; color: #64748b; margin-top: 5px;">总访问量</div>
-            </div>
-            <div style="background: white; padding: 15px; border-radius: 8px; text-align: center;">
-              <div style="font-size: 24px; font-weight: 700; color: #10b981;" id="stat-unique">0</div>
-              <div style="font-size: 14px; color: #64748b; margin-top: 5px;">独立IP</div>
-            </div>
-            <div style="background: white; padding: 15px; border-radius: 8px; text-align: center;">
-              <div style="font-size: 24px; font-weight: 700; color: #f59e0b;" id="stat-countries">0</div>
-              <div style="font-size: 14px; color: #64748b; margin-top: 5px;">countries and regions</div>
-            </div>
-          </div>
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px;">
-            <div style="background: white; padding: 15px; border-radius: 8px;">
-              <h3 style="margin: 0 0 15px; font-size: 16px; font-weight: 600;">Most visited countries and regions</h3>
-              <div id="stat-top-countries" style="font-size: 14px; line-height: 2;"></div>
-            </div>
-            <div style="background: white; padding: 15px; border-radius: 8px;">
-              <h3 style="margin: 0 0 15px; font-size: 16px; font-weight: 600;">访问最多的城市</h3>
-              <div id="stat-top-cities" style="font-size: 14px; line-height: 2;"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
 
   <script src="https://www.amcharts.com/lib/3/ammap.js"></script>
   <script src="https://www.amcharts.com/lib/3/maps/js/worldHigh.js"></script>
@@ -3352,6 +3397,114 @@
 
     // 初始化默认显示的地图
     initMap('global');
+
+    // 模态框事件监听器
+    const statsButton = document.getElementById('stats-button');
+    const analyticsModal = document.getElementById('analytics-modal');
+    const modalClose = document.getElementById('modal-close');
+
+    // 显示模态框
+    statsButton.addEventListener('click', () => {
+      analyticsModal.style.display = 'flex';
+      // 初始化统计地图
+      initMap('analytics');
+    });
+
+    // 关闭模态框
+    modalClose.addEventListener('click', () => {
+      analyticsModal.style.display = 'none';
+    });
+
+    // 点击模态框外部关闭
+    analyticsModal.addEventListener('click', (e) => {
+      if (e.target === analyticsModal) {
+        analyticsModal.style.display = 'none';
+      }
+    });
+
+    // ESC键关闭模态框
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && analyticsModal.style.display === 'flex') {
+        analyticsModal.style.display = 'none';
+      }
+    });
   </script>
+
+  <!-- 统计页面模态框 -->
+  <div id="analytics-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>📊 统计页面</h2>
+        <button class="modal-close" id="modal-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <!-- 访问统计地图 -->
+        <div id="analytics" class="map-container">
+          <div class="map-header">
+            <h2>网站访问统计</h2>
+            <p>访问者IP地理位置分布</p>
+            <div class="map-header-watermark">小红书：无花果先生 https://figsama.github.io/2026qzdt/</div>
+          </div>
+          
+          <!-- 管理员密码验证 -->
+          <div id="analytics-password-gate" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 400px; padding: 40px; background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); border-radius: 16px; margin-bottom: 20px;">
+            <div style="background: white; padding: 30px; border-radius: 12px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1); max-width: 400px; width: 100%; text-align: center;">
+              <div style="font-size: 24px; font-weight: 600; color: #1e293b; margin-bottom: 8px;">🔒 管理员验证</div>
+              <div style="font-size: 14px; color: #64748b; margin-bottom: 24px;">请输入管理员密码以查看访问统计数据</div>
+              
+              <div style="margin-bottom: 16px;">
+                <input type="password" id="admin-password" placeholder="请输入密码" 
+                       style="width: 100%; padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 16px; outline: none; transition: border-color 0.2s;"
+                       onfocus="this.style.borderColor='#3b82f6'"
+                       onblur="this.style.borderColor='#e2e8f0'">
+              </div>
+              
+              <button id="verify-password-btn" 
+                      style="width: 100%; padding: 12px 24px; background: #3b82f6; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; transition: background-color 0.2s;"
+                      onmouseover="this.style.backgroundColor='#2563eb'"
+                      onmouseout="this.style.backgroundColor='#3b82f6'">
+                验证密码
+              </button>
+              
+              <div id="password-error" style="color: #ef4444; font-size: 14px; margin-top: 12px; display: none;">
+                密码错误，请重试
+              </div>
+            </div>
+          </div>
+          
+          <!-- 统计数据内容 -->
+          <div id="analytics-content" style="display: none;">
+            <div id="chartdiv-analytics" class="chartdiv"></div>
+            <div id="analytics-stats" style="margin-top: 20px; padding: 20px; background: #f8fafc; border-radius: 12px;">
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px;">
+                <div style="background: white; padding: 15px; border-radius: 8px; text-align: center;">
+                  <div style="font-size: 24px; font-weight: 700; color: #3b82f6;" id="stat-total">0</div>
+                  <div style="font-size: 14px; color: #64748b; margin-top: 5px;">总访问量</div>
+                </div>
+                <div style="background: white; padding: 15px; border-radius: 8px; text-align: center;">
+                  <div style="font-size: 24px; font-weight: 700; color: #10b981;" id="stat-unique">0</div>
+                  <div style="font-size: 14px; color: #64748b; margin-top: 5px;">独立IP</div>
+                </div>
+                <div style="background: white; padding: 15px; border-radius: 8px; text-align: center;">
+                  <div style="font-size: 24px; font-weight: 700; color: #f59e0b;" id="stat-countries">0</div>
+                  <div style="font-size: 14px; color: #64748b; margin-top: 5px;">countries and regions</div>
+                </div>
+              </div>
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px;">
+                <div style="background: white; padding: 15px; border-radius: 8px;">
+                  <h3 style="margin: 0 0 15px; font-size: 16px; font-weight: 600;">Most visited countries and regions</h3>
+                  <div id="stat-top-countries" style="font-size: 14px; line-height: 2;"></div>
+                </div>
+                <div style="background: white; padding: 15px; border-radius: 8px;">
+                  <h3 style="margin: 0 0 15px; font-size: 16px; font-weight: 600;">访问最多的城市</h3>
+                  <div id="stat-top-cities" style="font-size: 14px; line-height: 2;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
