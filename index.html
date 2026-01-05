@@ -3133,35 +3133,49 @@
     async function initAnalyticsMap() {
       // 检查管理员密码验证状态
       const isAuthenticated = sessionStorage.getItem('analytics_authenticated') === 'true';
-      
+
+      // 确保DOM元素存在
+      const passwordGate = document.getElementById('analytics-password-gate');
+      const content = document.getElementById('analytics-content');
+
+      if (!passwordGate || !content) {
+        console.warn('Analytics modal elements not found');
+        return;
+      }
+
       if (!isAuthenticated) {
         // 显示密码输入界面，隐藏统计内容
-        document.getElementById('analytics-password-gate').style.display = 'flex';
-        document.getElementById('analytics-content').style.display = 'none';
-        
+        passwordGate.style.display = 'flex';
+        content.style.display = 'none';
+
         // 设置密码验证事件
         const passwordBtn = document.getElementById('verify-password-btn');
         const passwordInput = document.getElementById('admin-password');
         const errorDiv = document.getElementById('password-error');
-        
+
+        if (!passwordBtn || !passwordInput || !errorDiv) {
+          console.warn('Password verification elements not found');
+          return;
+        }
+
         // 移除之前的事件监听器（如果存在）
         passwordBtn.removeEventListener('click', handlePasswordVerification);
-        
+
         // 定义密码验证函数
         function handlePasswordVerification() {
           const password = passwordInput.value.trim();
           const correctPassword = 'figsama2026'; // 管理员密码
-          
+
           if (password === correctPassword) {
             // 密码正确，显示统计内容
             sessionStorage.setItem('analytics_authenticated', 'true');
-            document.getElementById('analytics-password-gate').style.display = 'none';
-            document.getElementById('analytics-content').style.display = 'block';
+            passwordGate.style.display = 'none';
+            content.style.display = 'block';
             errorDiv.style.display = 'none';
-            
+
             // 移除事件监听器
             passwordBtn.removeEventListener('click', handlePasswordVerification);
-            
+
             // 加载统计数据
             loadAnalyticsData();
           } else {
@@ -3171,22 +3185,22 @@
             passwordInput.focus();
           }
         }
-        
+
         // 添加事件监听器
         passwordBtn.addEventListener('click', handlePasswordVerification);
-        
+
         // 支持回车键验证
         passwordInput.addEventListener('keypress', function(e) {
           if (e.key === 'Enter') {
             handlePasswordVerification();
           }
         });
-        
+
         return; // 不继续加载数据
       } else {
         // 已验证，直接显示内容
-        document.getElementById('analytics-password-gate').style.display = 'none';
-        document.getElementById('analytics-content').style.display = 'block';
+        passwordGate.style.display = 'none';
+        content.style.display = 'block';
         loadAnalyticsData();
       }
       
@@ -3408,8 +3422,13 @@
       // 显示模态框
       statsButton.addEventListener('click', () => {
         analyticsModal.style.display = 'flex';
-        // 初始化统计地图
-        initMap('analytics');
+        // 延迟初始化统计地图，确保模态框完全显示
+        setTimeout(() => {
+          // 只有当模态框确实可见时才初始化
+          if (analyticsModal.style.display === 'flex') {
+            initMap('analytics');
+          }
+        }, 200);
       });
 
       // 关闭模态框
