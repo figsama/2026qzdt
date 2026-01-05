@@ -350,6 +350,7 @@
       <button class="tab-button" data-tab="japan">日本签证</button>
       <button class="tab-button" data-tab="australia">澳洲签证</button>
       <button class="tab-button" data-tab="schengen">申根签证</button>
+      <button class="tab-button" data-tab="analytics">访问统计</button>
     </div>
 
     <!-- 全球汇总地图 -->
@@ -429,6 +430,41 @@
       <div id="color-palette-schengen" class="color-palette"></div>
     </div>
 
+    <!-- 访问统计地图 -->
+    <div id="analytics" class="map-container">
+      <div class="map-header">
+        <h2>网站访问统计</h2>
+        <p>访问者IP地理位置分布</p>
+        <div class="map-header-watermark">小红书：无花果先生 https://figsama.github.io/2026qzdt/</div>
+      </div>
+      <div id="chartdiv-analytics" class="chartdiv"></div>
+      <div id="analytics-stats" style="margin-top: 20px; padding: 20px; background: #f8fafc; border-radius: 12px;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px;">
+          <div style="background: white; padding: 15px; border-radius: 8px; text-align: center;">
+            <div style="font-size: 24px; font-weight: 700; color: #3b82f6;" id="stat-total">0</div>
+            <div style="font-size: 14px; color: #64748b; margin-top: 5px;">总访问量</div>
+          </div>
+          <div style="background: white; padding: 15px; border-radius: 8px; text-align: center;">
+            <div style="font-size: 24px; font-weight: 700; color: #10b981;" id="stat-unique">0</div>
+            <div style="font-size: 14px; color: #64748b; margin-top: 5px;">独立IP</div>
+          </div>
+          <div style="background: white; padding: 15px; border-radius: 8px; text-align: center;">
+            <div style="font-size: 24px; font-weight: 700; color: #f59e0b;" id="stat-countries">0</div>
+            <div style="font-size: 14px; color: #64748b; margin-top: 5px;">国家/地区</div>
+          </div>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px;">
+          <div style="background: white; padding: 15px; border-radius: 8px;">
+            <h3 style="margin: 0 0 15px; font-size: 16px; font-weight: 600;">访问最多的国家</h3>
+            <div id="stat-top-countries" style="font-size: 14px; line-height: 2;"></div>
+          </div>
+          <div style="background: white; padding: 15px; border-radius: 8px;">
+            <h3 style="margin: 0 0 15px; font-size: 16px; font-weight: 600;">访问最多的城市</h3>
+            <div id="stat-top-cities" style="font-size: 14px; line-height: 2;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <script src="https://www.amcharts.com/lib/3/ammap.js"></script>
@@ -436,6 +472,24 @@
   <script src="https://www.amcharts.com/lib/3/plugins/export/export.min.js"></script>
   <link rel="stylesheet" href="https://www.amcharts.com/lib/3/plugins/export/export.css" type="text/css" media="all" />
   <script src="https://www.amcharts.com/lib/3/themes/light.js"></script>
+  
+  <!-- Firebase SDK v9+ (CDN兼容版本) -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyCYSpOk7NTqS9hzZ9OSBD2t3vc2OMgMjRg",
+      authDomain: "visitmap-f9bb2.firebaseapp.com",
+      projectId: "visitmap-f9bb2",
+      storageBucket: "visitmap-f9bb2.firebasestorage.app",
+      messagingSenderId: "737276588756",
+      appId: "1:737276588756:web:bb6f3872edae53ad2e4141",
+      measurementId: "G-L1102C4EC6"
+    };
+    
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+  </script>
 
   <script>
     // 存储所有地图实例
@@ -562,6 +616,165 @@
       }
     };
     
+    // 访问统计功能
+    const visitTracker = {
+      // 获取访问者IP和地理位置
+      async trackVisit() {
+        try {
+          // 使用免费的IP地理位置API
+          const response = await fetch('https://ipapi.co/json/');
+          const data = await response.json();
+          
+          const visitData = {
+            ip: data.ip || 'unknown',
+            country: data.country_name || 'Unknown',
+            countryCode: data.country_code || 'XX',
+            city: data.city || 'Unknown',
+            latitude: data.latitude || 0,
+            longitude: data.longitude || 0,
+            timestamp: new Date().toISOString(),
+            userAgent: navigator.userAgent,
+            referrer: document.referrer || 'direct'
+          };
+          
+          // 保存访问数据到Firebase
+          await this.saveVisit(visitData);
+          
+          return visitData;
+        } catch (error) {
+          console.error('访问追踪失败:', error);
+          // 如果API失败，尝试备用API
+          try {
+            const response = await fetch('https://ip-api.com/json/');
+            const data = await response.json();
+            
+            const visitData = {
+              ip: data.query || 'unknown',
+              country: data.country || 'Unknown',
+              countryCode: data.countryCode || 'XX',
+              city: data.city || 'Unknown',
+              latitude: data.lat || 0,
+              longitude: data.lon || 0,
+              timestamp: new Date().toISOString(),
+              userAgent: navigator.userAgent,
+              referrer: document.referrer || 'direct'
+            };
+            
+            await this.saveVisit(visitData);
+            return visitData;
+          } catch (error2) {
+            console.error('备用API也失败:', error2);
+            return null;
+          }
+        }
+      },
+      
+      // 保存访问数据到Firebase
+      async saveVisit(visitData) {
+        if (typeof db === 'undefined') {
+          console.warn('Firebase未初始化');
+          return;
+        }
+        
+        try {
+          // 检查是否已存在相同IP的访问（避免重复记录）
+          const today = new Date().toDateString();
+          const visitsRef = db.collection('visits');
+          const snapshot = await visitsRef
+            .where('ip', '==', visitData.ip)
+            .where('date', '==', today)
+            .limit(1)
+            .get();
+          
+          if (snapshot.empty) {
+            // 添加日期字段用于查询
+            visitData.date = today;
+            visitData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+            await visitsRef.add(visitData);
+          }
+        } catch (error) {
+          console.error('保存到Firebase失败:', error);
+        }
+      },
+      
+      // 从Firebase获取所有访问记录
+      async getVisitsFromFirebase() {
+        if (typeof db === 'undefined') {
+          console.warn('Firebase未配置，无法从云端获取数据');
+          return [];
+        }
+        
+        try {
+          const snapshot = await db.collection('visits')
+            .limit(1000)
+            .get();
+          
+          const visits = snapshot.docs.map(doc => {
+            const data = doc.data();
+            const createdAt = data.createdAt?.toDate ? data.createdAt.toDate() : (data.timestamp ? new Date(data.timestamp) : new Date());
+            return {
+              ...data,
+              id: doc.id,
+              timestamp: createdAt.toISOString(),
+              createdAt: createdAt
+            };
+          });
+          
+          // 在客户端按时间排序（降序）
+          visits.sort((a, b) => b.createdAt - a.createdAt);
+          
+          return visits;
+        } catch (error) {
+          console.error('从Firebase获取数据失败:', error);
+          return [];
+        }
+      },
+      
+      // 从指定的访问数据数组计算统计
+      getStatsFromVisits(visits) {
+        const stats = {
+          totalVisits: visits.length,
+          uniqueIPs: new Set(visits.map(v => v.ip)).size,
+          countries: {},
+          cities: {},
+          visitsByDate: {},
+          topCountries: [],
+          topCities: []
+        };
+        
+        visits.forEach(visit => {
+          // 统计国家
+          const country = visit.country || 'Unknown';
+          stats.countries[country] = (stats.countries[country] || 0) + 1;
+          
+          // 统计城市
+          const city = visit.city || 'Unknown';
+          stats.cities[city] = (stats.cities[city] || 0) + 1;
+          
+          // 统计日期
+          const date = new Date(visit.timestamp || visit.createdAt?.toDate?.() || visit.createdAt || Date.now()).toDateString();
+          stats.visitsByDate[date] = (stats.visitsByDate[date] || 0) + 1;
+        });
+        
+        // 获取访问最多的国家
+        stats.topCountries = Object.entries(stats.countries)
+          .sort((a, b) => b[1] - a[1])
+          .slice(0, 10)
+          .map(([country, count]) => ({ country, count }));
+        
+        // 获取访问最多的城市
+        stats.topCities = Object.entries(stats.cities)
+          .sort((a, b) => b[1] - a[1])
+          .slice(0, 10)
+          .map(([city, count]) => ({ city, count }));
+        
+        return stats;
+      }
+    };
+    
+    // 页面加载时追踪访问
+    visitTracker.trackVisit();
+    
     // 标签页切换功能
     document.querySelectorAll('.tab-button').forEach(button => {
       button.addEventListener('click', function() {
@@ -608,7 +821,8 @@
 
     // 初始化地图函数
     function initMap(mapType) {
-      if (maps[mapType]) return; // 已初始化则跳过
+      // 访问统计地图每次都重新初始化以显示最新数据
+      if (maps[mapType] && mapType !== 'analytics') return; // 已初始化则跳过
 
       switch(mapType) {
         case 'global':
@@ -631,6 +845,9 @@
           break;
         case 'schengen':
           initSchengenMap();
+          break;
+        case 'analytics':
+          initAnalyticsMap();
           break;
       }
     }
@@ -1962,6 +2179,143 @@
       
       // 初始化调色盘
       colorCustomizer.initColorPalette('schengen', legendTitleToColorKey, COLORS);
+    }
+
+    // 访问统计地图
+    async function initAnalyticsMap() {
+      // 清除旧的地图实例
+      if (maps['analytics']) {
+        maps['analytics'].clear();
+        delete maps['analytics'];
+      }
+      
+      // 从Firebase获取所有访问数据
+      const visits = await visitTracker.getVisitsFromFirebase();
+      
+      // 使用获取到的访问数据计算统计
+      const stats = visitTracker.getStatsFromVisits(visits);
+      
+      // 更新统计数据显示
+      document.getElementById('stat-total').textContent = stats.totalVisits;
+      document.getElementById('stat-unique').textContent = stats.uniqueIPs;
+      document.getElementById('stat-countries').textContent = Object.keys(stats.countries).length;
+      
+      // 显示访问最多的国家
+      const topCountriesDiv = document.getElementById('stat-top-countries');
+      if (stats.topCountries.length > 0) {
+        topCountriesDiv.innerHTML = stats.topCountries.map(item => 
+          `<div style="display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #e2e8f0;">
+            <span>${item.country}</span>
+            <span style="font-weight: 600; color: #3b82f6;">${item.count}</span>
+          </div>`
+        ).join('');
+      } else {
+        topCountriesDiv.innerHTML = '<div style="color: #64748b;">暂无数据</div>';
+      }
+      
+      // 显示访问最多的城市
+      const topCitiesDiv = document.getElementById('stat-top-cities');
+      if (stats.topCities.length > 0) {
+        topCitiesDiv.innerHTML = stats.topCities.map(item => 
+          `<div style="display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #e2e8f0;">
+            <span>${item.city}</span>
+            <span style="font-weight: 600; color: #3b82f6;">${item.count}</span>
+          </div>`
+        ).join('');
+      } else {
+        topCitiesDiv.innerHTML = '<div style="color: #64748b;">暂无数据</div>';
+      }
+      
+      // 创建访问分布地图
+      if (visits.length === 0) {
+        // 如果没有访问数据，显示提示
+        const chartDiv = document.getElementById('chartdiv-analytics');
+        if (chartDiv) {
+          chartDiv.innerHTML = '<div style="display: flex; align-items: center; justify-content: center; height: 100%; font-size: 18px; color: #64748b;">暂无访问数据，访问数据将在您浏览网站时自动收集</div>';
+        }
+        return;
+      }
+      
+      // 按国家统计访问次数
+      const countryVisits = {};
+      visits.forEach(visit => {
+        const countryCode = visit.countryCode || 'XX';
+        if (!countryVisits[countryCode]) {
+          countryVisits[countryCode] = {
+            count: 0,
+            country: visit.country || 'Unknown',
+            visits: []
+          };
+        }
+        countryVisits[countryCode].count++;
+        countryVisits[countryCode].visits.push(visit);
+      });
+      
+      // 创建地图区域数据
+      const areas = Object.keys(countryVisits).map(countryCode => {
+        const data = countryVisits[countryCode];
+        // 根据访问次数设置颜色深度
+        const maxCount = Math.max(...Object.values(countryVisits).map(d => d.count));
+        const intensity = maxCount > 0 ? Math.min(data.count / maxCount, 1) : 0;
+        const color = `rgb(${Math.floor(59 + (196 - 59) * (1 - intensity))}, ${Math.floor(130 + (196 - 130) * (1 - intensity))}, ${Math.floor(246 - 246 * intensity)})`;
+        
+        return {
+          id: countryCode,
+          title: data.country,
+          customData: `${data.count} 次访问`,
+          color: color,
+          value: data.count
+        };
+      });
+      
+      maps['analytics'] = AmCharts.makeChart("chartdiv-analytics", {
+        "type": "map",
+        "theme": "light",
+        "projection": "miller",
+        "dataProvider": {
+          "map": "worldHigh",
+          "zoomLevel": 1.2,
+          "zoomLongitude": 20,
+          "zoomLatitude": 30,
+          "areas": areas
+        },
+        "areasSettings": {
+          "autoZoom": true,
+          "rollOverOutlineColor": "#FFFFFF",
+          "rollOverColor": "#334155",
+          "rollOverAlpha": 1,
+          "alpha": 0.9,
+          "unlistedAreasAlpha": 0.1,
+          "unlistedAreasColor": "#cbd5e1",
+          "balloonText": "<div style='padding:10px; font-family: Inter, sans-serif; line-height:1.6;'><b style='font-size:14px;'>[[title]]</b><br/><span style='font-size:12px; opacity:0.9; margin-top:5px; display:block;'>[[customData]]</span></div>"
+        },
+        "balloon": {
+          "adjustBorderColor": false,
+          "color": "#ffffff",
+          "cornerRadius": 8,
+          "fillColor": "#1e293b",
+          "fillAlpha": 0.95,
+          "borderThickness": 0,
+          "shadowAlpha": 0.15
+        },
+        "export": {
+          "enabled": true,
+          "menu": [{
+            "class": "export-main",
+            "menu": [{
+              "label": "导出地图",
+              "menu": ["PNG", "JPG", "PDF"]
+            }]
+          }],
+          "capture": function() {
+            addWatermarkForExport('analytics', true);
+            return document.getElementById("chartdiv-analytics");
+          }
+        }
+      });
+      
+      // 添加水印文本到地图（用于显示）
+      addWatermarkForExport('analytics');
     }
 
     // 初始化默认显示的地图
