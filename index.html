@@ -791,9 +791,188 @@
         });
       },
       
+      // 中国城市中英对照表
+      getChineseCityMapping() {
+        return {
+          // 直辖市
+          '北京': 'Beijing',
+          '上海': 'Shanghai', 
+          '天津': 'Tianjin',
+          '重庆': 'Chongqing',
+          
+          // 广东省
+          '广州': 'Guangzhou',
+          '深圳': 'Shenzhen',
+          '东莞': 'Dongguan',
+          '佛山': 'Foshan',
+          '中山': 'Zhongshan',
+          '珠海': 'Zhuhai',
+          '惠州': 'Huizhou',
+          '江门': 'Jiangmen',
+          '湛江': 'Zhanjiang',
+          '茂名': 'Maoming',
+          '肇庆': 'Zhaoqing',
+          '清远': 'Qingyuan',
+          '韶关': 'Shaoguan',
+          '河源': 'Heyuan',
+          '梅州': 'Meizhou',
+          '汕头': 'Shantou',
+          '汕尾': 'Shanwei',
+          '阳江': 'Yangjiang',
+          '揭阳': 'Jieyang',
+          '云浮': 'Yunfu',
+          
+          // 江苏省
+          '南京': 'Nanjing',
+          '苏州': 'Suzhou',
+          '无锡': 'Wuxi',
+          '常州': 'Changzhou',
+          '徐州': 'Xuzhou',
+          '南通': 'Nantong',
+          '连云港': 'Lianyungang',
+          '淮安': 'Huai\'an',
+          '盐城': 'Yancheng',
+          '扬州': 'Yangzhou',
+          '镇江': 'Zhenjiang',
+          '泰州': 'Taizhou',
+          '宿迁': 'Suqian',
+          
+          // 浙江省
+          '杭州': 'Hangzhou',
+          '宁波': 'Ningbo',
+          '温州': 'Wenzhou',
+          '嘉兴': 'Jiaxing',
+          '湖州': 'Huzhou',
+          '绍兴': 'Shaoxing',
+          '金华': 'Jinhua',
+          '衢州': 'Quzhou',
+          '舟山': 'Zhoushan',
+          '台州': 'Taizhou',
+          '丽水': 'Lishui',
+          
+          // 山东省
+          '济南': 'Jinan',
+          '青岛': 'Qingdao',
+          '淄博': 'Zibo',
+          '枣庄': 'Zaozhuang',
+          '东营': 'Dongying',
+          '烟台': 'Yantai',
+          '潍坊': 'Weifang',
+          '济宁': 'Jining',
+          '泰安': 'Tai\'an',
+          '威海': 'Weihai',
+          '日照': 'Rizhao',
+          '莱芜': 'Laiwu',
+          '临沂': 'Linyi',
+          '德州': 'Dezhou',
+          '聊城': 'Liaocheng',
+          '滨州': 'Binzhou',
+          '菏泽': 'Heze',
+          
+          // 其他主要城市
+          '成都': 'Chengdu',
+          '武汉': 'Wuhan',
+          '西安': 'Xi\'an',
+          '沈阳': 'Shenyang',
+          '大连': 'Dalian',
+          '长春': 'Changchun',
+          '哈尔滨': 'Harbin',
+          '合肥': 'Hefei',
+          '福州': 'Fuzhou',
+          '厦门': 'Xiamen',
+          '南昌': 'Nanchang',
+          '郑州': 'Zhengzhou',
+          '长沙': 'Changsha',
+          '昆明': 'Kunming',
+          '贵阳': 'Guiyang',
+          '兰州': 'Lanzhou',
+          '西宁': 'Xining',
+          '银川': 'Yinchuan',
+          '乌鲁木齐': 'Urumqi',
+          '呼和浩特': 'Hohhot',
+          '太原': 'Taiyuan',
+          '石家庄': 'Shijiazhuang',
+          '唐山': 'Tangshan',
+          '保定': 'Baoding',
+          '廊坊': 'Langfang',
+          '沧州': 'Cangzhou',
+          '衡水': 'Hengshui',
+          '邢台': 'Xingtai',
+          '邯郸': 'Handan',
+          '秦皇岛': 'Qinhuangdao',
+          '张家口': 'Zhangjiakou'
+        };
+      },
+      
+      // 转换中文城市名为英文
+      convertChineseCityToEnglish(cityName) {
+        if (!cityName || typeof cityName !== 'string') return cityName;
+        
+        const mapping = this.getChineseCityMapping();
+        
+        // 直接匹配
+        if (mapping[cityName]) {
+          return mapping[cityName];
+        }
+        
+        // 检查是否包含中文城市名（如"北京市" -> "Beijing"）
+        for (const [chinese, english] of Object.entries(mapping)) {
+          if (cityName.includes(chinese)) {
+            return english;
+          }
+        }
+        
+        // 如果不包含中文字符，返回原名
+        const hasChinese = /[\u4e00-\u9fff]/.test(cityName);
+        if (!hasChinese) {
+          return cityName;
+        }
+        
+        // 对于未映射的中文城市，返回原名（保持中文）
+        return cityName;
+      },
+      
       // 使用中国本地API获取IP地理位置（针对中国大陆用户优化）
       async getIPLocationChina() {
         const apis = [
+          // 高德地图API - 中国最准确的定位服务
+          {
+            name: 'amap',
+            url: 'https://restapi.amap.com/v3/ip?key=your_amap_key&output=json',
+            parser: async (data) => {
+              if (data.status === '1' && data.city) {
+                let city = data.city.replace('市', ''); // 移除"市"字
+                city = this.convertChineseCityToEnglish(city);
+                return {
+                  ip: data.ip || 'unknown',
+                  country: 'China',
+                  countryCode: 'CN',
+                  city: city,
+                  latitude: data.rectangle ? parseFloat(data.rectangle.split(',')[1]) : 35.8617,
+                  longitude: data.rectangle ? parseFloat(data.rectangle.split(',')[0]) : 104.1954
+                };
+              }
+              throw new Error('高德API返回无效数据');
+            }
+          },
+          // ipip.net - 中国专业IP数据库
+          {
+            name: 'ipip.net',
+            url: 'https://myip.ipip.net/json',
+            parser: (data) => {
+              const location = data.data?.location || [];
+              let city = location[2] || location[1] || 'Unknown';
+              city = this.convertChineseCityToEnglish(city);
+              return {
+                ip: data.data?.ip || 'unknown',
+                country: 'China',
+                countryCode: 'CN',
+                city: city,
+                latitude: 35.8617,
+                longitude: 104.1954
+              };
+            }
+          },
           // 太平洋电脑网 - 免费，中国IP数据准确
           {
             name: 'pconline',
@@ -802,26 +981,10 @@
               ip: data.ip || 'unknown',
               country: 'China',
               countryCode: 'CN',
-              city: data.city || data.pro || 'Unknown',
+              city: this.convertChineseCityToEnglish(data.city || data.pro || 'Unknown'),
               latitude: 35.8617,
               longitude: 104.1954
             })
-          },
-          // ipip.net - 中国专业IP数据库
-          {
-            name: 'ipip.net',
-            url: 'https://myip.ipip.net/json',
-            parser: (data) => {
-              const location = data.data?.location || [];
-              return {
-                ip: data.data?.ip || 'unknown',
-                country: 'China',
-                countryCode: 'CN',
-                city: location[2] || location[1] || 'Unknown',
-                latitude: 35.8617,
-                longitude: 104.1954
-              };
-            }
           },
           // ip.cn - 简单快速
           {
@@ -831,7 +994,7 @@
               ip: data.ip || 'unknown',
               country: 'China',
               countryCode: 'CN',
-              city: data.address || 'Unknown',
+              city: this.convertChineseCityToEnglish(data.address || 'Unknown'),
               latitude: 35.8617,
               longitude: 104.1954
             })
