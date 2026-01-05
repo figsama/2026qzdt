@@ -697,36 +697,26 @@
         }
       },
       
-      // 从Firebase获取所有访问记录
-      async getVisitsFromFirebase() {
+      // 从Firebase获取聚合统计数据
+      async getAggregatedStats() {
         if (typeof db === 'undefined') {
           console.warn('Firebase未配置，无法从云端获取数据');
-          return [];
+          return null;
         }
         
         try {
-          const snapshot = await db.collection('visits')
-            .limit(1000)
-            .get();
+          // 从 aggregated_stats 集合读取聚合数据
+          const doc = await db.collection('aggregated_stats').doc('current').get();
           
-          const visits = snapshot.docs.map(doc => {
-            const data = doc.data();
-            const createdAt = data.createdAt?.toDate ? data.createdAt.toDate() : (data.timestamp ? new Date(data.timestamp) : new Date());
-            return {
-              ...data,
-              id: doc.id,
-              timestamp: createdAt.toISOString(),
-              createdAt: createdAt
-            };
-          });
-          
-          // 在客户端按时间排序（降序）
-          visits.sort((a, b) => b.createdAt - a.createdAt);
-          
-          return visits;
+          if (doc.exists) {
+            return doc.data();
+          } else {
+            console.warn('聚合统计数据不存在');
+            return null;
+          }
         } catch (error) {
-          console.error('从Firebase获取数据失败:', error);
-          return [];
+          console.error('从Firebase获取聚合数据失败:', error);
+          return null;
         }
       },
       
@@ -2189,21 +2179,32 @@
         delete maps['analytics'];
       }
       
-      // 从Firebase获取所有访问数据
-      const visits = await visitTracker.getVisitsFromFirebase();
+      // 从Firebase获取聚合统计数据
+      const aggregatedData = await visitTracker.getAggregatedStats();
       
-      // 使用获取到的访问数据计算统计
-      const stats = visitTracker.getStatsFromVisits(visits);
+      if (!aggregatedData) {
+        // 如果没有聚合数据，显示提示
+        const chartDiv = document.getElementById('chartdiv-analytics');
+        if (chartDiv) {
+          chartDiv.innerHTML = '<div style="display: flex; align-items: center; justify-content: center; height: 100%; font-size: 18px; color: #64748b;">暂无访问数据，访问数据将在您浏览网站时自动收集</div>';
+        }
+        document.getElementById('stat-total').textContent = '0';
+        document.getElementById('stat-unique').textContent = '0';
+        document.getElementById('stat-countries').textContent = '0';
+        document.getElementById('stat-top-countries').innerHTML = '<div style="color: #64748b;">暂无数据</div>';
+        document.getElementById('stat-top-cities').innerHTML = '<div style="color: #64748b;">暂无数据</div>';
+        return;
+      }
       
       // 更新统计数据显示
-      document.getElementById('stat-total').textContent = stats.totalVisits;
-      document.getElementById('stat-unique').textContent = stats.uniqueIPs;
-      document.getElementById('stat-countries').textContent = Object.keys(stats.countries).length;
+      document.getElementById('stat-total').textContent = aggregatedData.totalVisits || 0;
+      document.getElementById('stat-unique').textContent = aggregatedData.uniqueIPs || 0;
+      document.getElementById('stat-countries').textContent = aggregatedData.countriesCount || Object.keys(aggregatedData.countries || {}).length;
       
       // 显示访问最多的国家
       const topCountriesDiv = document.getElementById('stat-top-countries');
-      if (stats.topCountries.length > 0) {
-        topCountriesDiv.innerHTML = stats.topCountries.map(item => 
+      if (aggregatedData.topCountries && aggregatedData.topCountries.length > 0) {
+        topCountriesDiv.innerHTML = aggregatedData.topCountries.map(item => 
           `<div style="display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #e2e8f0;">
             <span>${item.country}</span>
             <span style="font-weight: 600; color: #3b82f6;">${item.count}</span>
@@ -2215,8 +2216,8 @@
       
       // 显示访问最多的城市
       const topCitiesDiv = document.getElementById('stat-top-cities');
-      if (stats.topCities.length > 0) {
-        topCitiesDiv.innerHTML = stats.topCities.map(item => 
+      if (aggregatedData.topCities && aggregatedData.topCities.length > 0) {
+        topCitiesDiv.innerHTML = aggregatedData.topCities.map(item => 
           `<div style="display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #e2e8f0;">
             <span>${item.city}</span>
             <span style="font-weight: 600; color: #3b82f6;">${item.count}</span>
@@ -2227,44 +2228,29 @@
       }
       
       // 创建访问分布地图
-      if (visits.length === 0) {
-        // 如果没有访问数据，显示提示
+      const countryVisits = aggregatedData.countryVisits || {};
+      if (Object.keys(countryVisits).length === 0) {
         const chartDiv = document.getElementById('chartdiv-analytics');
         if (chartDiv) {
-          chartDiv.innerHTML = '<div style="display: flex; align-items: center; justify-content: center; height: 100%; font-size: 18px; color: #64748b;">暂无访问数据，访问数据将在您浏览网站时自动收集</div>';
+          chartDiv.innerHTML = '<div style="display: flex; align-items: center; justify-content: center; height: 100%; font-size: 18px; color: #64748b;">暂无访问数据</div>';
         }
         return;
       }
       
-      // 按国家统计访问次数
-      const countryVisits = {};
-      visits.forEach(visit => {
-        const countryCode = visit.countryCode || 'XX';
-        if (!countryVisits[countryCode]) {
-          countryVisits[countryCode] = {
-            count: 0,
-            country: visit.country || 'Unknown',
-            visits: []
-          };
-        }
-        countryVisits[countryCode].count++;
-        countryVisits[countryCode].visits.push(visit);
-      });
-      
       // 创建地图区域数据
+      const maxCount = Math.max(...Object.values(countryVisits).map(d => d.count || 0));
       const areas = Object.keys(countryVisits).map(countryCode => {
         const data = countryVisits[countryCode];
         // 根据访问次数设置颜色深度
-        const maxCount = Math.max(...Object.values(countryVisits).map(d => d.count));
-        const intensity = maxCount > 0 ? Math.min(data.count / maxCount, 1) : 0;
+        const intensity = maxCount > 0 ? Math.min((data.count || 0) / maxCount, 1) : 0;
         const color = `rgb(${Math.floor(59 + (196 - 59) * (1 - intensity))}, ${Math.floor(130 + (196 - 130) * (1 - intensity))}, ${Math.floor(246 - 246 * intensity)})`;
         
         return {
           id: countryCode,
-          title: data.country,
-          customData: `${data.count} 次访问`,
+          title: data.country || 'Unknown',
+          customData: `${data.count || 0} 次访问`,
           color: color,
-          value: data.count
+          value: data.count || 0
         };
       });
       
