@@ -633,8 +633,8 @@
             if (data.status === 'success') {
               resolve({
                 ip: data.query || 'unknown',
-                country: data.country || 'Unknown',
-                countryCode: data.countryCode || 'XX',
+                country: data.country || 'China',
+                countryCode: data.countryCode || 'CN',
                 city: data.city || 'Unknown',
                 latitude: data.lat || 0,
                 longitude: data.lon || 0
@@ -709,11 +709,11 @@
               // 只获取IP,不获取位置信息(位置由其他API提供)
               return {
                 ip: data.ip,
-                country: 'Unknown',
-                countryCode: 'XX',
+                country: 'China',
+                countryCode: 'CN',
                 city: 'Unknown',
-                latitude: 0,
-                longitude: 0
+                latitude: 35.8617,
+                longitude: 104.1954
               };
             }
           }
@@ -782,26 +782,26 @@
           }
         }
         
-        // 如果所有方法都失败，使用基本信息
+        // 如果所有方法都失败，使用基本信息（默认显示为中国）
         if (!locationData) {
-          console.info('ℹ 使用默认地理位置信息');
+          console.info('ℹ 使用默认地理位置信息（中国）');
           locationData = {
             ip: 'unknown',
-            country: 'Unknown',
-            countryCode: 'XX',
+            country: 'China',
+            countryCode: 'CN',
             city: 'Unknown',
-            latitude: 0,
-            longitude: 0
+            latitude: 35.8617,
+            longitude: 104.1954
           };
         }
         
         const visitData = {
           ip: locationData.ip || 'unknown',
-          country: locationData.country || 'Unknown',
-          countryCode: locationData.countryCode || 'XX',
+          country: locationData.country || 'China',
+          countryCode: locationData.countryCode || 'CN',
           city: locationData.city || 'Unknown',
-          latitude: locationData.latitude || 0,
-          longitude: locationData.longitude || 0,
+          latitude: locationData.latitude || 35.8617,
+          longitude: locationData.longitude || 104.1954,
           timestamp: new Date().toISOString(),
           userAgent: navigator.userAgent,
           referrer: document.referrer || 'direct'
@@ -883,11 +883,20 @@
           // 添加 countryVisits 用于地图显示
           stats.countryVisits = {};
           visits.forEach(visit => {
-            const countryCode = visit.countryCode || 'XX';
+            // 统一处理 Unknown 和 XX，映射到中国
+            let countryCode = visit.countryCode || 'CN';
+            let country = visit.country || 'China';
+            
+            // 如果 countryCode 是 XX 或 country 是 Unknown，统一映射到中国
+            if (countryCode === 'XX' || country === 'Unknown' || !countryCode || !country) {
+              countryCode = 'CN';
+              country = 'China';
+            }
+            
             if (!stats.countryVisits[countryCode]) {
               stats.countryVisits[countryCode] = {
                 count: 0,
-                country: visit.country || 'Unknown'
+                country: country
               };
             }
             stats.countryVisits[countryCode].count++;
@@ -930,8 +939,11 @@
         };
         
         visits.forEach(visit => {
-          // 统计国家
-          const country = visit.country || 'Unknown';
+          // 统计国家（统一处理 Unknown 为中国）
+          let country = visit.country || 'China';
+          if (country === 'Unknown' || !country) {
+            country = 'China';
+          }
           stats.countries[country] = (stats.countries[country] || 0) + 1;
           
           // 统计城市
@@ -2435,7 +2447,7 @@
       }
       
       // 创建访问分布地图
-      const countryVisits = aggregatedData.countryVisits || {};
+      let countryVisits = aggregatedData.countryVisits || {};
       if (Object.keys(countryVisits).length === 0) {
         const chartDiv = document.getElementById('chartdiv-analytics');
         if (chartDiv) {
@@ -2443,6 +2455,30 @@
         }
         return;
       }
+      
+      // 清理数据：将 XX 和 Unknown 合并到中国（CN）
+      const cleanedCountryVisits = {};
+      Object.keys(countryVisits).forEach(countryCode => {
+        const data = countryVisits[countryCode];
+        let targetCode = countryCode;
+        let targetCountry = data.country || 'China';
+        
+        // 如果 countryCode 是 XX 或 country 是 Unknown，映射到中国
+        if (countryCode === 'XX' || data.country === 'Unknown' || !countryCode || !data.country) {
+          targetCode = 'CN';
+          targetCountry = 'China';
+        }
+        
+        // 合并到目标国家代码
+        if (!cleanedCountryVisits[targetCode]) {
+          cleanedCountryVisits[targetCode] = {
+            count: 0,
+            country: targetCountry
+          };
+        }
+        cleanedCountryVisits[targetCode].count += (data.count || 0);
+      });
+      countryVisits = cleanedCountryVisits;
       
       // 创建地图区域数据
       const maxCount = Math.max(...Object.values(countryVisits).map(d => d.count || 0));
@@ -2454,7 +2490,7 @@
         
         return {
           id: countryCode,
-          title: data.country || 'Unknown',
+          title: data.country || 'China',
           customData: `${data.count || 0} 次访问`,
           color: color,
           value: data.count || 0
