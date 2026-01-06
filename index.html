@@ -75,98 +75,6 @@
       position: relative;
     }
 
-    .search-container {
-      margin-top: 20px;
-      max-width: 500px;
-      margin-left: auto;
-      margin-right: auto;
-      position: relative;
-    }
-
-    .search-box {
-      width: 100%;
-      padding: 12px 45px 12px 15px;
-      border: 2px solid #e2e8f0;
-      border-radius: 25px;
-      font-size: 14px;
-      font-family: 'Inter', 'Noto Sans SC', sans-serif;
-      outline: none;
-      transition: all 0.3s ease;
-      background: white;
-    }
-
-    .search-box:focus {
-      border-color: #3b82f6;
-      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-    }
-
-    .search-button {
-      position: absolute;
-      right: 5px;
-      top: 50%;
-      transform: translateY(-50%);
-      background: #3b82f6;
-      color: white;
-      border: none;
-      border-radius: 20px;
-      padding: 8px 16px;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    .search-button:hover {
-      background: #2563eb;
-      transform: translateY(-50%) scale(1.05);
-    }
-
-    .search-results {
-      position: absolute;
-      top: 100%;
-      left: 0;
-      right: 0;
-      margin-top: 8px;
-      background: white;
-      border: 1px solid #e2e8f0;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      max-height: 300px;
-      overflow-y: auto;
-      z-index: 1000;
-      display: none;
-    }
-
-    .search-results.show {
-      display: block;
-    }
-
-    .search-result-item {
-      padding: 12px 15px;
-      cursor: pointer;
-      border-bottom: 1px solid #f1f5f9;
-      transition: background 0.2s;
-    }
-
-    .search-result-item:last-child {
-      border-bottom: none;
-    }
-
-    .search-result-item:hover {
-      background: #f8fafc;
-    }
-
-    .search-result-title {
-      font-weight: 600;
-      color: #0f172a;
-      margin-bottom: 4px;
-    }
-
-    .search-result-info {
-      font-size: 12px;
-      color: #64748b;
-    }
-
     .star-button {
       position: absolute;
       top: 0;
@@ -422,11 +330,6 @@
       <div class="header-content">
         <h1>全球签证免签政策地图总览</h1>
         <p>2026版 · 一键切换查看各类签证免签政策地图</p>
-        <div class="search-container">
-          <input type="text" class="search-box" id="country-search" placeholder="搜索国家或地区..." />
-          <button class="search-button" id="search-btn">搜索</button>
-          <div class="search-results" id="search-results"></div>
-        </div>
         <a href="https://github.com/figsama/2026qzdt" target="_blank" class="star-button">
           <span class="star-icon">⭐</span>
           Star on GitHub
@@ -529,60 +432,30 @@
         <p>访问者IP地理位置分布</p>
         <div class="map-header-watermark">小红书：无花果先生 https://figsama.github.io/2026qzdt/</div>
       </div>
-      
-      <!-- 管理员密码验证 -->
-      <div id="analytics-password-gate" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 400px; padding: 40px; background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); border-radius: 16px; margin-bottom: 20px;">
-        <div style="background: white; padding: 30px; border-radius: 12px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1); max-width: 400px; width: 100%; text-align: center;">
-          <div style="font-size: 24px; font-weight: 600; color: #1e293b; margin-bottom: 8px;">🔒 管理员验证</div>
-          <div style="font-size: 14px; color: #64748b; margin-bottom: 24px;">请输入管理员密码以查看访问统计数据</div>
-          
-          <div style="margin-bottom: 16px;">
-            <input type="password" id="admin-password" placeholder="请输入密码" 
-                   style="width: 100%; padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 16px; outline: none; transition: border-color 0.2s;"
-                   onfocus="this.style.borderColor='#3b82f6'"
-                   onblur="this.style.borderColor='#e2e8f0'">
+      <div id="chartdiv-analytics" class="chartdiv"></div>
+      <div id="analytics-stats" style="margin-top: 20px; padding: 20px; background: #f8fafc; border-radius: 12px;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px;">
+          <div style="background: white; padding: 15px; border-radius: 8px; text-align: center;">
+            <div style="font-size: 24px; font-weight: 700; color: #3b82f6;" id="stat-total">0</div>
+            <div style="font-size: 14px; color: #64748b; margin-top: 5px;">总访问量</div>
           </div>
-          
-          <button id="verify-password-btn" 
-                  style="width: 100%; padding: 12px 24px; background: #3b82f6; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; transition: background-color 0.2s;"
-                  onmouseover="this.style.backgroundColor='#2563eb'"
-                  onmouseout="this.style.backgroundColor='#3b82f6'">
-            验证密码
-          </button>
-          
-          <div id="password-error" style="color: #ef4444; font-size: 14px; margin-top: 12px; display: none;">
-            密码错误，请重试
+          <div style="background: white; padding: 15px; border-radius: 8px; text-align: center;">
+            <div style="font-size: 24px; font-weight: 700; color: #10b981;" id="stat-unique">0</div>
+            <div style="font-size: 14px; color: #64748b; margin-top: 5px;">独立IP</div>
+          </div>
+          <div style="background: white; padding: 15px; border-radius: 8px; text-align: center;">
+            <div style="font-size: 24px; font-weight: 700; color: #f59e0b;" id="stat-countries">0</div>
+            <div style="font-size: 14px; color: #64748b; margin-top: 5px;">国家/地区</div>
           </div>
         </div>
-      </div>
-      
-      <!-- 统计数据内容 -->
-      <div id="analytics-content" style="display: none;">
-        <div id="chartdiv-analytics" class="chartdiv"></div>
-        <div id="analytics-stats" style="margin-top: 20px; padding: 20px; background: #f8fafc; border-radius: 12px;">
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px;">
-            <div style="background: white; padding: 15px; border-radius: 8px; text-align: center;">
-              <div style="font-size: 24px; font-weight: 700; color: #3b82f6;" id="stat-total">0</div>
-              <div style="font-size: 14px; color: #64748b; margin-top: 5px;">总访问量</div>
-            </div>
-            <div style="background: white; padding: 15px; border-radius: 8px; text-align: center;">
-              <div style="font-size: 24px; font-weight: 700; color: #10b981;" id="stat-unique">0</div>
-              <div style="font-size: 14px; color: #64748b; margin-top: 5px;">独立IP</div>
-            </div>
-            <div style="background: white; padding: 15px; border-radius: 8px; text-align: center;">
-              <div style="font-size: 24px; font-weight: 700; color: #f59e0b;" id="stat-countries">0</div>
-              <div style="font-size: 14px; color: #64748b; margin-top: 5px;">countries and regions</div>
-            </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px;">
+          <div style="background: white; padding: 15px; border-radius: 8px;">
+            <h3 style="margin: 0 0 15px; font-size: 16px; font-weight: 600;">访问最多的国家</h3>
+            <div id="stat-top-countries" style="font-size: 14px; line-height: 2;"></div>
           </div>
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px;">
-            <div style="background: white; padding: 15px; border-radius: 8px;">
-              <h3 style="margin: 0 0 15px; font-size: 16px; font-weight: 600;">Most visited countries and regions</h3>
-              <div id="stat-top-countries" style="font-size: 14px; line-height: 2;"></div>
-            </div>
-            <div style="background: white; padding: 15px; border-radius: 8px;">
-              <h3 style="margin: 0 0 15px; font-size: 16px; font-weight: 600;">访问最多的城市</h3>
-              <div id="stat-top-cities" style="font-size: 14px; line-height: 2;"></div>
-            </div>
+          <div style="background: white; padding: 15px; border-radius: 8px;">
+            <h3 style="margin: 0 0 15px; font-size: 16px; font-weight: 600;">访问最多的城市</h3>
+            <div id="stat-top-cities" style="font-size: 14px; line-height: 2;"></div>
           </div>
         </div>
       </div>
@@ -609,30 +482,8 @@
       measurementId: "G-L1102C4EC6"
     };
     
-    let db;
-    try {
-      firebase.initializeApp(firebaseConfig);
-      db = firebase.firestore();
-      
-      // 设置Firestore错误处理，避免连接错误影响页面功能
-      db.settings({
-        ignoreUndefinedProperties: true
-      });
-      
-      // 监听Firestore连接错误，静默处理
-      db.enablePersistence().catch((err) => {
-        if (err.code === 'failed-precondition') {
-          console.warn('Firestore持久化失败: 多个标签页可能同时打开');
-        } else if (err.code === 'unimplemented') {
-          console.warn('Firestore持久化不支持: 浏览器可能不支持');
-        } else {
-          console.warn('Firestore连接警告:', err.message);
-        }
-      });
-    } catch (error) {
-      console.warn('Firebase初始化失败，访问统计功能将不可用:', error.message);
-      db = undefined;
-    }
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
   </script>
 
   <script>
@@ -760,8 +611,140 @@
       }
     };
     
+    // 城市坐标数据库（用于修正错误的默认坐标）
+    const CITY_COORDINATES_DB = {
+      // 中国主要城市
+      'Beijing-China': { lat: 39.9042, lon: 116.4074 },
+      'Shanghai-China': { lat: 31.2304, lon: 121.4737 },
+      'Shenzhen-China': { lat: 22.5431, lon: 114.0579 },
+      'Guangzhou-China': { lat: 23.1291, lon: 113.2644 },
+      'Hangzhou-China': { lat: 30.2741, lon: 120.1551 },
+      'Chengdu-China': { lat: 30.5728, lon: 104.0668 },
+      'Wuhan-China': { lat: 30.5928, lon: 114.3055 },
+      "Xi'an-China": { lat: 34.2658, lon: 108.9541 },
+      'Nanjing-China': { lat: 32.0603, lon: 118.7969 },
+      'Chongqing-China': { lat: 29.4316, lon: 106.9123 },
+      'Tianjin-China': { lat: 39.3434, lon: 117.3616 },
+      'Suzhou-China': { lat: 31.2989, lon: 120.5853 },
+      'Changsha-China': { lat: 28.2282, lon: 112.9388 },
+      'Zhengzhou-China': { lat: 34.7466, lon: 113.6253 },
+      'Qingdao-China': { lat: 36.0671, lon: 120.3826 },
+      'Xiamen-China': { lat: 24.4798, lon: 118.0894 },
+      'Dalian-China': { lat: 38.9140, lon: 121.6147 },
+      'Jinan-China': { lat: 36.6512, lon: 117.1209 },
+      'Huangshi-China': { lat: 30.2006, lon: 115.0386 },
+      'Shenyang-China': { lat: 41.8057, lon: 123.4328 },
+      'Harbin-China': { lat: 45.8038, lon: 126.5340 },
+      'Kunming-China': { lat: 25.0406, lon: 102.7129 },
+      'Lanzhou-China': { lat: 36.0611, lon: 103.8343 },
+      'Urumqi-China': { lat: 43.8256, lon: 87.6168 },
+      'Lhasa-China': { lat: 29.6500, lon: 91.1000 },
+      
+      // 香港、澳门、台湾
+      'Hong Kong-Hong Kong': { lat: 22.3193, lon: 114.1694 },
+      'Macau-Macau': { lat: 22.1987, lon: 113.5439 },
+      'Taipei-Taiwan': { lat: 25.0330, lon: 121.5654 },
+      
+      // 其他国家主要城市
+      'Tokyo-Japan': { lat: 35.6762, lon: 139.6503 },
+      'Seoul-South Korea': { lat: 37.5665, lon: 126.9780 },
+      'Singapore-Singapore': { lat: 1.3521, lon: 103.8198 },
+      'Bangkok-Thailand': { lat: 13.7563, lon: 100.5018 },
+      'New York-United States': { lat: 40.7128, lon: -74.0060 },
+      'Los Angeles-United States': { lat: 34.0522, lon: -118.2437 },
+      'London-United Kingdom': { lat: 51.5074, lon: -0.1278 },
+      'Paris-France': { lat: 48.8566, lon: 2.3522 },
+      'Berlin-Germany': { lat: 52.5200, lon: 13.4050 },
+      'Sydney-Australia': { lat: -33.8688, lon: 151.2093 },
+      'Toronto-Canada': { lat: 43.6532, lon: -79.3832 },
+      'Amsterdam-Netherlands': { lat: 52.3676, lon: 4.9041 }
+    };
+    
     // 访问统计功能
     const visitTracker = {
+      // 检查坐标是否为默认坐标
+      isDefaultCoordinate(lat, lon) {
+        return (
+          (lat === 0 && lon === 0) ||
+          (Math.abs(lat - 35.8617) < 0.01 && Math.abs(lon - 104.1954) < 0.01) || // 中国/甘肃默认
+          (Math.abs(lat - 39.9042) < 0.01 && Math.abs(lon - 116.4074) < 0.01)    // 北京默认（非精确）
+        );
+      },
+      
+      // 计算坐标质量评分
+      calculateQualityScore(data, apiName) {
+        let score = 100;
+        
+        // 1. 检查是否是默认坐标（-60分）
+        if (this.isDefaultCoordinate(data.latitude, data.longitude)) {
+          score -= 60;
+        }
+        
+        // 2. 检查城市名是否具体
+        if (!data.city || data.city === 'Unknown' || data.city.toLowerCase() === 'unknown') {
+          score -= 40;
+        }
+        
+        // 3. 检查是否包含中文（-50分）
+        if (/[\u4e00-\u9fa5]/.test(data.city)) {
+          score -= 50;
+        }
+        
+        // 4. 检查坐标精度（小数位数）
+        const latStr = data.latitude.toString();
+        const lonStr = data.longitude.toString();
+        const latPrecision = (latStr.split('.')[1] || '').length;
+        const lonPrecision = (lonStr.split('.')[1] || '').length;
+        
+        if (latPrecision >= 4 && lonPrecision >= 4) {
+          score += 15; // 高精度加分
+        } else if (latPrecision < 2 || lonPrecision < 2) {
+          score -= 20; // 低精度减分
+        }
+        
+        // 5. 检查国家代码是否有效
+        if (!data.countryCode || data.countryCode === 'XX' || data.countryCode.length !== 2) {
+          score -= 20;
+        }
+        
+        // 6. API可靠性加权
+        const apiReliability = {
+          'ipapi.co': 20,
+          'ip-api.com': 18,
+          'ipwhois.app': 12,
+          'ipinfo.io': 15,
+          'freeipapi.com': 10,
+          'ipgeolocation.io': 8
+        };
+        score += apiReliability[apiName] || 0;
+        
+        return Math.max(0, Math.min(100, score)); // 限制在0-100之间
+      },
+      
+      // 修正城市坐标（使用本地数据库）
+      correctCityCoordinates(locationData) {
+        const key = `${locationData.city}-${locationData.country}`;
+        const correctCoords = CITY_COORDINATES_DB[key];
+        
+        if (correctCoords) {
+          const isDefault = this.isDefaultCoordinate(locationData.latitude, locationData.longitude);
+          
+          if (isDefault) {
+            console.log(`🔧 修正坐标: ${locationData.city}, ${locationData.country}`);
+            console.log(`   原坐标: (${locationData.latitude}, ${locationData.longitude})`);
+            console.log(`   新坐标: (${correctCoords.lat}, ${correctCoords.lon})`);
+            
+            locationData.latitude = correctCoords.lat;
+            locationData.longitude = correctCoords.lon;
+            locationData.coordsCorrected = true;
+            locationData.originalLat = locationData.latitude;
+            locationData.originalLon = locationData.longitude;
+          }
+        }
+        
+        return locationData;
+      },
+      
       // 使用 JSONP 获取IP地理位置（绕过CORS限制）
       getIPLocationJSONP() {
         return new Promise((resolve, reject) => {
@@ -780,20 +763,45 @@
             }
             
             if (data.status === 'success') {
-              resolve({
+              const result = {
                 ip: data.query || 'unknown',
-                country: data.country || 'China',
-                countryCode: data.countryCode || 'CN',
+                country: data.country || 'Unknown',
+                countryCode: data.countryCode || 'XX',
                 city: data.city || 'Unknown',
                 latitude: data.lat || 0,
                 longitude: data.lon || 0
-              });
+              };
+              
+              // 验证数据：检查是否是中文城市名（说明lang=en未生效）
+              const hasChinese = /[\u4e00-\u9fa5]/.test(result.city);
+              if (hasChinese) {
+                console.warn(`⚠️ ip-api返回了中文城市名: ${result.city}，lang=en参数未生效`);
+                reject(new Error('API返回中文数据，参数未生效'));
+                return;
+              }
+              
+              // 验证坐标不是默认值
+              const isDefaultCoord = (
+                (result.latitude === 0 && result.longitude === 0) ||
+                (Math.abs(result.latitude - 35.8617) < 0.01 && Math.abs(result.longitude - 104.1954) < 0.01) ||
+                (Math.abs(result.latitude - 39.9042) < 0.01 && Math.abs(result.longitude - 116.4074) < 0.01)
+              );
+              
+              if (isDefaultCoord) {
+                console.warn(`⚠️ ip-api返回默认坐标: (${result.latitude}, ${result.longitude})`);
+                reject(new Error('API返回默认坐标'));
+                return;
+              }
+              
+              console.log(`✓ ip-api.com JSONP成功: ${result.city}, ${result.country}`);
+              resolve(result);
             } else {
               reject(new Error('API返回失败'));
             }
           };
           
-          script.src = `http://ip-api.com/json/?callback=${callbackName}&fields=status,query,country,countryCode,city,lat,lon`;
+          // 添加 lang=en 参数强制返回英文地名，避免返回中文城市名
+          script.src = `http://ip-api.com/json/?callback=${callbackName}&fields=status,query,country,countryCode,city,lat,lon&lang=en`;
           script.onerror = () => {
             if (completed) return;
             completed = true;
@@ -821,263 +829,11 @@
         });
       },
       
-      // 中国城市中英对照表
-      getChineseCityMapping() {
-        return {
-          // 直辖市
-          '北京': 'Beijing',
-          '上海': 'Shanghai', 
-          '天津': 'Tianjin',
-          '重庆': 'Chongqing',
-          
-          // 广东省
-          '广州': 'Guangzhou',
-          '深圳': 'Shenzhen',
-          '东莞': 'Dongguan',
-          '佛山': 'Foshan',
-          '中山': 'Zhongshan',
-          '珠海': 'Zhuhai',
-          '惠州': 'Huizhou',
-          '江门': 'Jiangmen',
-          '湛江': 'Zhanjiang',
-          '茂名': 'Maoming',
-          '肇庆': 'Zhaoqing',
-          '清远': 'Qingyuan',
-          '韶关': 'Shaoguan',
-          '河源': 'Heyuan',
-          '梅州': 'Meizhou',
-          '汕头': 'Shantou',
-          '汕尾': 'Shanwei',
-          '阳江': 'Yangjiang',
-          '揭阳': 'Jieyang',
-          '云浮': 'Yunfu',
-          
-          // 江苏省
-          '南京': 'Nanjing',
-          '苏州': 'Suzhou',
-          '无锡': 'Wuxi',
-          '常州': 'Changzhou',
-          '徐州': 'Xuzhou',
-          '南通': 'Nantong',
-          '连云港': 'Lianyungang',
-          '淮安': 'Huai\'an',
-          '盐城': 'Yancheng',
-          '扬州': 'Yangzhou',
-          '镇江': 'Zhenjiang',
-          '泰州': 'Taizhou',
-          '宿迁': 'Suqian',
-          
-          // 浙江省
-          '杭州': 'Hangzhou',
-          '宁波': 'Ningbo',
-          '温州': 'Wenzhou',
-          '嘉兴': 'Jiaxing',
-          '湖州': 'Huzhou',
-          '绍兴': 'Shaoxing',
-          '金华': 'Jinhua',
-          '衢州': 'Quzhou',
-          '舟山': 'Zhoushan',
-          '台州': 'Taizhou',
-          '丽水': 'Lishui',
-          
-          // 山东省
-          '济南': 'Jinan',
-          '青岛': 'Qingdao',
-          '淄博': 'Zibo',
-          '枣庄': 'Zaozhuang',
-          '东营': 'Dongying',
-          '烟台': 'Yantai',
-          '潍坊': 'Weifang',
-          '济宁': 'Jining',
-          '泰安': 'Tai\'an',
-          '威海': 'Weihai',
-          '日照': 'Rizhao',
-          '莱芜': 'Laiwu',
-          '临沂': 'Linyi',
-          '德州': 'Dezhou',
-          '聊城': 'Liaocheng',
-          '滨州': 'Binzhou',
-          '菏泽': 'Heze',
-          
-          // 其他主要城市
-          '成都': 'Chengdu',
-          '武汉': 'Wuhan',
-          '西安': 'Xi\'an',
-          '沈阳': 'Shenyang',
-          '大连': 'Dalian',
-          '长春': 'Changchun',
-          '哈尔滨': 'Harbin',
-          '合肥': 'Hefei',
-          '福州': 'Fuzhou',
-          '厦门': 'Xiamen',
-          '南昌': 'Nanchang',
-          '郑州': 'Zhengzhou',
-          '长沙': 'Changsha',
-          '昆明': 'Kunming',
-          '贵阳': 'Guiyang',
-          '兰州': 'Lanzhou',
-          '西宁': 'Xining',
-          '银川': 'Yinchuan',
-          '乌鲁木齐': 'Urumqi',
-          '呼和浩特': 'Hohhot',
-          '太原': 'Taiyuan',
-          '石家庄': 'Shijiazhuang',
-          '唐山': 'Tangshan',
-          '保定': 'Baoding',
-          '廊坊': 'Langfang',
-          '沧州': 'Cangzhou',
-          '衡水': 'Hengshui',
-          '邢台': 'Xingtai',
-          '邯郸': 'Handan',
-          '秦皇岛': 'Qinhuangdao',
-          '张家口': 'Zhangjiakou'
-        };
-      },
-      
-      // 转换中文城市名为英文
-      convertChineseCityToEnglish(cityName) {
-        if (!cityName || typeof cityName !== 'string') return cityName;
-        
-        const mapping = this.getChineseCityMapping();
-        
-        // 直接匹配
-        if (mapping[cityName]) {
-          return mapping[cityName];
-        }
-        
-        // 检查是否包含中文城市名（如"北京市" -> "Beijing"）
-        for (const [chinese, english] of Object.entries(mapping)) {
-          if (cityName.includes(chinese)) {
-            return english;
-          }
-        }
-        
-        // 如果不包含中文字符，返回原名
-        const hasChinese = /[\u4e00-\u9fff]/.test(cityName);
-        if (!hasChinese) {
-          return cityName;
-        }
-        
-        // 对于未映射的中文城市，返回原名（保持中文）
-        return cityName;
-      },
-      
-      // 使用中国本地API获取IP地理位置（针对中国大陆用户优化）
-      async getIPLocationChina() {
-        const apis = [
-          // 高德地图API - 中国最准确的定位服务
-          {
-            name: 'amap',
-            url: 'https://restapi.amap.com/v3/ip?key=your_amap_key&output=json',
-            parser: async (data) => {
-              if (data.status === '1' && data.city) {
-                let city = data.city.replace('市', ''); // 移除"市"字
-                city = this.convertChineseCityToEnglish(city);
-                return {
-                  ip: data.ip || 'unknown',
-                  country: 'China',
-                  countryCode: 'CN',
-                  city: city,
-                  latitude: data.rectangle ? parseFloat(data.rectangle.split(',')[1]) : 35.8617,
-                  longitude: data.rectangle ? parseFloat(data.rectangle.split(',')[0]) : 104.1954
-                };
-              }
-              throw new Error('高德API返回无效数据');
-            }
-          },
-          // 太平洋电脑网 - 免费，中国IP数据准确
-          {
-            name: 'pconline',
-            url: 'https://whois.pconline.com.cn/ipJson.jsp?json=true',
-            parser: (data) => ({
-              ip: data.ip || 'unknown',
-              country: 'China',
-              countryCode: 'CN',
-              city: this.convertChineseCityToEnglish(data.city || data.pro || 'Unknown'),
-              latitude: 35.8617,
-              longitude: 104.1954
-            })
-          },
-          // ip.cn - 简单快速
-          {
-            name: 'ip.cn',
-            url: 'https://ip.cn/api/index?ip=&type=0',
-            parser: (data) => ({
-              ip: data.ip || 'unknown',
-              country: 'China',
-              countryCode: 'CN',
-              city: this.convertChineseCityToEnglish(data.address || 'Unknown'),
-              latitude: 35.8617,
-              longitude: 104.1954
-            })
-          },
-          // ipip.net - 中国专业IP数据库
-          {
-            name: 'ipip.net',
-            url: 'https://myip.ipip.net/json',
-            parser: (data) => {
-              const location = data.data?.location || [];
-              let city = location[2] || location[1] || 'Unknown';
-              city = this.convertChineseCityToEnglish(city);
-              return {
-                ip: data.data?.ip || 'unknown',
-                country: 'China',
-                countryCode: 'CN',
-                city: city,
-                latitude: 35.8617,
-                longitude: 104.1954
-              };
-            }
-          }
-        ];
-        
-        for (const api of apis) {
-          try {
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 4000);
-            
-            const response = await fetch(api.url, {
-              method: 'GET',
-              headers: {
-                'Accept': 'application/json'
-              },
-              signal: controller.signal
-            });
-            
-            clearTimeout(timeoutId);
-            
-            if (!response.ok) {
-              console.warn(`中国API ${api.name} 返回状态 ${response.status}`);
-              continue;
-            }
-            
-            const data = await response.json();
-            const parsed = typeof api.parser === 'function' 
-              ? await api.parser(data) 
-              : api.parser(data);
-            
-            // 检查数据是否有效
-            if (parsed.city && parsed.city !== 'Unknown') {
-              console.log(`✓ 使用中国API ${api.name} 成功获取城市信息: ${parsed.city}`);
-              return parsed;
-            }
-          } catch (error) {
-            if (error.name === 'AbortError') {
-              console.warn(`中国API ${api.name} 超时`);
-            } else {
-              console.warn(`中国API ${api.name} 失败:`, error.message);
-            }
-            continue;
-          }
-        }
-        
-        throw new Error('所有中国API都失败');
-      },
-      
-      // 使用支持 CORS 的国际 API 获取IP地理位置（备用方案）
+      // 使用支持 CORS 的国际 API 获取IP地理位置（优先使用，返回英文）
+      // 增强版：支持质量评分和坐标修正
       async getIPLocationCORS() {
         const apis = [
-          // ipapi.co - 免费且稳定
+          // ipapi.co - 免费且稳定，返回英文
           {
             name: 'ipapi.co',
             url: 'https://ipapi.co/json/',
@@ -1090,7 +846,7 @@
               longitude: data.longitude
             })
           },
-          // ipwhois.app - 备用
+          // ipwhois.app - 备用，返回英文
           {
             name: 'ipwhois.app',
             url: 'https://ipwhois.app/json/',
@@ -1099,27 +855,57 @@
               country: data.country,
               countryCode: data.country_code,
               city: data.city,
-              latitude: data.latitude,
-              longitude: data.longitude
+              latitude: parseFloat(data.latitude) || 0,
+              longitude: parseFloat(data.longitude) || 0
             })
           },
-          // ipify + ipapi - 组合方案
+          // ipinfo.io - 需要token但有免费额度
           {
-            name: 'ipify',
-            url: 'https://api.ipify.org?format=json',
-            parser: async (data) => {
-              // 只获取IP,不获取位置信息(位置由其他API提供)
+            name: 'ipinfo.io',
+            url: 'https://ipinfo.io/json',
+            parser: (data) => {
+              const [lat, lon] = (data.loc || '0,0').split(',').map(parseFloat);
               return {
                 ip: data.ip,
-                country: 'China',
-                countryCode: 'CN',
-                city: 'Unknown',
-                latitude: 35.8617,
-                longitude: 104.1954
+                country: data.country, // 只返回代码，需要转换
+                countryCode: data.country,
+                city: data.city,
+                latitude: lat,
+                longitude: lon
               };
             }
+          },
+          // freeipapi.com - 新的免费API
+          {
+            name: 'freeipapi.com',
+            url: 'https://freeipapi.com/api/json',
+            parser: (data) => ({
+              ip: data.ipAddress,
+              country: data.countryName,
+              countryCode: data.countryCode,
+              city: data.cityName,
+              latitude: parseFloat(data.latitude) || 0,
+              longitude: parseFloat(data.longitude) || 0
+            })
+          },
+          // ipgeolocation.io - 使用免费的demo key
+          {
+            name: 'ipgeolocation.io',
+            url: 'https://api.ipgeolocation.io/ipgeo?apiKey=demo',
+            parser: (data) => ({
+              ip: data.ip,
+              country: data.country_name,
+              countryCode: data.country_code2,
+              city: data.city,
+              latitude: parseFloat(data.latitude) || 0,
+              longitude: parseFloat(data.longitude) || 0
+            })
           }
         ];
+        
+        let bestResult = null;
+        let bestScore = 0;
+        const allResults = [];
         
         for (const api of apis) {
           try {
@@ -1146,10 +932,35 @@
               ? await api.parser(data) 
               : api.parser(data);
             
-            // 检查数据是否有效
-            if (parsed.ip && parsed.ip !== 'unknown') {
-              console.log(`✓ 使用 ${api.name} 成功获取IP信息`);
-              return parsed;
+            // 基本验证数据有效性
+            if (parsed.ip && parsed.ip !== 'unknown' && 
+                parsed.country && parsed.country !== 'Unknown' &&
+                parsed.city && parsed.city !== 'Unknown' &&
+                typeof parsed.latitude === 'number' && 
+                typeof parsed.longitude === 'number') {
+              
+              // 添加API来源信息
+              parsed.apiSource = api.name;
+              
+              // 计算质量评分
+              const qualityScore = this.calculateQualityScore(parsed, api.name);
+              parsed.qualityScore = qualityScore;
+              
+              allResults.push(parsed);
+              
+              console.log(`📊 ${api.name}: ${parsed.city}, ${parsed.country} - 质量评分: ${qualityScore}`);
+              
+              // 如果质量评分高于阈值（60分）且高于当前最佳，则更新最佳结果
+              if (qualityScore >= 60 && qualityScore > bestScore) {
+                bestScore = qualityScore;
+                bestResult = parsed;
+                
+                // 如果是非默认坐标且质量很高（>80分），可以直接返回
+                if (qualityScore > 80 && !this.isDefaultCoordinate(parsed.latitude, parsed.longitude)) {
+                  console.log(`✅ 找到高质量结果 (${qualityScore}分)，直接使用: ${parsed.city}, ${parsed.country}`);
+                  return parsed;
+                }
+              }
             }
           } catch (error) {
             if (error.name === 'AbortError') {
@@ -1161,67 +972,135 @@
           }
         }
         
-        throw new Error('所有CORS API都失败');
-      },
-      
-      // 获取访问者IP和地理位置
-      async trackVisit() {
-        let locationData = null;
-        
-        // 优先尝试中国本地API（速度更快，准确性更高）
-        try {
-          locationData = await this.getIPLocationChina();
-          console.log('✓ 使用中国API获取IP地理位置成功');
-        } catch (error) {
-          console.warn('⚠ 中国API失败，尝试国际CORS API:', error.message);
+        // 如果找到了质量评分及格的结果
+        if (bestResult) {
+          console.log(`✅ 选择最佳结果 (${bestScore}分): ${bestResult.city}, ${bestResult.country} [${bestResult.apiSource}]`);
           
-          // 备用方案1: 尝试国际 CORS API
-          try {
-            locationData = await this.getIPLocationCORS();
-            console.log('✓ 使用国际CORS API获取IP地理位置成功');
-          } catch (error2) {
-            console.warn('⚠ CORS API 失败，尝试 JSONP:', error2.message);
+          // 尝试修正默认坐标
+          if (this.isDefaultCoordinate(bestResult.latitude, bestResult.longitude)) {
+            console.log(`⚠️ 检测到默认坐标，尝试修正...`);
+            bestResult = this.correctCityCoordinates(bestResult);
             
-            // 备用方案2: 尝试 JSONP
-            try {
-              locationData = await this.getIPLocationJSONP();
-              console.log('✓ 使用 JSONP 获取IP地理位置成功');
-            } catch (error3) {
-              console.warn('⚠ JSONP 也失败:', error3.message);
+            // 如果修正成功，提升质量评分
+            if (bestResult.coordsCorrected) {
+              bestResult.qualityScore += 30;
+              console.log(`✅ 坐标已修正，质量评分提升至: ${bestResult.qualityScore}`);
             }
+          }
+          
+          return bestResult;
+        }
+        
+        // 如果所有结果质量都不合格，尝试修正质量最高的那个
+        if (allResults.length > 0) {
+          const bestOfBad = allResults.sort((a, b) => b.qualityScore - a.qualityScore)[0];
+          console.warn(`⚠️ 所有API质量评分都不及格，尝试修正最佳结果: ${bestOfBad.city} (${bestOfBad.qualityScore}分)`);
+          
+          const corrected = this.correctCityCoordinates(bestOfBad);
+          if (corrected.coordsCorrected) {
+            console.log(`✅ 坐标修正成功，使用修正后的数据`);
+            corrected.qualityScore += 30;
+            return corrected;
           }
         }
         
-        // 如果所有方法都失败，使用基本信息（默认显示为中国）
-        if (!locationData) {
-          console.info('ℹ 使用默认地理位置信息（中国）');
-          locationData = {
-            ip: 'unknown',
-            country: 'China',
-            countryCode: 'CN',
-            city: 'Unknown',
-            latitude: 35.8617,
-            longitude: 104.1954
-          };
+        throw new Error('所有CORS API都失败或质量不合格');
+      },
+      
+      // 获取访问者IP和地理位置（增强版：质量控制）
+      async trackVisit() {
+        let locationData = null;
+        let attempts = 0;
+        
+        // 第一优先：使用国际 CORS API（返回英文地名）
+        try {
+          attempts++;
+          locationData = await this.getIPLocationCORS();
+          console.log('✓ 使用国际API获取IP地理位置成功');
+        } catch (error) {
+          console.warn('⚠ 国际API失败，尝试 ip-api.com (JSONP):', error.message);
+          
+          // 第二备用：使用 ip-api.com JSONP（已强制英文）
+          try {
+            attempts++;
+            locationData = await this.getIPLocationJSONP();
+            console.log('✓ 使用 ip-api.com JSONP 获取IP地理位置成功（英文）');
+            
+            // 为JSONP结果添加质量评分
+            if (locationData) {
+              locationData.apiSource = 'ip-api.com (JSONP)';
+              locationData.qualityScore = this.calculateQualityScore(locationData, 'ip-api.com');
+              
+              // 尝试修正坐标
+              if (this.isDefaultCoordinate(locationData.latitude, locationData.longitude)) {
+                locationData = this.correctCityCoordinates(locationData);
+                if (locationData.coordsCorrected) {
+                  locationData.qualityScore += 30;
+                }
+              }
+            }
+          } catch (error2) {
+            console.warn('⚠ 所有API都失败:', error2.message);
+          }
         }
         
-        // 处理城市名称：如果是中国的 Unknown 城市，显示为 "Other Cities in China"
-        let city = locationData.city || 'Unknown';
-        const country = locationData.country || 'China';
-        if ((country === 'China' || country === '中国') && (city === 'Unknown' || city === 'Unknown city in China' || !city)) {
-          city = 'Other Cities in China';
+        // 质量控制：拒绝保存低质量数据
+        if (locationData) {
+          const qualityScore = locationData.qualityScore || 0;
+          const isDefault = this.isDefaultCoordinate(locationData.latitude, locationData.longitude);
+          const hasChinese = /[\u4e00-\u9fa5]/.test(locationData.city);
+          
+          // 拒绝条件：
+          // 1. 质量评分低于40分
+          // 2. 是默认坐标且未被修正
+          // 3. 包含中文
+          // 4. 城市名为Unknown且坐标为0,0
+          const shouldReject = (
+            qualityScore < 40 ||
+            (isDefault && !locationData.coordsCorrected) ||
+            hasChinese ||
+            (locationData.city === 'Unknown' && locationData.latitude === 0 && locationData.longitude === 0)
+          );
+          
+          if (shouldReject) {
+            console.warn(`❌ 拒绝保存低质量数据:`);
+            console.warn(`   城市: ${locationData.city}, ${locationData.country}`);
+            console.warn(`   坐标: (${locationData.latitude}, ${locationData.longitude})`);
+            console.warn(`   质量评分: ${qualityScore}`);
+            console.warn(`   原因: ${
+              qualityScore < 40 ? '质量评分过低' :
+              isDefault && !locationData.coordsCorrected ? '默认坐标未修正' :
+              hasChinese ? '包含中文' : '无效数据'
+            }`);
+            
+            // 不保存数据，但不影响页面正常使用
+            console.info('ℹ️ 访问统计已跳过，页面功能不受影响');
+            return null;
+          }
+          
+          console.log(`✅ 数据质量合格 (评分: ${qualityScore})，准备保存...`);
+        } else {
+          console.warn('⚠️ 未获取到有效的地理位置数据，跳过访问统计');
+          return null;
         }
         
         const visitData = {
           ip: locationData.ip || 'unknown',
-          country: country,
-          countryCode: locationData.countryCode || 'CN',
-          city: city,
-          latitude: locationData.latitude || 35.8617,
-          longitude: locationData.longitude || 104.1954,
+          country: locationData.country || 'Unknown',
+          countryCode: locationData.countryCode || 'XX',
+          city: locationData.city || 'Unknown',
+          latitude: locationData.latitude || 0,
+          longitude: locationData.longitude || 0,
           timestamp: new Date().toISOString(),
           userAgent: navigator.userAgent,
-          referrer: document.referrer || 'direct'
+          referrer: document.referrer || 'direct',
+          
+          // 新增元数据字段
+          coordsSource: locationData.apiSource || 'unknown',
+          coordsQuality: locationData.qualityScore || 0,
+          coordsCorrected: locationData.coordsCorrected || false,
+          isDefaultCoords: this.isDefaultCoordinate(locationData.latitude, locationData.longitude),
+          apiAttempts: attempts
         };
         
         // 保存访问数据到Firebase
@@ -1254,14 +1133,12 @@
             await visitsRef.add(visitData);
           }
         } catch (error) {
-          // 静默处理Firebase错误，避免影响页面功能
           if (error.code === 'permission-denied') {
-            console.warn('Firestore 权限错误: 请检查安全规则配置');
-            console.warn('请参考 FREE_FIRESTORE_RULES.md 文件配置安全规则');
-          } else if (error.code === 'unavailable' || error.code === 'deadline-exceeded') {
-            console.warn('Firestore连接超时或不可用，访问统计功能暂时不可用');
+            console.error('Firestore 权限错误: 请检查安全规则配置');
+            console.error('请参考 FIRESTORE_RULES.md 文件配置安全规则');
+            console.error('错误详情:', error.message);
           } else {
-            console.warn('保存到Firebase失败:', error.message || error);
+            console.error('保存到Firebase失败:', error);
           }
         }
       },
@@ -1302,20 +1179,11 @@
           // 添加 countryVisits 用于地图显示
           stats.countryVisits = {};
           visits.forEach(visit => {
-            // 统一处理 Unknown 和 XX，映射到中国
-            let countryCode = visit.countryCode || 'CN';
-            let country = visit.country || 'China';
-            
-            // 如果 countryCode 是 XX 或 country 是 Unknown，统一映射到中国
-            if (countryCode === 'XX' || country === 'Unknown' || !countryCode || !country) {
-              countryCode = 'CN';
-              country = 'China';
-            }
-            
+            const countryCode = visit.countryCode || 'XX';
             if (!stats.countryVisits[countryCode]) {
               stats.countryVisits[countryCode] = {
                 count: 0,
-                country: country
+                country: visit.country || 'Unknown'
               };
             }
             stats.countryVisits[countryCode].count++;
@@ -1329,14 +1197,16 @@
           
           return stats;
         } catch (error) {
-          // 静默处理Firebase错误，避免影响页面功能
+          console.error('从Firebase获取访问数据失败:', error);
+          console.error('错误详情:', {
+            code: error.code,
+            message: error.message
+          });
+          
+          // 如果是权限错误，提示用户配置安全规则
           if (error.code === 'permission-denied') {
-            console.warn('权限错误: 请修改 Firestore 安全规则，允许读取 visits 集合');
-            console.warn('参考 FREE_FIRESTORE_RULES.md 文件');
-          } else if (error.code === 'unavailable' || error.code === 'deadline-exceeded') {
-            console.warn('Firestore连接超时或不可用，访问统计功能暂时不可用');
-          } else {
-            console.warn('从Firebase获取访问数据失败:', error.message || error);
+            console.error('权限错误: 请修改 Firestore 安全规则，允许读取 visits 集合');
+            console.error('参考 FREE_FIRESTORE_RULES.md 文件');
           }
           
           return null;
@@ -1350,39 +1220,19 @@
           uniqueIPs: new Set(visits.map(v => v.ip)).size,
           countries: {},
           cities: {},
-          cityLocations: {}, // 新增：存储城市的经纬度信息
           visitsByDate: {},
           topCountries: [],
           topCities: []
         };
         
         visits.forEach(visit => {
-          // 统计国家（统一处理 Unknown 为中国）
-          let country = visit.country || 'China';
-          if (country === 'Unknown' || !country) {
-            country = 'China';
-          }
+          // 统计国家
+          const country = visit.country || 'Unknown';
           stats.countries[country] = (stats.countries[country] || 0) + 1;
           
-          // 统计城市（如果是中国的 Unknown 城市，显示为 "Other Cities in China"）
-          let city = visit.city || 'Unknown';
-          if ((country === 'China' || country === '中国') && (city === 'Unknown' || city === 'Unknown city in China' || !city)) {
-            city = 'Other Cities in China';
-          }
+          // 统计城市
+          const city = visit.city || 'Unknown';
           stats.cities[city] = (stats.cities[city] || 0) + 1;
-          
-          // 收集城市的经纬度信息（用于地图标注）
-          if (visit.latitude && visit.longitude && city !== 'Unknown' && city !== 'Other Cities in China') {
-            if (!stats.cityLocations[city]) {
-              stats.cityLocations[city] = {
-                latitude: visit.latitude,
-                longitude: visit.longitude,
-                count: 0,
-                country: country
-              };
-            }
-            stats.cityLocations[city].count++;
-          }
           
           // 统计日期
           const date = new Date(visit.timestamp || visit.createdAt?.toDate?.() || visit.createdAt || Date.now()).toDateString();
@@ -1407,215 +1257,6 @@
     
     // 页面加载时追踪访问
     visitTracker.trackVisit();
-    
-    // 搜索功能
-    const searchBox = document.getElementById('country-search');
-    const searchBtn = document.getElementById('search-btn');
-    const searchResults = document.getElementById('search-results');
-    
-    // 获取地图类型的中文名称
-    function getMapTypeName(mapType) {
-      const mapNames = {
-        'global': '全球汇总',
-        'china': '中国护照',
-        'us': '美国签证',
-        'uk': '英国签证',
-        'japan': '日本签证',
-        'australia': '澳洲签证',
-        'schengen': '申根签证',
-        'analytics': '访问统计'
-      };
-      return mapNames[mapType] || mapType;
-    }
-    
-    // 存储所有国家数据用于搜索（在初始化地图时收集）
-    const allCountryDataForSearch = {};
-    
-    // 搜索函数
-    function searchCountry(query) {
-      if (!query || query.trim().length === 0) {
-        searchResults.classList.remove('show');
-        return;
-      }
-      
-      const searchTerm = query.trim().toLowerCase();
-      const results = [];
-      
-      // 首先尝试从已初始化的地图中搜索
-      Object.keys(maps).forEach(mapType => {
-        const map = maps[mapType];
-        if (!map || !map.dataProvider || !map.dataProvider.areas) return;
-        
-        map.dataProvider.areas.forEach(area => {
-          const title = area.title || '';
-          const id = area.id || '';
-          
-          // 匹配国家名称或ID
-          if (title.toLowerCase().includes(searchTerm) || 
-              id.toLowerCase() === searchTerm.toLowerCase()) {
-            // 检查是否已经添加过
-            if (!results.find(r => r.id === id && r.mapType === mapType)) {
-              results.push({
-                id: id,
-                title: title,
-                mapType: mapType,
-                customData: area.customData || '',
-                color: area.color || ''
-              });
-            }
-          }
-        });
-      });
-      
-      // 如果已初始化的地图中没有找到，尝试从存储的数据中搜索
-      if (results.length === 0) {
-        Object.keys(allCountryDataForSearch).forEach(mapType => {
-          const countryData = allCountryDataForSearch[mapType];
-          if (!countryData) return;
-          
-          Object.keys(countryData).forEach(id => {
-            const data = countryData[id];
-            const title = data.title || '';
-            
-            if (title.toLowerCase().includes(searchTerm) || 
-                id.toLowerCase() === searchTerm.toLowerCase()) {
-              if (!results.find(r => r.id === id && r.mapType === mapType)) {
-                results.push({
-                  id: id,
-                  title: title,
-                  mapType: mapType,
-                  customData: Array.isArray(data.visas) ? data.visas.join(' / ') : '',
-                  color: data.color || ''
-                });
-              }
-            }
-          });
-        });
-      }
-      
-      // 显示搜索结果
-      displaySearchResults(results);
-    }
-    
-    // 显示搜索结果
-    function displaySearchResults(results) {
-      searchResults.innerHTML = '';
-      
-      if (results.length === 0) {
-        searchResults.innerHTML = '<div class="search-result-item"><div class="search-result-title">未找到匹配的国家或地区</div></div>';
-        searchResults.classList.add('show');
-        return;
-      }
-      
-      // 限制显示前10个结果
-      const displayResults = results.slice(0, 10);
-      
-      displayResults.forEach(result => {
-        const item = document.createElement('div');
-        item.className = 'search-result-item';
-        item.innerHTML = `
-          <div class="search-result-title">${result.title}</div>
-          <div class="search-result-info">${getMapTypeName(result.mapType)} · ${result.customData || '无政策信息'}</div>
-        `;
-        item.addEventListener('click', () => {
-          focusOnCountry(result.id, result.mapType);
-        });
-        searchResults.appendChild(item);
-      });
-      
-      searchResults.classList.add('show');
-    }
-    
-    // 聚焦到指定国家
-    function focusOnCountry(countryId, mapType) {
-      // 切换到对应的地图标签页
-      const tabButton = document.querySelector(`[data-tab="${mapType}"]`);
-      if (tabButton) {
-        tabButton.click();
-      }
-      
-      // 等待地图加载完成
-      setTimeout(() => {
-        const map = maps[mapType];
-        if (!map) {
-          console.warn('地图未初始化:', mapType);
-          // 如果地图未初始化，尝试初始化
-          initMap(mapType);
-          setTimeout(() => focusOnCountry(countryId, mapType), 500);
-          return;
-        }
-        
-        // AmCharts 3 API: 通过 mapObject 属性访问地图对象
-        if (map.mapObject) {
-          const mapObject = map.mapObject.getObjectById(countryId);
-          if (mapObject) {
-            // 聚焦到该国家 (AmCharts 3 使用 zoomToMapObject)
-            map.zoomToMapObject(mapObject, 2, true);
-            
-            // 高亮显示
-            mapObject.isHover = true;
-            mapObject.validate();
-            
-            // 显示气球提示
-            setTimeout(() => {
-              mapObject.showTooltip();
-            }, 500);
-          } else {
-            console.warn('未找到国家:', countryId, '在地图类型:', mapType);
-          }
-        } else {
-          // 如果 mapObject 不存在，尝试直接访问
-          const mapObject = map.getObjectById(countryId);
-          if (mapObject) {
-            map.zoomToMapObject(mapObject, 2, true);
-            mapObject.isHover = true;
-            mapObject.validate();
-            setTimeout(() => {
-              mapObject.showTooltip();
-            }, 500);
-          } else {
-            console.warn('未找到国家:', countryId, '在地图类型:', mapType);
-          }
-        }
-        
-        // 隐藏搜索结果
-        searchResults.classList.remove('show');
-        searchBox.value = '';
-      }, 300);
-    }
-    
-    // 绑定搜索事件
-    if (searchBtn) {
-      searchBtn.addEventListener('click', () => {
-        searchCountry(searchBox.value);
-      });
-    }
-    
-    if (searchBox) {
-      searchBox.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-          searchCountry(searchBox.value);
-        }
-      });
-      
-      searchBox.addEventListener('input', () => {
-        if (searchBox.value.length > 0) {
-          searchCountry(searchBox.value);
-        } else {
-          searchResults.classList.remove('show');
-        }
-      });
-    }
-    
-    // 点击外部关闭搜索结果
-    document.addEventListener('click', (e) => {
-      if (searchBox && searchResults && searchBtn &&
-          !searchBox.contains(e.target) && 
-          !searchResults.contains(e.target) && 
-          !searchBtn.contains(e.target)) {
-        searchResults.classList.remove('show');
-      }
-    });
     
     // 标签页切换功能
     document.querySelectorAll('.tab-button').forEach(button => {
@@ -1702,7 +1343,7 @@
         major_issuer: "#3b82f6",
         conditional: "#14b8a6",
         transit: "#60a5fa",
-        cn_free: "#059669",
+        cn_free: "#10b981",
         cn_arrival: "#34d399",
         cn_evisa: "#a7f3d0",
         hmt_pass: "#ff9999",
@@ -1772,7 +1413,6 @@
         "CR": { title: "哥斯达黎加", visas: ["美签30天", "申根签30天(需D类)", "英签30天"], color: COLORS.conditional },
         "PA": { title: "巴拿马", visas: ["美签30天", "申根签30天", "多次日签", "英签30天", "澳签(需已使用1次)"], color: COLORS.conditional },
         "HN": { title: "洪都拉斯", visas: ["美签30天", "申根签90天"], color: COLORS.conditional },
-        "NI": { title: "尼加拉瓜", visas: ["美签50美元落地签(政策不清晰，不同口岸政策执行不同，有可能不收费免签入境，也有可能被拒绝入境)"], color: COLORS.conditional },
         "KY": { title: "开曼群岛", visas: ["美签30天", "英签免签"], color: COLORS.conditional },
         "MK": { title: "北马其顿", visas: ["美签15天", "英签(6个月内不超过90天)"], color: COLORS.conditional },
         "PH": { title: "菲律宾", visas: ["美签7天", "申根签7天", "单次或多次日签", "澳签7天"], color: COLORS.conditional },
@@ -1782,8 +1422,6 @@
         "AW": { title: "阿鲁巴", visas: ["美签90天", "申根签(需多次入境)"], color: COLORS.conditional },
         "SX": { title: "荷属圣马丁", visas: ["美签90天", "申根签(需多次入境)"], color: COLORS.conditional },
         "BQ": { title: "荷属加勒比", visas: ["美签90天", "申根签(需多次入境)"], color: COLORS.conditional },
-        "PR": { title: "波多黎各", visas: ["美签免签"], color: COLORS.conditional },
-        "GU": { title: "关岛", visas: ["美签免签"], color: COLORS.conditional },
         "CL": { title: "智利", visas: ["美签90天"], color: COLORS.conditional },
         "AR": { title: "阿根廷", visas: ["美签30天"], color: COLORS.conditional },
         "BZ": { title: "伯利兹", visas: ["美签30天"], color: COLORS.conditional },
@@ -1791,48 +1429,46 @@
         "SV": { title: "萨尔瓦多", visas: ["申根签90天(收费12美元)"], color: COLORS.conditional },
         "RS": { title: "塞尔维亚", visas: ["中国护照免签"], color: COLORS.cn_free },
         "BA": { title: "波黑", visas: ["中国护照免签"], color: COLORS.cn_free },
-        "XK": { title: "科索沃（地区）", visas: ["申根签免签(需多次)"], color: COLORS.conditional },
+        "XK": { title: "科索沃", visas: ["申根签免签(需多次)"], color: COLORS.conditional },
         "HK": { title: "中国香港", visas: ["需办理港澳台通行证"], color: COLORS.hmt_pass },
         "MO": { title: "中国澳门", visas: ["需办理港澳台通行证"], color: COLORS.hmt_pass },
         "TW": { title: "中国台湾", visas: ["需办理港澳台通行证"], color: COLORS.hmt_pass },
         "CY": { title: "塞浦路斯", visas: ["申根签(需有效签证)"], color: COLORS.conditional },
         "IE": { title: "爱尔兰", visas: ["英签(已使用)"], color: COLORS.conditional },
-        "GI": { title: "直布罗陀", visas: ["英签(1年以上)", "多次申根签免签"], color: COLORS.conditional },
+        "GI": { title: "直布罗陀", visas: ["英签(1年以上)"], color: COLORS.conditional },
         "JE": { title: "泽西岛", visas: ["英签(有效)"], color: COLORS.conditional },
         "GG": { title: "根西岛", visas: ["英签(有效)"], color: COLORS.conditional },
         "IM": { title: "马恩岛", visas: ["英签(有效)"], color: COLORS.conditional },
         "AI": { title: "安圭拉", visas: ["英签(有效)"], color: COLORS.conditional },
         "FJ": { title: "斐济", visas: ["英签4个月(需6个月有效期)", "中国护照免签"], color: COLORS.conditional },
         "NZ": { title: "新西兰", visas: ["澳签(需先从澳洲入境，申请NZeTA)"], color: COLORS.conditional },
-        "KR": { title: "韩国", visas: ["美签过境30天", "申根签过境30天", "英签过境30天", "澳签过境30天", "中国护照免签(济州岛无条件免签，本土三人以上团体免签，但需指定旅行社开材料)"], color: COLORS.transit },
+        "KR": { title: "韩国", visas: ["美签过境30天", "申根签过境30天", "英签过境30天", "澳签过境30天", "中国护照免签(济州岛)"], color: COLORS.transit },
         "JP": { title: "日本", visas: ["美签过境72小时", "澳签过境72小时"], color: COLORS.transit },
         "GB": { title: "英国", visas: ["美签过境24小时"], color: COLORS.transit },
         "SG": { title: "新加坡", visas: ["中国护照免签"], color: COLORS.cn_free },
         "RU": { title: "俄罗斯", visas: ["中国护照免签"], color: COLORS.cn_free },
-        "KH": { title: "柬埔寨", visas: ["中国护照免签(2025年6月15日到10月15日实行免签)"], color: COLORS.cn_free },
+        "KH": { title: "柬埔寨", visas: ["中国护照免签"], color: COLORS.cn_free },
         "TR": { title: "土耳其", visas: ["中国护照免签"], color: COLORS.cn_free },
-        "BR": { title: "巴西", visas: ["中国护照免签(目前没有官宣)"], color: COLORS.cn_free },
+        "BR": { title: "巴西", visas: ["中国护照免签"], color: COLORS.cn_free },
         "AE": { title: "阿联酋", visas: ["中国护照免签"], color: COLORS.cn_free },
         "BB": { title: "巴巴多斯", visas: ["中国护照免签"], color: COLORS.cn_free },
         "BS": { title: "巴哈马", visas: ["中国护照免签"], color: COLORS.cn_free },
         "GD": { title: "格林纳达", visas: ["中国护照免签"], color: COLORS.cn_free },
         "MU": { title: "毛里求斯", visas: ["中国护照免签"], color: COLORS.cn_free },
-        "SM": { title: "圣马力诺", visas: ["中国护照免签", "申根签免签"], color: COLORS.conditional },
+        "SM": { title: "圣马力诺", visas: ["中国护照免签"], color: COLORS.cn_free },
         "SC": { title: "塞舌尔", visas: ["中国护照免签"], color: COLORS.cn_free },
         "TO": { title: "汤加", visas: ["中国护照免签"], color: COLORS.cn_free },
-        "FM": { title: "密克罗尼西亚联邦", visas: ["中国护照免签"], color: COLORS.cn_free },
         "BY": { title: "白俄罗斯", visas: ["中国护照免签"], color: COLORS.cn_free },
         "QA": { title: "卡塔尔", visas: ["中国护照免签"], color: COLORS.cn_free },
         "AM": { title: "亚美尼亚", visas: ["中国护照免签"], color: COLORS.cn_free },
         "UZ": { title: "乌兹别克斯坦", visas: ["中国护照免签"], color: COLORS.cn_free },
         "OM": { title: "阿曼", visas: ["中国护照免签"], color: COLORS.cn_free },
         "MA": { title: "摩洛哥", visas: ["中国护照免签"], color: COLORS.cn_free },
-        "EH": { title: "西撒哈拉", visas: ["中国护照免签(西撒哈拉地区存在主权争议，目前由摩洛哥实际控制，进入无需签证)"], color: COLORS.cn_free },
         "RE": { title: "法属留尼汪", visas: ["中国护照免签"], color: COLORS.cn_free },
-        "TN": { title: "突尼斯", visas: ["中国护照免签(机场入境免签，铁路口岸由于冷门业务不熟练可能会被错误拒绝入境)"], color: COLORS.cn_free },
+        "TN": { title: "突尼斯", visas: ["中国护照免签"], color: COLORS.cn_free },
         "AG": { title: "安提瓜和巴布达", visas: ["中国护照免签"], color: COLORS.cn_free },
         "HT": { title: "海地", visas: ["中国护照免签"], color: COLORS.cn_free },
-        "GS": { title: "南乔治亚和南桑威奇群岛", visas: ["中国护照电子签(需要200英镑申请入境ECS)"], color: COLORS.cn_evisa },
+        "GS": { title: "南乔治亚和南桑威奇群岛", visas: ["中国护照免签"], color: COLORS.cn_free },
         "KN": { title: "圣基茨和尼维斯", visas: ["中国护照免签"], color: COLORS.cn_free },
         "TC": { title: "特克斯和凯科斯群岛", visas: ["中国护照免签"], color: COLORS.cn_free },
         "JM": { title: "牙买加", visas: ["中国护照免签"], color: COLORS.cn_free },
@@ -1846,9 +1482,7 @@
         "IR": { title: "伊朗", visas: ["中国护照免签"], color: COLORS.cn_free },
         "ZM": { title: "赞比亚", visas: ["中国护照免签"], color: COLORS.cn_free },
         "SR": { title: "苏里南", visas: ["中国护照免签"], color: COLORS.cn_free },
-        "ZA": { title: "南非", visas: ["中国护照免签(需申请免费ETA)"], color: COLORS.cn_free },
         "MV": { title: "马尔代夫", visas: ["中国护照免签"], color: COLORS.cn_free },
-        "LB": { title: "黎巴嫩", visas: ["中国护照免签(免费落地签)"], color: COLORS.cn_free },
         "KZ": { title: "哈萨克斯坦", visas: ["中国护照免签"], color: COLORS.cn_free },
         "GA": { title: "加蓬", visas: ["中国护照免签"], color: COLORS.cn_free },
         "MZ": { title: "莫桑比克", visas: ["中国护照免签"], color: COLORS.cn_free },
@@ -1858,19 +1492,20 @@
         "PS": { title: "巴勒斯坦", visas: ["中国护照免签"], color: COLORS.cn_free },
         "TH": { title: "泰国", visas: ["中国护照免签"], color: COLORS.cn_free },
         "MY": { title: "马来西亚", visas: ["中国护照免签"], color: COLORS.cn_free },
-        "LK": { title: "斯里兰卡", visas: ["中国护照免签(需申请免费ETA)"], color: COLORS.cn_free },
+        "LK": { title: "斯里兰卡", visas: ["中国护照免签"], color: COLORS.cn_free },
         "CU": { title: "古巴", visas: ["中国护照免签"], color: COLORS.cn_free },
         "AZ": { title: "阿塞拜疆", visas: ["中国护照免签"], color: COLORS.cn_free },
+        "PK": { title: "巴基斯坦", visas: ["中国护照免签"], color: COLORS.cn_free },
         "VU": { title: "瓦努阿图", visas: ["中国护照免签"], color: COLORS.cn_free },
         "SB": { title: "所罗门群岛", visas: ["中国护照免签"], color: COLORS.cn_free },
-        "SJ": { title: "斯瓦尔巴群岛", visas: ["中国护照免签(实际上由于交通方式限制，需要持有多次申根签证)"], color: COLORS.cn_free },
+        "SJ": { title: "斯瓦尔巴群岛", visas: ["中国护照免签"], color: COLORS.cn_free },
         "AX": { title: "奥兰群岛", visas: ["中国护照免签"], color: COLORS.cn_free },
         "BN": { title: "文莱", visas: ["中国护照落地签"], color: COLORS.cn_arrival },
         "TL": { title: "东帝汶", visas: ["中国护照落地签"], color: COLORS.cn_arrival },
         "LA": { title: "老挝", visas: ["中国护照落地签"], color: COLORS.cn_arrival },
-        "LB": { title: "黎巴嫩", visas: ["中国护照免签(免费落地签)"], color: COLORS.cn_free },
+        "LB": { title: "黎巴嫩", visas: ["中国护照落地签"], color: COLORS.cn_arrival },
         "MM": { title: "缅甸", visas: ["中国护照落地签"], color: COLORS.cn_arrival },
-        "NP": { title: "尼泊尔", visas: ["中国护照免签(可提前申请ETA或免费落地签)"], color: COLORS.cn_free },
+        "NP": { title: "尼泊尔", visas: ["中国护照落地签"], color: COLORS.cn_arrival },
         "JO": { title: "约旦", visas: ["中国护照落地签"], color: COLORS.cn_arrival },
         "BD": { title: "孟加拉国", visas: ["中国护照落地签"], color: COLORS.cn_arrival },
         "EG": { title: "埃及", visas: ["中国护照落地签"], color: COLORS.cn_arrival },
@@ -1885,9 +1520,9 @@
         "UG": { title: "乌干达", visas: ["中国护照落地签"], color: COLORS.cn_arrival },
         "ZW": { title: "津巴布韦", visas: ["中国护照落地签"], color: COLORS.cn_arrival },
         "SH": { title: "圣赫勒拿", visas: ["中国护照落地签"], color: COLORS.cn_arrival },
-        "PW": { title: "帕劳", visas: ["中国护照免签(需要缴纳100美元环保税)"], color: COLORS.cn_free },
+        "PW": { title: "帕劳", visas: ["中国护照落地签"], color: COLORS.cn_arrival },
         "TV": { title: "图瓦卢", visas: ["中国护照落地签"], color: COLORS.cn_arrival },
-        "PG": { title: "巴布亚新几内亚", visas: ["中国护照电子签"], color: COLORS.cn_evisa },
+        "PG": { title: "巴布亚新几内亚", visas: ["中国护照落地签"], color: COLORS.cn_arrival },
         "SA": { title: "沙特阿拉伯", visas: ["中国护照落地签"], color: COLORS.cn_arrival },
         "KE": { title: "肯尼亚", visas: ["中国护照落地签"], color: COLORS.cn_arrival },
         "GW": { title: "几内亚比绍", visas: ["中国护照落地签"], color: COLORS.cn_arrival },
@@ -1907,7 +1542,7 @@
         "GN": { title: "几内亚", visas: ["中国护照电子签"], color: COLORS.cn_evisa },
         "LS": { title: "莱索托", visas: ["中国护照电子签"], color: COLORS.cn_evisa },
         "MS": { title: "蒙特塞拉特", visas: ["中国护照电子签"], color: COLORS.cn_evisa },
-        "VN": { title: "越南", visas: ["中国护照电子签(除了富国岛对中国大陆护照免签外，由于领土争议越南不认中国护照，前往其他所有地区需要办理另纸签)"], color: COLORS.cn_evisa },
+        "VN": { title: "越南", visas: ["中国护照电子签"], color: COLORS.cn_evisa },
         "MN": { title: "蒙古", visas: ["中国护照电子签"], color: COLORS.cn_evisa },
         "SS": { title: "南苏丹", visas: ["中国护照电子签"], color: COLORS.cn_evisa },
         "CD": { title: "刚果(金)", visas: ["中国护照电子签"], color: COLORS.cn_evisa },
@@ -1918,14 +1553,13 @@
         "BT": { title: "不丹", visas: ["中国护照电子签"], color: COLORS.cn_evisa },
         "BW": { title: "博茨瓦纳", visas: ["中国护照电子签"], color: COLORS.cn_evisa },
         "UA": { title: "乌克兰", visas: ["中国护照电子签"], color: COLORS.cn_evisa },
-        "NA": { title: "纳米比亚", visas: ["中国护照电子签"], color: COLORS.cn_evisa },
-        "PK": { title: "巴基斯坦", visas: ["中国护照电子签(8.18usd ETA)"], color: COLORS.cn_evisa },
+        "ZA": { title: "南非", visas: ["中国护照电子签"], color: COLORS.cn_evisa },
         "CA": { title: "加拿大", visas: ["需办理签证"], color: COLORS.visa_required },
         "IN": { title: "印度", visas: ["需办理签证"], color: COLORS.visa_required },
         "IL": { title: "以色列", visas: ["需办理签证"], color: COLORS.visa_required },
         "AF": { title: "阿富汗", visas: ["需办理签证"], color: COLORS.visa_required },
         "DZ": { title: "阿尔及利亚", visas: ["需办理签证"], color: COLORS.visa_required },
-        "AD": { title: "安道尔", visas: ["申根签免签"], color: COLORS.conditional },
+        "AD": { title: "安道尔", visas: ["需办理签证"], color: COLORS.visa_required },
         "BF": { title: "布基纳法索", visas: ["需办理签证"], color: COLORS.visa_required },
         "CF": { title: "中非", visas: ["需办理签证"], color: COLORS.visa_required },
         "TD": { title: "乍得", visas: ["需办理签证"], color: COLORS.visa_required },
@@ -1944,20 +1578,20 @@
         "ML": { title: "马里", visas: ["需办理签证"], color: COLORS.visa_required },
         "MH": { title: "马绍尔群岛", visas: ["需办理签证"], color: COLORS.visa_required },
         "MC": { title: "摩纳哥", visas: ["需办理签证"], color: COLORS.visa_required },
-        "NA": { title: "纳米比亚", visas: ["中国护照电子签"], color: COLORS.cn_evisa },
+        "NA": { title: "纳米比亚", visas: ["需办理签证"], color: COLORS.visa_required },
+        "NI": { title: "尼加拉瓜", visas: ["需办理签证"], color: COLORS.visa_required },
         "NE": { title: "尼日尔", visas: ["需办理签证"], color: COLORS.visa_required },
         "PY": { title: "巴拉圭", visas: ["需办理签证"], color: COLORS.visa_required },
         "VC": { title: "圣文森特和格林纳丁斯", visas: ["需办理签证"], color: COLORS.visa_required },
         "SD": { title: "苏丹", visas: ["需办理签证"], color: COLORS.visa_required },
-        "SY": { title: "叙利亚", visas: ["中国护照落地签(25USD或15USD)"], color: COLORS.cn_arrival },
+        "SY": { title: "叙利亚", visas: ["需办理签证"], color: COLORS.visa_required },
         "TM": { title: "土库曼斯坦", visas: ["需办理签证"], color: COLORS.visa_required },
         "TT": { title: "特立尼达和多巴哥", visas: ["需办理签证"], color: COLORS.visa_required },
-        "VA": { title: "梵蒂冈", visas: ["申根签免签"], color: COLORS.conditional },
+        "VA": { title: "梵蒂冈", visas: ["需办理签证"], color: COLORS.visa_required },
         "VE": { title: "委内瑞拉", visas: ["需办理签证"], color: COLORS.visa_required },
         "YE": { title: "也门", visas: ["需办理签证"], color: COLORS.visa_required },
-        "GL": { title: "格陵兰岛", visas: ["需办理签证(需要办理丹麦签证，并且特别申请前往格陵兰)"], color: COLORS.visa_required },
-        "FO": { title: "法罗群岛", visas: ["需办理签证(需要办理丹麦签证，并且特别申请前往法罗群岛)"], color: COLORS.visa_required },
-        "FK": { title: "马尔维纳斯群岛（福克兰群岛）", visas: ["需办理签证(持英国或阿根廷签证均不可直接访问，需要向英国特殊申请访问。乘游轮前往不需要签证)"], color: COLORS.visa_required }
+        "GL": { title: "格陵兰岛", visas: ["需办理签证"], color: COLORS.visa_required },
+        "FO": { title: "法罗群岛", visas: ["需办理签证"], color: COLORS.visa_required }
       };
 
       const areas = Object.keys(countryData).map(id => {
@@ -1982,9 +1616,6 @@
           }
         }
       });
-      
-      // 存储国家数据用于搜索
-      allCountryDataForSearch['global'] = countryData;
       
       // 初始化调色盘
       colorCustomizer.initColorPalette('global', legendTitleToColorKey, COLORS);
@@ -2013,9 +1644,9 @@
           { "id": "MO", "title": "中国澳门", "customData": "需办理港澳台通行证", "color": COLORS.hmt_pass },
           { "id": "TW", "title": "中国台湾", "customData": "需办理港澳台通行证", "color": COLORS.hmt_pass },
           { "id": "RU", "title": "俄罗斯", "customData": "免签", "color": COLORS.free },
-          { "id": "KH", "title": "柬埔寨", "customData": "免签(2025年6月15日到10月15日实行免签)", "color": COLORS.free },
+          { "id": "KH", "title": "柬埔寨", "customData": "免签", "color": COLORS.free },
           { "id": "TR", "title": "土耳其", "customData": "免签", "color": COLORS.free },
-          { "id": "BR", "title": "巴西", "customData": "免签(目前没有官宣)", "color": COLORS.free },
+          { "id": "BR", "title": "巴西", "customData": "免签", "color": COLORS.free },
           { "id": "AE", "title": "阿联酋", "customData": "免签", "color": COLORS.free },
           { "id": "BB", "title": "巴巴多斯", "customData": "免签", "color": COLORS.free },
           { "id": "BS", "title": "巴哈马", "customData": "免签", "color": COLORS.free },
@@ -2027,7 +1658,6 @@
           { "id": "SC", "title": "塞舌尔", "customData": "免签", "color": COLORS.free },
           { "id": "RS", "title": "塞尔维亚", "customData": "免签", "color": COLORS.free },
           { "id": "TO", "title": "汤加", "customData": "免签", "color": COLORS.free },
-          { "id": "FM", "title": "密克罗尼西亚联邦", "customData": "免签", "color": COLORS.free },
           { "id": "BY", "title": "白俄罗斯", "customData": "免签", "color": COLORS.free },
           { "id": "QA", "title": "卡塔尔", "customData": "免签", "color": COLORS.free },
           { "id": "AM", "title": "亚美尼亚", "customData": "免签", "color": COLORS.free },
@@ -2035,12 +1665,11 @@
           { "id": "OM", "title": "阿曼", "customData": "免签", "color": COLORS.free },
           { "id": "AL", "title": "阿尔巴尼亚", "customData": "免签", "color": COLORS.free },
           { "id": "MA", "title": "摩洛哥", "customData": "免签", "color": COLORS.free },
-          { "id": "EH", "title": "西撒哈拉", "customData": "免签(西撒哈拉地区存在主权争议，目前由摩洛哥实际控制，进入无需签证)", "color": COLORS.free },
           { "id": "RE", "title": "法属留尼汪", "customData": "免签", "color": COLORS.free },
-          { "id": "TN", "title": "突尼斯", "customData": "免签（机场入境免签，铁路口岸由于冷门业务不熟练可能会被错误拒绝入境）", "color": COLORS.free },
+          { "id": "TN", "title": "突尼斯", "customData": "免签（需查材料，有概率拒绝入境）", "color": COLORS.free },
           { "id": "AG", "title": "安提瓜和巴布达", "customData": "免签", "color": COLORS.free },
           { "id": "HT", "title": "海地", "customData": "免签", "color": COLORS.free },
-          { "id": "GS", "title": "南乔治亚和南桑威奇群岛", "customData": "电子签(需要200英镑申请入境ECS)", "color": COLORS.evisa },
+          { "id": "GS", "title": "南乔治亚和南桑威奇群岛", "customData": "免签", "color": COLORS.free },
           { "id": "KN", "title": "圣基茨和尼维斯", "customData": "免签", "color": COLORS.free },
           { "id": "TC", "title": "特克斯和凯科斯群岛", "customData": "免签", "color": COLORS.free },
           { "id": "JM", "title": "牙买加", "customData": "免签", "color": COLORS.free },
@@ -2065,24 +1694,21 @@
           { "id": "TH", "title": "泰国", "customData": "免签", "color": COLORS.free },
           { "id": "MY", "title": "马来西亚", "customData": "免签", "color": COLORS.free },
           { "id": "SG", "title": "新加坡", "customData": "免签", "color": COLORS.free },
-          { "id": "LK", "title": "斯里兰卡", "customData": "免签(需申请免费ETA)", "color": COLORS.free },
-          { "id": "NP", "title": "尼泊尔", "customData": "免签(可提前申请ETA或免费落地签)", "color": COLORS.free },
-          { "id": "LB", "title": "黎巴嫩", "customData": "免签(免费落地签)", "color": COLORS.free },
+          { "id": "LK", "title": "斯里兰卡", "customData": "免签", "color": COLORS.free },
           { "id": "CU", "title": "古巴", "customData": "免签", "color": COLORS.free },
           { "id": "AZ", "title": "阿塞拜疆", "customData": "免签", "color": COLORS.free },
+          { "id": "PK", "title": "巴基斯坦", "customData": "免签", "color": COLORS.free },
           { "id": "VU", "title": "瓦努阿图", "customData": "免签", "color": COLORS.free },
           { "id": "SB", "title": "所罗门群岛", "customData": "免签", "color": COLORS.free },
-          { "id": "FM", "title": "密克罗尼西亚联邦", "customData": "免签", "color": COLORS.free },
-          { "id": "PW", "title": "帕劳", "customData": "免签(需要缴纳100美元环保税)", "color": COLORS.free },
-          { "id": "SJ", "title": "斯瓦尔巴群岛", "customData": "免签(实际上由于交通方式限制，需要持有多次申根签证)", "color": COLORS.free },
+          { "id": "SJ", "title": "斯瓦尔巴群岛", "customData": "免签", "color": COLORS.free },
           { "id": "AX", "title": "奥兰群岛", "customData": "免签", "color": COLORS.free },
           { "id": "BN", "title": "文莱", "customData": "落地签", "color": COLORS.arrival },
           { "id": "TL", "title": "东帝汶", "customData": "落地签", "color": COLORS.arrival },
           { "id": "LA", "title": "老挝", "customData": "落地签", "color": COLORS.arrival },
-          { "id": "LB", "title": "黎巴嫩", "customData": "免签(免费落地签)", "color": COLORS.free },
+          { "id": "LB", "title": "黎巴嫩", "customData": "落地签", "color": COLORS.arrival },
           { "id": "MM", "title": "缅甸", "customData": "落地签", "color": COLORS.arrival },
+          { "id": "NP", "title": "尼泊尔", "customData": "落地签", "color": COLORS.arrival },
           { "id": "JO", "title": "约旦", "customData": "落地签", "color": COLORS.arrival },
-          { "id": "SY", "title": "叙利亚", "customData": "落地签(25USD或15USD)", "color": COLORS.arrival },
           { "id": "BD", "title": "孟加拉国", "customData": "落地签", "color": COLORS.arrival },
           { "id": "EG", "title": "埃及", "customData": "落地签", "color": COLORS.arrival },
           { "id": "TG", "title": "多哥", "customData": "落地签", "color": COLORS.arrival },
@@ -2097,9 +1723,9 @@
           { "id": "UG", "title": "乌干达", "customData": "落地签", "color": COLORS.arrival },
           { "id": "ZW", "title": "津巴布韦", "customData": "落地签", "color": COLORS.arrival },
           { "id": "SH", "title": "圣赫勒拿", "customData": "落地签", "color": COLORS.arrival },
-          { "id": "PW", "title": "帕劳", "customData": "免签(需要缴纳100美元环保税)", "color": COLORS.free },
+          { "id": "PW", "title": "帕劳", "customData": "落地签", "color": COLORS.arrival },
           { "id": "TV", "title": "图瓦卢", "customData": "落地签", "color": COLORS.arrival },
-          { "id": "NR", "title": "瑙鲁", "customData": "落地签", "color": COLORS.arrival },
+          { "id": "PG", "title": "巴布亚新几内亚", "customData": "落地签", "color": COLORS.arrival },
           { "id": "SA", "title": "沙特阿拉伯", "customData": "落地签", "color": COLORS.arrival },
           { "id": "KE", "title": "肯尼亚", "customData": "落地签", "color": COLORS.arrival },
           { "id": "GW", "title": "几内亚比绍", "customData": "落地签", "color": COLORS.arrival },
@@ -2112,13 +1738,14 @@
           { "id": "IQ", "title": "伊拉克", "customData": "电子签", "color": COLORS.evisa },
           { "id": "SN", "title": "塞内加尔", "customData": "落地签", "color": COLORS.arrival },
           { "id": "BI", "title": "布隆迪", "customData": "落地签", "color": COLORS.arrival },
+          { "id": "NR", "title": "瑙鲁", "customData": "落地签", "color": COLORS.arrival },
           { "id": "KG", "title": "吉尔吉斯斯坦", "customData": "电子签", "color": COLORS.evisa },
           { "id": "TJ", "title": "塔吉克斯坦", "customData": "电子签", "color": COLORS.evisa },
           { "id": "BH", "title": "巴林", "customData": "电子签", "color": COLORS.evisa },
           { "id": "GN", "title": "几内亚", "customData": "电子签", "color": COLORS.evisa },
           { "id": "LS", "title": "莱索托", "customData": "电子签", "color": COLORS.evisa },
           { "id": "MS", "title": "蒙特塞拉特", "customData": "电子签", "color": COLORS.evisa },
-          { "id": "VN", "title": "越南", "customData": "电子签(除了富国岛对中国大陆护照免签外，由于领土争议越南不认中国护照，前往其他所有地区需要办理另纸签)", "color": COLORS.evisa },
+          { "id": "VN", "title": "越南", "customData": "电子签", "color": COLORS.evisa },
           { "id": "MN", "title": "蒙古", "customData": "电子签", "color": COLORS.evisa },
           { "id": "SS", "title": "南苏丹", "customData": "电子签", "color": COLORS.evisa },
           { "id": "CD", "title": "刚果(金)", "customData": "电子签", "color": COLORS.evisa },
@@ -2130,11 +1757,7 @@
           { "id": "BW", "title": "博茨瓦纳", "customData": "电子签", "color": COLORS.evisa },
           { "id": "UA", "title": "乌克兰", "customData": "电子签", "color": COLORS.evisa },
           { "id": "MD", "title": "摩尔多瓦", "customData": "电子签", "color": COLORS.evisa },
-          { "id": "NA", "title": "纳米比亚", "customData": "电子签", "color": COLORS.evisa },
-          { "id": "PG", "title": "巴布亚新几内亚", "customData": "电子签", "color": COLORS.evisa },
-          { "id": "PK", "title": "巴基斯坦", "customData": "电子签(8.18usd ETA)", "color": COLORS.evisa },
-          { "id": "GS", "title": "南乔治亚和南桑威奇群岛", "customData": "电子签(需要200英镑申请入境ECS)", "color": COLORS.evisa },
-          { "id": "GS", "title": "南乔治亚和南桑威奇群岛", "customData": "电子签(需要200英镑申请入境ECS)", "color": COLORS.evisa }
+          { "id": "ZA", "title": "南非", "customData": "电子签ETA", "color": COLORS.evisa }
         ]},
         "areasSettings": { "autoZoom": true, "rollOverOutlineColor": "#FFFFFF", "rollOverColor": "#334155", "rollOverAlpha": 1, "alpha": 0.9, "unlistedAreasAlpha": 0.1, "unlistedAreasColor": "#cbd5e1", "balloonText": "<div style='padding:8px; font-family: Inter, sans-serif;'><b>[[title]]</b><br/><span style='font-size:12px; opacity:0.8;'>[[customData]]</span></div>" },
         "balloon": { "adjustBorderColor": false, "color": "#ffffff", "cornerRadius": 8, "fillColor": "#1e293b", "fillAlpha": 0.95, "borderThickness": 0, "shadowAlpha": 0.15 },
@@ -2187,7 +1810,6 @@
           { "id": "CO", "title": "哥伦比亚", "customData": "持美签免签90天", "color": COLORS.visa_free },
           { "id": "DO", "title": "多米尼加", "customData": "持美签免签30天", "color": COLORS.visa_free },
           { "id": "HN", "title": "洪都拉斯", "customData": "持美签免签30天", "color": COLORS.visa_free },
-          { "id": "NI", "title": "尼加拉瓜", "customData": "持美签可以50美元落地签进入，但是政策不清晰，不同口岸政策执行不同，有可能不收费免签入境，也有可能被拒绝入境", "color": COLORS.visa_free },
           { "id": "SV", "title": "萨尔瓦多", "customData": "持美签免签90天", "color": COLORS.visa_free },
           { "id": "BZ", "title": "伯利兹", "customData": "持美签免签30天", "color": COLORS.visa_free },
           { "id": "AR", "title": "阿根廷", "customData": "持美签免签30天", "color": COLORS.visa_free },
@@ -2205,12 +1827,10 @@
           { "id": "AW", "title": "阿鲁巴", "customData": "持美签免签90天", "color": COLORS.visa_free },
           { "id": "SX", "title": "荷属圣马丁", "customData": "持美签免签90天", "color": COLORS.visa_free },
           { "id": "BQ", "title": "荷属加勒比", "customData": "持美签免签90天", "color": COLORS.visa_free },
-          { "id": "GU", "title": "关岛", "customData": "持美签免签", "color": COLORS.visa_free },
-          { "id": "PR", "title": "波多黎各", "customData": "持美签免签", "color": COLORS.visa_free },
           { "id": "RU", "title": "俄罗斯", "customData": "中国护照免签", "color": COLORS.cn_free },
-          { "id": "KH", "title": "柬埔寨", "customData": "中国护照免签(2025年6月15日到10月15日实行免签)", "color": COLORS.cn_free },
+          { "id": "KH", "title": "柬埔寨", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "TR", "title": "土耳其", "customData": "中国护照免签", "color": COLORS.cn_free },
-          { "id": "BR", "title": "巴西", "customData": "中国护照免签(目前没有官宣)", "color": COLORS.cn_free },
+          { "id": "BR", "title": "巴西", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "AE", "title": "阿联酋", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "BB", "title": "巴巴多斯", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "BS", "title": "巴哈马", "customData": "中国护照免签", "color": COLORS.cn_free },
@@ -2222,7 +1842,6 @@
           { "id": "SC", "title": "塞舌尔", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "RS", "title": "塞尔维亚", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "TO", "title": "汤加", "customData": "中国护照免签", "color": COLORS.cn_free },
-          { "id": "FM", "title": "密克罗尼西亚联邦", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "BY", "title": "白俄罗斯", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "QA", "title": "卡塔尔", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "AM", "title": "亚美尼亚", "customData": "中国护照免签", "color": COLORS.cn_free },
@@ -2230,12 +1849,11 @@
           { "id": "OM", "title": "阿曼", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "AL", "title": "阿尔巴尼亚", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "MA", "title": "摩洛哥", "customData": "中国护照免签", "color": COLORS.cn_free },
-          { "id": "EH", "title": "西撒哈拉", "customData": "中国护照免签(西撒哈拉地区存在主权争议，目前由摩洛哥实际控制，进入无需签证)", "color": COLORS.cn_free },
           { "id": "RE", "title": "法属留尼汪", "customData": "中国护照免签", "color": COLORS.cn_free },
-          { "id": "TN", "title": "突尼斯", "customData": "中国护照免签（机场入境免签，铁路口岸由于冷门业务不熟练可能会被错误拒绝入境）", "color": COLORS.cn_free },
+          { "id": "TN", "title": "突尼斯", "customData": "中国护照免签（需查材料，有概率拒绝入境）", "color": COLORS.cn_free },
           { "id": "AG", "title": "安提瓜和巴布达", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "HT", "title": "海地", "customData": "中国护照免签", "color": COLORS.cn_free },
-          { "id": "GS", "title": "南乔治亚和南桑威奇群岛", "customData": "中国护照电子签(需要200英镑申请入境ECS)", "color": COLORS.cn_evisa },
+          { "id": "GS", "title": "南乔治亚和南桑威奇群岛", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "KN", "title": "圣基茨和尼维斯", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "TC", "title": "特克斯和凯科斯群岛", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "JM", "title": "牙买加", "customData": "中国护照免签", "color": COLORS.cn_free },
@@ -2250,7 +1868,6 @@
           { "id": "ZM", "title": "赞比亚", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "SR", "title": "苏里南", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "MV", "title": "马尔代夫", "customData": "中国护照免签", "color": COLORS.cn_free },
-          { "id": "ZA", "title": "南非", "customData": "中国护照免签(需申请免费ETA)", "color": COLORS.cn_free },
           { "id": "KZ", "title": "哈萨克斯坦", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "GA", "title": "加蓬", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "MZ", "title": "莫桑比克", "customData": "中国护照免签", "color": COLORS.cn_free },
@@ -2261,21 +1878,21 @@
           { "id": "TH", "title": "泰国", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "MY", "title": "马来西亚", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "SG", "title": "新加坡", "customData": "中国护照免签", "color": COLORS.cn_free },
-          { "id": "LK", "title": "斯里兰卡", "customData": "中国护照免签(需申请免费ETA)", "color": COLORS.cn_free },
-          { "id": "NP", "title": "尼泊尔", "customData": "中国护照免签(可提前申请ETA或免费落地签)", "color": COLORS.cn_free },
-          { "id": "LB", "title": "黎巴嫩", "customData": "中国护照免签(免费落地签)", "color": COLORS.cn_free },
+          { "id": "LK", "title": "斯里兰卡", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "CU", "title": "古巴", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "AZ", "title": "阿塞拜疆", "customData": "中国护照免签", "color": COLORS.cn_free },
+          { "id": "PK", "title": "巴基斯坦", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "VU", "title": "瓦努阿图", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "SB", "title": "所罗门群岛", "customData": "中国护照免签", "color": COLORS.cn_free },
-          { "id": "SJ", "title": "斯瓦尔巴群岛", "customData": "中国护照免签(实际上由于交通方式限制，需要持有多次申根签证)", "color": COLORS.cn_free },
+          { "id": "SJ", "title": "斯瓦尔巴群岛", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "AX", "title": "奥兰群岛", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "BN", "title": "文莱", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
           { "id": "TL", "title": "东帝汶", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
           { "id": "LA", "title": "老挝", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
+          { "id": "LB", "title": "黎巴嫩", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
           { "id": "MM", "title": "缅甸", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
+          { "id": "NP", "title": "尼泊尔", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
           { "id": "JO", "title": "约旦", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
-          { "id": "SY", "title": "叙利亚", "customData": "中国护照落地签(25USD或15USD)", "color": COLORS.cn_arrival },
           { "id": "BD", "title": "孟加拉国", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
           { "id": "EG", "title": "埃及", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
           { "id": "TG", "title": "多哥", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
@@ -2290,9 +1907,9 @@
           { "id": "UG", "title": "乌干达", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
           { "id": "ZW", "title": "津巴布韦", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
           { "id": "SH", "title": "圣赫勒拿", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
-          { "id": "PW", "title": "帕劳", "customData": "中国护照免签(需要缴纳100美元环保税)", "color": COLORS.cn_free },
+          { "id": "PW", "title": "帕劳", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
           { "id": "TV", "title": "图瓦卢", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
-          { "id": "PG", "title": "巴布亚新几内亚", "customData": "中国护照电子签", "color": COLORS.cn_evisa },
+          { "id": "PG", "title": "巴布亚新几内亚", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
           { "id": "SA", "title": "沙特阿拉伯", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
           { "id": "KE", "title": "肯尼亚", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
           { "id": "GW", "title": "几内亚比绍", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
@@ -2312,7 +1929,7 @@
           { "id": "GN", "title": "几内亚", "customData": "中国护照电子签", "color": COLORS.cn_evisa },
           { "id": "LS", "title": "莱索托", "customData": "中国护照电子签", "color": COLORS.cn_evisa },
           { "id": "MS", "title": "蒙特塞拉特", "customData": "中国护照电子签", "color": COLORS.cn_evisa },
-          { "id": "VN", "title": "越南", "customData": "中国护照电子签(除了富国岛对中国大陆护照免签外，由于领土争议越南不认中国护照，前往其他所有地区需要办理另纸签)", "color": COLORS.cn_evisa },
+          { "id": "VN", "title": "越南", "customData": "中国护照电子签", "color": COLORS.cn_evisa },
           { "id": "MN", "title": "蒙古", "customData": "中国护照电子签", "color": COLORS.cn_evisa },
           { "id": "SS", "title": "南苏丹", "customData": "中国护照电子签", "color": COLORS.cn_evisa },
           { "id": "CD", "title": "刚果(金)", "customData": "中国护照电子签", "color": COLORS.cn_evisa },
@@ -2324,11 +1941,7 @@
           { "id": "BW", "title": "博茨瓦纳", "customData": "中国护照电子签", "color": COLORS.cn_evisa },
           { "id": "UA", "title": "乌克兰", "customData": "中国护照电子签", "color": COLORS.cn_evisa },
           { "id": "MD", "title": "摩尔多瓦", "customData": "中国护照电子签", "color": COLORS.cn_evisa },
-          { "id": "NA", "title": "纳米比亚", "customData": "中国护照电子签", "color": COLORS.cn_evisa },
-          { "id": "LK", "title": "斯里兰卡", "customData": "中国护照免签(需申请免费ETA)", "color": COLORS.cn_free },
-          { "id": "PG", "title": "巴布亚新几内亚", "customData": "中国护照电子签", "color": COLORS.cn_evisa },
-          { "id": "PK", "title": "巴基斯坦", "customData": "中国护照电子签(8.18usd ETA)", "color": COLORS.cn_evisa },
-          { "id": "GS", "title": "南乔治亚和南桑威奇群岛", "customData": "中国护照电子签(需要200英镑申请入境ECS)", "color": COLORS.cn_evisa }
+          { "id": "ZA", "title": "南非", "customData": "中国护照电子签ETA", "color": COLORS.cn_evisa }
         ]},
         "areasSettings": { "autoZoom": true, "rollOverOutlineColor": "#FFFFFF", "rollOverColor": "#334155", "rollOverAlpha": 1, "alpha": 0.9, "unlistedAreasAlpha": 0.1, "unlistedAreasColor": "#cbd5e1", "balloonText": "<div style='padding:8px; font-family: Inter, sans-serif;'><b>[[title]]</b><br/><span style='font-size:12px; opacity:0.8;'>[[customData]]</span></div>" },
         "balloon": { "adjustBorderColor": false, "color": "#ffffff", "cornerRadius": 8, "fillColor": "#1e293b", "fillAlpha": 0.95, "borderThickness": 0, "shadowAlpha": 0.15 },
@@ -2391,9 +2004,9 @@
           { "id": "FJ", "title": "斐济", "customData": "持英签免签4个月(需6个月有效期)", "color": COLORS.visa_free },
           { "id": "KR", "title": "韩国", "customData": "持英签有条件过境免签30天", "color": COLORS.transit },
           { "id": "RU", "title": "俄罗斯", "customData": "中国护照免签", "color": COLORS.cn_free },
-          { "id": "KH", "title": "柬埔寨", "customData": "中国护照免签(2025年6月15日到10月15日实行免签)", "color": COLORS.cn_free },
+          { "id": "KH", "title": "柬埔寨", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "TR", "title": "土耳其", "customData": "中国护照免签", "color": COLORS.cn_free },
-          { "id": "BR", "title": "巴西", "customData": "中国护照免签(目前没有官宣)", "color": COLORS.cn_free },
+          { "id": "BR", "title": "巴西", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "AE", "title": "阿联酋", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "BB", "title": "巴巴多斯", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "BS", "title": "巴哈马", "customData": "中国护照免签", "color": COLORS.cn_free },
@@ -2402,7 +2015,6 @@
           { "id": "SC", "title": "塞舌尔", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "RS", "title": "塞尔维亚", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "TO", "title": "汤加", "customData": "中国护照免签", "color": COLORS.cn_free },
-          { "id": "FM", "title": "密克罗尼西亚联邦", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "BY", "title": "白俄罗斯", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "QA", "title": "卡塔尔", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "AM", "title": "亚美尼亚", "customData": "中国护照免签", "color": COLORS.cn_free },
@@ -2410,12 +2022,11 @@
           { "id": "OM", "title": "阿曼", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "AL", "title": "阿尔巴尼亚", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "MA", "title": "摩洛哥", "customData": "中国护照免签", "color": COLORS.cn_free },
-          { "id": "EH", "title": "西撒哈拉", "customData": "中国护照免签(西撒哈拉地区存在主权争议，目前由摩洛哥实际控制，进入无需签证)", "color": COLORS.cn_free },
           { "id": "RE", "title": "法属留尼汪", "customData": "中国护照免签", "color": COLORS.cn_free },
-          { "id": "TN", "title": "突尼斯", "customData": "中国护照免签（机场入境免签，铁路口岸由于冷门业务不熟练可能会被错误拒绝入境）", "color": COLORS.cn_free },
+          { "id": "TN", "title": "突尼斯", "customData": "中国护照免签（需查材料，有概率拒绝入境）", "color": COLORS.cn_free },
           { "id": "AG", "title": "安提瓜和巴布达", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "HT", "title": "海地", "customData": "中国护照免签", "color": COLORS.cn_free },
-          { "id": "GS", "title": "南乔治亚和南桑威奇群岛", "customData": "中国护照电子签(需要200英镑申请入境ECS)", "color": COLORS.cn_evisa },
+          { "id": "GS", "title": "南乔治亚和南桑威奇群岛", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "KN", "title": "圣基茨和尼维斯", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "TC", "title": "特克斯和凯科斯群岛", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "JM", "title": "牙买加", "customData": "中国护照免签", "color": COLORS.cn_free },
@@ -2430,7 +2041,6 @@
           { "id": "ZM", "title": "赞比亚", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "SR", "title": "苏里南", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "MV", "title": "马尔代夫", "customData": "中国护照免签", "color": COLORS.cn_free },
-          { "id": "ZA", "title": "南非", "customData": "中国护照免签(需申请免费ETA)", "color": COLORS.cn_free },
           { "id": "KZ", "title": "哈萨克斯坦", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "GA", "title": "加蓬", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "MZ", "title": "莫桑比克", "customData": "中国护照免签", "color": COLORS.cn_free },
@@ -2441,23 +2051,23 @@
           { "id": "TH", "title": "泰国", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "MY", "title": "马来西亚", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "SG", "title": "新加坡", "customData": "中国护照免签", "color": COLORS.cn_free },
-          { "id": "LK", "title": "斯里兰卡", "customData": "中国护照免签(需申请免费ETA)", "color": COLORS.cn_free },
-          { "id": "NP", "title": "尼泊尔", "customData": "中国护照免签(可提前申请ETA或免费落地签)", "color": COLORS.cn_free },
-          { "id": "LB", "title": "黎巴嫩", "customData": "中国护照免签(免费落地签)", "color": COLORS.cn_free },
+          { "id": "LK", "title": "斯里兰卡", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "CU", "title": "古巴", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "AZ", "title": "阿塞拜疆", "customData": "中国护照免签", "color": COLORS.cn_free },
+          { "id": "PK", "title": "巴基斯坦", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "VU", "title": "瓦努阿图", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "SB", "title": "所罗门群岛", "customData": "中国护照免签", "color": COLORS.cn_free },
-          { "id": "SJ", "title": "斯瓦尔巴群岛", "customData": "中国护照免签(实际上由于交通方式限制，需要持有多次申根签证)", "color": COLORS.cn_free },
+          { "id": "SJ", "title": "斯瓦尔巴群岛", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "AX", "title": "奥兰群岛", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "GD", "title": "格林纳达", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "MU", "title": "毛里求斯", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "BN", "title": "文莱", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
           { "id": "TL", "title": "东帝汶", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
           { "id": "LA", "title": "老挝", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
+          { "id": "LB", "title": "黎巴嫩", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
           { "id": "MM", "title": "缅甸", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
+          { "id": "NP", "title": "尼泊尔", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
           { "id": "JO", "title": "约旦", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
-          { "id": "SY", "title": "叙利亚", "customData": "中国护照落地签(25USD或15USD)", "color": COLORS.cn_arrival },
           { "id": "BD", "title": "孟加拉国", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
           { "id": "EG", "title": "埃及", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
           { "id": "TG", "title": "多哥", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
@@ -2472,9 +2082,9 @@
           { "id": "UG", "title": "乌干达", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
           { "id": "ZW", "title": "津巴布韦", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
           { "id": "SH", "title": "圣赫勒拿", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
-          { "id": "PW", "title": "帕劳", "customData": "中国护照免签(需要缴纳100美元环保税)", "color": COLORS.cn_free },
+          { "id": "PW", "title": "帕劳", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
           { "id": "TV", "title": "图瓦卢", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
-          { "id": "PG", "title": "巴布亚新几内亚", "customData": "中国护照电子签", "color": COLORS.cn_evisa },
+          { "id": "PG", "title": "巴布亚新几内亚", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
           { "id": "SA", "title": "沙特阿拉伯", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
           { "id": "KE", "title": "肯尼亚", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
           { "id": "GW", "title": "几内亚比绍", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
@@ -2494,7 +2104,7 @@
           { "id": "GN", "title": "几内亚", "customData": "中国护照电子签", "color": COLORS.cn_evisa },
           { "id": "LS", "title": "莱索托", "customData": "中国护照电子签", "color": COLORS.cn_evisa },
           { "id": "MS", "title": "蒙特塞拉特", "customData": "中国护照电子签", "color": COLORS.cn_evisa },
-          { "id": "VN", "title": "越南", "customData": "中国护照电子签(除了富国岛对中国大陆护照免签外，由于领土争议越南不认中国护照，前往其他所有地区需要办理另纸签)", "color": COLORS.cn_evisa },
+          { "id": "VN", "title": "越南", "customData": "中国护照电子签", "color": COLORS.cn_evisa },
           { "id": "MN", "title": "蒙古", "customData": "中国护照电子签", "color": COLORS.cn_evisa },
           { "id": "SS", "title": "南苏丹", "customData": "中国护照电子签", "color": COLORS.cn_evisa },
           { "id": "CD", "title": "刚果(金)", "customData": "中国护照电子签", "color": COLORS.cn_evisa },
@@ -2506,11 +2116,7 @@
           { "id": "BW", "title": "博茨瓦纳", "customData": "中国护照电子签", "color": COLORS.cn_evisa },
           { "id": "UA", "title": "乌克兰", "customData": "中国护照电子签", "color": COLORS.cn_evisa },
           { "id": "MD", "title": "摩尔多瓦", "customData": "中国护照电子签", "color": COLORS.cn_evisa },
-          { "id": "NA", "title": "纳米比亚", "customData": "中国护照电子签", "color": COLORS.cn_evisa },
-          { "id": "LK", "title": "斯里兰卡", "customData": "中国护照免签(需申请免费ETA)", "color": COLORS.cn_free },
-          { "id": "PG", "title": "巴布亚新几内亚", "customData": "中国护照电子签", "color": COLORS.cn_evisa },
-          { "id": "PK", "title": "巴基斯坦", "customData": "中国护照电子签(8.18usd ETA)", "color": COLORS.cn_evisa },
-          { "id": "GS", "title": "南乔治亚和南桑威奇群岛", "customData": "中国护照电子签(需要200英镑申请入境ECS)", "color": COLORS.cn_evisa }
+          { "id": "ZA", "title": "南非", "customData": "中国护照电子签ETA", "color": COLORS.cn_evisa }
         ]},
         "areasSettings": { "autoZoom": true, "rollOverOutlineColor": "#FFFFFF", "rollOverColor": "#334155", "rollOverAlpha": 1, "alpha": 0.9, "unlistedAreasAlpha": 0.1, "unlistedAreasColor": "#cbd5e1", "balloonText": "<div style='padding:8px; font-family: Inter, sans-serif;'><b>[[title]]</b><br/><span style='font-size:12px; opacity:0.8;'>[[customData]]</span></div>" },
         "balloon": { "adjustBorderColor": false, "color": "#ffffff", "cornerRadius": 8, "fillColor": "#1e293b", "fillAlpha": 0.95, "borderThickness": 0, "shadowAlpha": 0.15 },
@@ -2558,9 +2164,9 @@
           { "id": "ME", "title": "黑山", "customData": "持日签免签30天", "color": COLORS.visa_free },
           { "id": "PA", "title": "巴拿马", "customData": "持日签免签30天", "color": COLORS.visa_free },
           { "id": "RU", "title": "俄罗斯", "customData": "中国护照免签", "color": COLORS.cn_free },
-          { "id": "KH", "title": "柬埔寨", "customData": "中国护照免签(2025年6月15日到10月15日实行免签)", "color": COLORS.cn_free },
+          { "id": "KH", "title": "柬埔寨", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "TR", "title": "土耳其", "customData": "中国护照免签", "color": COLORS.cn_free },
-          { "id": "BR", "title": "巴西", "customData": "中国护照免签(目前没有官宣)", "color": COLORS.cn_free },
+          { "id": "BR", "title": "巴西", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "AE", "title": "阿联酋", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "BB", "title": "巴巴多斯", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "BS", "title": "巴哈马", "customData": "中国护照免签", "color": COLORS.cn_free },
@@ -2572,7 +2178,6 @@
           { "id": "SC", "title": "塞舌尔", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "RS", "title": "塞尔维亚", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "TO", "title": "汤加", "customData": "中国护照免签", "color": COLORS.cn_free },
-          { "id": "FM", "title": "密克罗尼西亚联邦", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "BY", "title": "白俄罗斯", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "QA", "title": "卡塔尔", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "AM", "title": "亚美尼亚", "customData": "中国护照免签", "color": COLORS.cn_free },
@@ -2580,12 +2185,11 @@
           { "id": "OM", "title": "阿曼", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "AL", "title": "阿尔巴尼亚", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "MA", "title": "摩洛哥", "customData": "中国护照免签", "color": COLORS.cn_free },
-          { "id": "EH", "title": "西撒哈拉", "customData": "中国护照免签(西撒哈拉地区存在主权争议，目前由摩洛哥实际控制，进入无需签证)", "color": COLORS.cn_free },
           { "id": "RE", "title": "法属留尼汪", "customData": "中国护照免签", "color": COLORS.cn_free },
-          { "id": "TN", "title": "突尼斯", "customData": "中国护照免签（机场入境免签，铁路口岸由于冷门业务不熟练可能会被错误拒绝入境）", "color": COLORS.cn_free },
+          { "id": "TN", "title": "突尼斯", "customData": "中国护照免签（需查材料，有概率拒绝入境）", "color": COLORS.cn_free },
           { "id": "AG", "title": "安提瓜和巴布达", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "HT", "title": "海地", "customData": "中国护照免签", "color": COLORS.cn_free },
-          { "id": "GS", "title": "南乔治亚和南桑威奇群岛", "customData": "中国护照电子签(需要200英镑申请入境ECS)", "color": COLORS.cn_evisa },
+          { "id": "GS", "title": "南乔治亚和南桑威奇群岛", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "KN", "title": "圣基茨和尼维斯", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "TC", "title": "特克斯和凯科斯群岛", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "JM", "title": "牙买加", "customData": "中国护照免签", "color": COLORS.cn_free },
@@ -2600,7 +2204,6 @@
           { "id": "ZM", "title": "赞比亚", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "SR", "title": "苏里南", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "MV", "title": "马尔代夫", "customData": "中国护照免签", "color": COLORS.cn_free },
-          { "id": "ZA", "title": "南非", "customData": "中国护照免签(需申请免费ETA)", "color": COLORS.cn_free },
           { "id": "KZ", "title": "哈萨克斯坦", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "GA", "title": "加蓬", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "MZ", "title": "莫桑比克", "customData": "中国护照免签", "color": COLORS.cn_free },
@@ -2611,21 +2214,21 @@
           { "id": "TH", "title": "泰国", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "MY", "title": "马来西亚", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "SG", "title": "新加坡", "customData": "中国护照免签", "color": COLORS.cn_free },
-          { "id": "LK", "title": "斯里兰卡", "customData": "中国护照免签(需申请免费ETA)", "color": COLORS.cn_free },
-          { "id": "NP", "title": "尼泊尔", "customData": "中国护照免签(可提前申请ETA或免费落地签)", "color": COLORS.cn_free },
-          { "id": "LB", "title": "黎巴嫩", "customData": "中国护照免签(免费落地签)", "color": COLORS.cn_free },
+          { "id": "LK", "title": "斯里兰卡", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "CU", "title": "古巴", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "AZ", "title": "阿塞拜疆", "customData": "中国护照免签", "color": COLORS.cn_free },
+          { "id": "PK", "title": "巴基斯坦", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "VU", "title": "瓦努阿图", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "SB", "title": "所罗门群岛", "customData": "中国护照免签", "color": COLORS.cn_free },
-          { "id": "SJ", "title": "斯瓦尔巴群岛", "customData": "中国护照免签(实际上由于交通方式限制，需要持有多次申根签证)", "color": COLORS.cn_free },
+          { "id": "SJ", "title": "斯瓦尔巴群岛", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "AX", "title": "奥兰群岛", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "BN", "title": "文莱", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
           { "id": "TL", "title": "东帝汶", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
           { "id": "LA", "title": "老挝", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
+          { "id": "LB", "title": "黎巴嫩", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
           { "id": "MM", "title": "缅甸", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
+          { "id": "NP", "title": "尼泊尔", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
           { "id": "JO", "title": "约旦", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
-          { "id": "SY", "title": "叙利亚", "customData": "中国护照落地签(25USD或15USD)", "color": COLORS.cn_arrival },
           { "id": "BD", "title": "孟加拉国", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
           { "id": "EG", "title": "埃及", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
           { "id": "TG", "title": "多哥", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
@@ -2640,9 +2243,9 @@
           { "id": "UG", "title": "乌干达", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
           { "id": "ZW", "title": "津巴布韦", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
           { "id": "SH", "title": "圣赫勒拿", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
-          { "id": "PW", "title": "帕劳", "customData": "中国护照免签(需要缴纳100美元环保税)", "color": COLORS.cn_free },
+          { "id": "PW", "title": "帕劳", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
           { "id": "TV", "title": "图瓦卢", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
-          { "id": "PG", "title": "巴布亚新几内亚", "customData": "中国护照电子签", "color": COLORS.cn_evisa },
+          { "id": "PG", "title": "巴布亚新几内亚", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
           { "id": "SA", "title": "沙特阿拉伯", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
           { "id": "KE", "title": "肯尼亚", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
           { "id": "GW", "title": "几内亚比绍", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
@@ -2662,7 +2265,7 @@
           { "id": "GN", "title": "几内亚", "customData": "中国护照电子签", "color": COLORS.cn_evisa },
           { "id": "LS", "title": "莱索托", "customData": "中国护照电子签", "color": COLORS.cn_evisa },
           { "id": "MS", "title": "蒙特塞拉特", "customData": "中国护照电子签", "color": COLORS.cn_evisa },
-          { "id": "VN", "title": "越南", "customData": "中国护照电子签(除了富国岛对中国大陆护照免签外，由于领土争议越南不认中国护照，前往其他所有地区需要办理另纸签)", "color": COLORS.cn_evisa },
+          { "id": "VN", "title": "越南", "customData": "中国护照电子签", "color": COLORS.cn_evisa },
           { "id": "MN", "title": "蒙古", "customData": "中国护照电子签", "color": COLORS.cn_evisa },
           { "id": "SS", "title": "南苏丹", "customData": "中国护照电子签", "color": COLORS.cn_evisa },
           { "id": "CD", "title": "刚果(金)", "customData": "中国护照电子签", "color": COLORS.cn_evisa },
@@ -2674,11 +2277,7 @@
           { "id": "BW", "title": "博茨瓦纳", "customData": "中国护照电子签", "color": COLORS.cn_evisa },
           { "id": "UA", "title": "乌克兰", "customData": "中国护照电子签", "color": COLORS.cn_evisa },
           { "id": "MD", "title": "摩尔多瓦", "customData": "中国护照电子签", "color": COLORS.cn_evisa },
-          { "id": "NA", "title": "纳米比亚", "customData": "中国护照电子签", "color": COLORS.cn_evisa },
-          { "id": "LK", "title": "斯里兰卡", "customData": "中国护照免签(需申请免费ETA)", "color": COLORS.cn_free },
-          { "id": "PG", "title": "巴布亚新几内亚", "customData": "中国护照电子签", "color": COLORS.cn_evisa },
-          { "id": "PK", "title": "巴基斯坦", "customData": "中国护照电子签(8.18usd ETA)", "color": COLORS.cn_evisa },
-          { "id": "GS", "title": "南乔治亚和南桑威奇群岛", "customData": "中国护照电子签(需要200英镑申请入境ECS)", "color": COLORS.cn_evisa }
+          { "id": "ZA", "title": "南非", "customData": "中国护照电子签ETA", "color": COLORS.cn_evisa }
         ]},
         "areasSettings": { "autoZoom": true, "rollOverOutlineColor": "#FFFFFF", "rollOverColor": "#334155", "rollOverAlpha": 1, "alpha": 0.9, "unlistedAreasAlpha": 0.1, "unlistedAreasColor": "#cbd5e1", "balloonText": "<div style='padding:8px; font-family: Inter, sans-serif;'><b>[[title]]</b><br/><span style='font-size:12px; opacity:0.8;'>[[customData]]</span></div>" },
         "balloon": { "adjustBorderColor": false, "color": "#ffffff", "cornerRadius": 8, "fillColor": "#1e293b", "fillAlpha": 0.95, "borderThickness": 0, "shadowAlpha": 0.15 },
@@ -2729,9 +2328,9 @@
           { "id": "KR", "title": "韩国", "customData": "持澳签有条件过境免签30天", "color": COLORS.transit },
           { "id": "JP", "title": "日本", "customData": "持澳签有条件过境免签72小时(需预订大航司机票)", "color": COLORS.transit },
           { "id": "RU", "title": "俄罗斯", "customData": "中国护照免签", "color": COLORS.cn_free },
-          { "id": "KH", "title": "柬埔寨", "customData": "中国护照免签(2025年6月15日到10月15日实行免签)", "color": COLORS.cn_free },
+          { "id": "KH", "title": "柬埔寨", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "TR", "title": "土耳其", "customData": "中国护照免签", "color": COLORS.cn_free },
-          { "id": "BR", "title": "巴西", "customData": "中国护照免签(目前没有官宣)", "color": COLORS.cn_free },
+          { "id": "BR", "title": "巴西", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "AE", "title": "阿联酋", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "BB", "title": "巴巴多斯", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "BS", "title": "巴哈马", "customData": "中国护照免签", "color": COLORS.cn_free },
@@ -2743,7 +2342,6 @@
           { "id": "SC", "title": "塞舌尔", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "RS", "title": "塞尔维亚", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "TO", "title": "汤加", "customData": "中国护照免签", "color": COLORS.cn_free },
-          { "id": "FM", "title": "密克罗尼西亚联邦", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "BY", "title": "白俄罗斯", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "QA", "title": "卡塔尔", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "AM", "title": "亚美尼亚", "customData": "中国护照免签", "color": COLORS.cn_free },
@@ -2751,12 +2349,11 @@
           { "id": "OM", "title": "阿曼", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "AL", "title": "阿尔巴尼亚", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "MA", "title": "摩洛哥", "customData": "中国护照免签", "color": COLORS.cn_free },
-          { "id": "EH", "title": "西撒哈拉", "customData": "中国护照免签(西撒哈拉地区存在主权争议，目前由摩洛哥实际控制，进入无需签证)", "color": COLORS.cn_free },
           { "id": "RE", "title": "法属留尼汪", "customData": "中国护照免签", "color": COLORS.cn_free },
-          { "id": "TN", "title": "突尼斯", "customData": "中国护照免签（机场入境免签，铁路口岸由于冷门业务不熟练可能会被错误拒绝入境）", "color": COLORS.cn_free },
+          { "id": "TN", "title": "突尼斯", "customData": "中国护照免签（需查材料，有概率拒绝入境）", "color": COLORS.cn_free },
           { "id": "AG", "title": "安提瓜和巴布达", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "HT", "title": "海地", "customData": "中国护照免签", "color": COLORS.cn_free },
-          { "id": "GS", "title": "南乔治亚和南桑威奇群岛", "customData": "中国护照电子签(需要200英镑申请入境ECS)", "color": COLORS.cn_evisa },
+          { "id": "GS", "title": "南乔治亚和南桑威奇群岛", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "KN", "title": "圣基茨和尼维斯", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "TC", "title": "特克斯和凯科斯群岛", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "JM", "title": "牙买加", "customData": "中国护照免签", "color": COLORS.cn_free },
@@ -2771,7 +2368,6 @@
           { "id": "ZM", "title": "赞比亚", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "SR", "title": "苏里南", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "MV", "title": "马尔代夫", "customData": "中国护照免签", "color": COLORS.cn_free },
-          { "id": "ZA", "title": "南非", "customData": "中国护照免签(需申请免费ETA)", "color": COLORS.cn_free },
           { "id": "KZ", "title": "哈萨克斯坦", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "GA", "title": "加蓬", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "MZ", "title": "莫桑比克", "customData": "中国护照免签", "color": COLORS.cn_free },
@@ -2782,21 +2378,21 @@
           { "id": "TH", "title": "泰国", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "MY", "title": "马来西亚", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "SG", "title": "新加坡", "customData": "中国护照免签", "color": COLORS.cn_free },
-          { "id": "LK", "title": "斯里兰卡", "customData": "中国护照免签(需申请免费ETA)", "color": COLORS.cn_free },
-          { "id": "NP", "title": "尼泊尔", "customData": "中国护照免签(可提前申请ETA或免费落地签)", "color": COLORS.cn_free },
-          { "id": "LB", "title": "黎巴嫩", "customData": "中国护照免签(免费落地签)", "color": COLORS.cn_free },
+          { "id": "LK", "title": "斯里兰卡", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "CU", "title": "古巴", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "AZ", "title": "阿塞拜疆", "customData": "中国护照免签", "color": COLORS.cn_free },
+          { "id": "PK", "title": "巴基斯坦", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "VU", "title": "瓦努阿图", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "SB", "title": "所罗门群岛", "customData": "中国护照免签", "color": COLORS.cn_free },
-          { "id": "SJ", "title": "斯瓦尔巴群岛", "customData": "中国护照免签(实际上由于交通方式限制，需要持有多次申根签证)", "color": COLORS.cn_free },
+          { "id": "SJ", "title": "斯瓦尔巴群岛", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "AX", "title": "奥兰群岛", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "BN", "title": "文莱", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
           { "id": "TL", "title": "东帝汶", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
           { "id": "LA", "title": "老挝", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
+          { "id": "LB", "title": "黎巴嫩", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
           { "id": "MM", "title": "缅甸", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
+          { "id": "NP", "title": "尼泊尔", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
           { "id": "JO", "title": "约旦", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
-          { "id": "SY", "title": "叙利亚", "customData": "中国护照落地签(25USD或15USD)", "color": COLORS.cn_arrival },
           { "id": "BD", "title": "孟加拉国", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
           { "id": "EG", "title": "埃及", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
           { "id": "TG", "title": "多哥", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
@@ -2811,9 +2407,9 @@
           { "id": "UG", "title": "乌干达", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
           { "id": "ZW", "title": "津巴布韦", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
           { "id": "SH", "title": "圣赫勒拿", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
-          { "id": "PW", "title": "帕劳", "customData": "中国护照免签(需要缴纳100美元环保税)", "color": COLORS.cn_free },
+          { "id": "PW", "title": "帕劳", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
           { "id": "TV", "title": "图瓦卢", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
-          { "id": "PG", "title": "巴布亚新几内亚", "customData": "中国护照电子签", "color": COLORS.cn_evisa },
+          { "id": "PG", "title": "巴布亚新几内亚", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
           { "id": "SA", "title": "沙特阿拉伯", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
           { "id": "KE", "title": "肯尼亚", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
           { "id": "GW", "title": "几内亚比绍", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
@@ -2833,7 +2429,7 @@
           { "id": "GN", "title": "几内亚", "customData": "中国护照电子签", "color": COLORS.cn_evisa },
           { "id": "LS", "title": "莱索托", "customData": "中国护照电子签", "color": COLORS.cn_evisa },
           { "id": "MS", "title": "蒙特塞拉特", "customData": "中国护照电子签", "color": COLORS.cn_evisa },
-          { "id": "VN", "title": "越南", "customData": "中国护照电子签(除了富国岛对中国大陆护照免签外，由于领土争议越南不认中国护照，前往其他所有地区需要办理另纸签)", "color": COLORS.cn_evisa },
+          { "id": "VN", "title": "越南", "customData": "中国护照电子签", "color": COLORS.cn_evisa },
           { "id": "MN", "title": "蒙古", "customData": "中国护照电子签", "color": COLORS.cn_evisa },
           { "id": "SS", "title": "南苏丹", "customData": "中国护照电子签", "color": COLORS.cn_evisa },
           { "id": "CD", "title": "刚果(金)", "customData": "中国护照电子签", "color": COLORS.cn_evisa },
@@ -2845,11 +2441,7 @@
           { "id": "BW", "title": "博茨瓦纳", "customData": "中国护照电子签", "color": COLORS.cn_evisa },
           { "id": "UA", "title": "乌克兰", "customData": "中国护照电子签", "color": COLORS.cn_evisa },
           { "id": "MD", "title": "摩尔多瓦", "customData": "中国护照电子签", "color": COLORS.cn_evisa },
-          { "id": "NA", "title": "纳米比亚", "customData": "中国护照电子签", "color": COLORS.cn_evisa },
-          { "id": "LK", "title": "斯里兰卡", "customData": "中国护照免签(需申请免费ETA)", "color": COLORS.cn_free },
-          { "id": "PG", "title": "巴布亚新几内亚", "customData": "中国护照电子签", "color": COLORS.cn_evisa },
-          { "id": "PK", "title": "巴基斯坦", "customData": "中国护照电子签(8.18usd ETA)", "color": COLORS.cn_evisa },
-          { "id": "GS", "title": "南乔治亚和南桑威奇群岛", "customData": "中国护照电子签(需要200英镑申请入境ECS)", "color": COLORS.cn_evisa }
+          { "id": "ZA", "title": "南非", "customData": "中国护照电子签ETA", "color": COLORS.cn_evisa }
         ]},
         "areasSettings": { "autoZoom": true, "rollOverOutlineColor": "#FFFFFF", "rollOverColor": "#334155", "rollOverAlpha": 1, "alpha": 0.9, "unlistedAreasAlpha": 0.1, "unlistedAreasColor": "#cbd5e1", "balloonText": "<div style='padding:8px; font-family: Inter, sans-serif;'><b>[[title]]</b><br/><span style='font-size:12px; opacity:0.8;'>[[customData]]</span></div>" },
         "balloon": { "adjustBorderColor": false, "color": "#ffffff", "cornerRadius": 8, "fillColor": "#1e293b", "fillAlpha": 0.95, "borderThickness": 0, "shadowAlpha": 0.15 },
@@ -2932,13 +2524,8 @@
           { "id": "UY", "title": "乌拉圭", "customData": "持申根签免签90天", "color": COLORS.visa_free },
           { "id": "ME", "title": "黑山", "customData": "持申根签免签30天", "color": COLORS.visa_free },
           { "id": "MD", "title": "摩尔多瓦", "customData": "持申根签免签", "color": COLORS.visa_free },
-          { "id": "XK", "title": "科索沃（地区）", "customData": "持申根签免签(需多次)", "color": COLORS.visa_free },
+          { "id": "XK", "title": "科索沃", "customData": "持申根签免签(需多次)", "color": COLORS.visa_free },
           { "id": "CY", "title": "塞浦路斯", "customData": "持申根签免签(需有效签证)", "color": COLORS.visa_free },
-          { "id": "MK", "title": "北马其顿", "customData": "持申根签免签", "color": COLORS.visa_free },
-          { "id": "AD", "title": "安道尔", "customData": "持申根签免签", "color": COLORS.visa_free },
-          { "id": "SM", "title": "圣马力诺", "customData": "持申根签免签", "color": COLORS.visa_free },
-          { "id": "VA", "title": "梵蒂冈", "customData": "持申根签免签", "color": COLORS.visa_free },
-          { "id": "GI", "title": "直布罗陀", "customData": "持多次申根签免签", "color": COLORS.visa_free },
           { "id": "PH", "title": "菲律宾", "customData": "持申根签免签7天", "color": COLORS.visa_free },
           { "id": "KR", "title": "韩国", "customData": "持申根签有条件过境免签30天", "color": COLORS.transit },
           { "id": "CW", "title": "库拉索", "customData": "持申根签免签(需多次入境)", "color": COLORS.visa_free },
@@ -2946,9 +2533,9 @@
           { "id": "SX", "title": "荷属圣马丁", "customData": "持申根签免签(需多次入境)", "color": COLORS.visa_free },
           { "id": "BQ", "title": "荷属加勒比", "customData": "持申根签免签(需多次入境)", "color": COLORS.visa_free },
           { "id": "RU", "title": "俄罗斯", "customData": "中国护照免签", "color": COLORS.cn_free },
-          { "id": "KH", "title": "柬埔寨", "customData": "中国护照免签(2025年6月15日到10月15日实行免签)", "color": COLORS.cn_free },
+          { "id": "KH", "title": "柬埔寨", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "TR", "title": "土耳其", "customData": "中国护照免签", "color": COLORS.cn_free },
-          { "id": "BR", "title": "巴西", "customData": "中国护照免签(目前没有官宣)", "color": COLORS.cn_free },
+          { "id": "BR", "title": "巴西", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "AE", "title": "阿联酋", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "BB", "title": "巴巴多斯", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "BS", "title": "巴哈马", "customData": "中国护照免签", "color": COLORS.cn_free },
@@ -2960,7 +2547,6 @@
           { "id": "SC", "title": "塞舌尔", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "RS", "title": "塞尔维亚", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "TO", "title": "汤加", "customData": "中国护照免签", "color": COLORS.cn_free },
-          { "id": "FM", "title": "密克罗尼西亚联邦", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "BY", "title": "白俄罗斯", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "QA", "title": "卡塔尔", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "AM", "title": "亚美尼亚", "customData": "中国护照免签", "color": COLORS.cn_free },
@@ -2968,12 +2554,11 @@
           { "id": "OM", "title": "阿曼", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "AL", "title": "阿尔巴尼亚", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "MA", "title": "摩洛哥", "customData": "中国护照免签", "color": COLORS.cn_free },
-          { "id": "EH", "title": "西撒哈拉", "customData": "中国护照免签(西撒哈拉地区存在主权争议，目前由摩洛哥实际控制，进入无需签证)", "color": COLORS.cn_free },
           { "id": "RE", "title": "法属留尼汪", "customData": "中国护照免签", "color": COLORS.cn_free },
-          { "id": "TN", "title": "突尼斯", "customData": "中国护照免签（机场入境免签，铁路口岸由于冷门业务不熟练可能会被错误拒绝入境）", "color": COLORS.cn_free },
+          { "id": "TN", "title": "突尼斯", "customData": "中国护照免签（需查材料，有概率拒绝入境）", "color": COLORS.cn_free },
           { "id": "AG", "title": "安提瓜和巴布达", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "HT", "title": "海地", "customData": "中国护照免签", "color": COLORS.cn_free },
-          { "id": "GS", "title": "南乔治亚和南桑威奇群岛", "customData": "中国护照电子签(需要200英镑申请入境ECS)", "color": COLORS.cn_evisa },
+          { "id": "GS", "title": "南乔治亚和南桑威奇群岛", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "KN", "title": "圣基茨和尼维斯", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "TC", "title": "特克斯和凯科斯群岛", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "JM", "title": "牙买加", "customData": "中国护照免签", "color": COLORS.cn_free },
@@ -2988,7 +2573,6 @@
           { "id": "ZM", "title": "赞比亚", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "SR", "title": "苏里南", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "MV", "title": "马尔代夫", "customData": "中国护照免签", "color": COLORS.cn_free },
-          { "id": "ZA", "title": "南非", "customData": "中国护照免签(需申请免费ETA)", "color": COLORS.cn_free },
           { "id": "KZ", "title": "哈萨克斯坦", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "GA", "title": "加蓬", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "MZ", "title": "莫桑比克", "customData": "中国护照免签", "color": COLORS.cn_free },
@@ -2999,21 +2583,21 @@
           { "id": "TH", "title": "泰国", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "MY", "title": "马来西亚", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "SG", "title": "新加坡", "customData": "中国护照免签", "color": COLORS.cn_free },
-          { "id": "LK", "title": "斯里兰卡", "customData": "中国护照免签(需申请免费ETA)", "color": COLORS.cn_free },
-          { "id": "NP", "title": "尼泊尔", "customData": "中国护照免签(可提前申请ETA或免费落地签)", "color": COLORS.cn_free },
-          { "id": "LB", "title": "黎巴嫩", "customData": "中国护照免签(免费落地签)", "color": COLORS.cn_free },
+          { "id": "LK", "title": "斯里兰卡", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "CU", "title": "古巴", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "AZ", "title": "阿塞拜疆", "customData": "中国护照免签", "color": COLORS.cn_free },
+          { "id": "PK", "title": "巴基斯坦", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "VU", "title": "瓦努阿图", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "SB", "title": "所罗门群岛", "customData": "中国护照免签", "color": COLORS.cn_free },
-          { "id": "SJ", "title": "斯瓦尔巴群岛", "customData": "中国护照免签(实际上由于交通方式限制，需要持有多次申根签证)", "color": COLORS.cn_free },
+          { "id": "SJ", "title": "斯瓦尔巴群岛", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "AX", "title": "奥兰群岛", "customData": "中国护照免签", "color": COLORS.cn_free },
           { "id": "BN", "title": "文莱", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
           { "id": "TL", "title": "东帝汶", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
           { "id": "LA", "title": "老挝", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
+          { "id": "LB", "title": "黎巴嫩", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
           { "id": "MM", "title": "缅甸", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
+          { "id": "NP", "title": "尼泊尔", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
           { "id": "JO", "title": "约旦", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
-          { "id": "SY", "title": "叙利亚", "customData": "中国护照落地签(25USD或15USD)", "color": COLORS.cn_arrival },
           { "id": "BD", "title": "孟加拉国", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
           { "id": "EG", "title": "埃及", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
           { "id": "TG", "title": "多哥", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
@@ -3028,9 +2612,9 @@
           { "id": "UG", "title": "乌干达", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
           { "id": "ZW", "title": "津巴布韦", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
           { "id": "SH", "title": "圣赫勒拿", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
-          { "id": "PW", "title": "帕劳", "customData": "中国护照免签(需要缴纳100美元环保税)", "color": COLORS.cn_free },
+          { "id": "PW", "title": "帕劳", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
           { "id": "TV", "title": "图瓦卢", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
-          { "id": "PG", "title": "巴布亚新几内亚", "customData": "中国护照电子签", "color": COLORS.cn_evisa },
+          { "id": "PG", "title": "巴布亚新几内亚", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
           { "id": "SA", "title": "沙特阿拉伯", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
           { "id": "KE", "title": "肯尼亚", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
           { "id": "GW", "title": "几内亚比绍", "customData": "中国护照落地签", "color": COLORS.cn_arrival },
@@ -3050,7 +2634,7 @@
           { "id": "GN", "title": "几内亚", "customData": "中国护照电子签", "color": COLORS.cn_evisa },
           { "id": "LS", "title": "莱索托", "customData": "中国护照电子签", "color": COLORS.cn_evisa },
           { "id": "MS", "title": "蒙特塞拉特", "customData": "中国护照电子签", "color": COLORS.cn_evisa },
-          { "id": "VN", "title": "越南", "customData": "中国护照电子签(除了富国岛对中国大陆护照免签外，由于领土争议越南不认中国护照，前往其他所有地区需要办理另纸签)", "color": COLORS.cn_evisa },
+          { "id": "VN", "title": "越南", "customData": "中国护照电子签", "color": COLORS.cn_evisa },
           { "id": "MN", "title": "蒙古", "customData": "中国护照电子签", "color": COLORS.cn_evisa },
           { "id": "SS", "title": "南苏丹", "customData": "中国护照电子签", "color": COLORS.cn_evisa },
           { "id": "CD", "title": "刚果(金)", "customData": "中国护照电子签", "color": COLORS.cn_evisa },
@@ -3062,11 +2646,7 @@
           { "id": "BW", "title": "博茨瓦纳", "customData": "中国护照电子签", "color": COLORS.cn_evisa },
           { "id": "UA", "title": "乌克兰", "customData": "中国护照电子签", "color": COLORS.cn_evisa },
           { "id": "MD", "title": "摩尔多瓦", "customData": "中国护照电子签", "color": COLORS.cn_evisa },
-          { "id": "NA", "title": "纳米比亚", "customData": "中国护照电子签", "color": COLORS.cn_evisa },
-          { "id": "LK", "title": "斯里兰卡", "customData": "中国护照免签(需申请免费ETA)", "color": COLORS.cn_free },
-          { "id": "PG", "title": "巴布亚新几内亚", "customData": "中国护照电子签", "color": COLORS.cn_evisa },
-          { "id": "PK", "title": "巴基斯坦", "customData": "中国护照电子签(8.18usd ETA)", "color": COLORS.cn_evisa },
-          { "id": "GS", "title": "南乔治亚和南桑威奇群岛", "customData": "中国护照电子签(需要200英镑申请入境ECS)", "color": COLORS.cn_evisa }
+          { "id": "ZA", "title": "南非", "customData": "中国护照电子签ETA", "color": COLORS.cn_evisa }
         ]},
         "areasSettings": { "autoZoom": true, "rollOverOutlineColor": "#FFFFFF", "rollOverColor": "#334155", "rollOverAlpha": 1, "alpha": 0.9, "unlistedAreasAlpha": 0.1, "unlistedAreasColor": "#cbd5e1", "balloonText": "<div style='padding:8px; font-family: Inter, sans-serif;'><b>[[title]]</b><br/><span style='font-size:12px; opacity:0.8;'>[[customData]]</span></div>" },
         "balloon": { "adjustBorderColor": false, "color": "#ffffff", "cornerRadius": 8, "fillColor": "#1e293b", "fillAlpha": 0.95, "borderThickness": 0, "shadowAlpha": 0.15 },
@@ -3086,75 +2666,14 @@
 
     // 访问统计地图
     async function initAnalyticsMap() {
-      // 检查管理员密码验证状态
-      const isAuthenticated = sessionStorage.getItem('analytics_authenticated') === 'true';
-      
-      if (!isAuthenticated) {
-        // 显示密码输入界面，隐藏统计内容
-        document.getElementById('analytics-password-gate').style.display = 'flex';
-        document.getElementById('analytics-content').style.display = 'none';
-        
-        // 设置密码验证事件
-        const passwordBtn = document.getElementById('verify-password-btn');
-        const passwordInput = document.getElementById('admin-password');
-        const errorDiv = document.getElementById('password-error');
-        
-        // 移除之前的事件监听器（如果存在）
-        passwordBtn.removeEventListener('click', handlePasswordVerification);
-        
-        // 定义密码验证函数
-        function handlePasswordVerification() {
-          const password = passwordInput.value.trim();
-          const correctPassword = 'figsama2026'; // 管理员密码
-          
-          if (password === correctPassword) {
-            // 密码正确，显示统计内容
-            sessionStorage.setItem('analytics_authenticated', 'true');
-            document.getElementById('analytics-password-gate').style.display = 'none';
-            document.getElementById('analytics-content').style.display = 'block';
-            errorDiv.style.display = 'none';
-            
-            // 移除事件监听器
-            passwordBtn.removeEventListener('click', handlePasswordVerification);
-            
-            // 加载统计数据
-            loadAnalyticsData();
-          } else {
-            // 密码错误
-            errorDiv.style.display = 'block';
-            passwordInput.value = '';
-            passwordInput.focus();
-          }
-        }
-        
-        // 添加事件监听器
-        passwordBtn.addEventListener('click', handlePasswordVerification);
-        
-        // 支持回车键验证
-        passwordInput.addEventListener('keypress', function(e) {
-          if (e.key === 'Enter') {
-            handlePasswordVerification();
-          }
-        });
-        
-        return; // 不继续加载数据
-      } else {
-        // 已验证，直接显示内容
-        document.getElementById('analytics-password-gate').style.display = 'none';
-        document.getElementById('analytics-content').style.display = 'block';
-        loadAnalyticsData();
+      // 清除旧的地图实例
+      if (maps['analytics']) {
+        maps['analytics'].clear();
+        delete maps['analytics'];
       }
       
-      // 加载统计数据的内部函数
-      async function loadAnalyticsData() {
-        // 清除旧的地图实例
-        if (maps['analytics']) {
-          maps['analytics'].clear();
-          delete maps['analytics'];
-        }
-        
-        // 从Firebase获取聚合统计数据
-        const aggregatedData = await visitTracker.getAggregatedStats();
+      // 从Firebase获取聚合统计数据
+      const aggregatedData = await visitTracker.getAggregatedStats();
       
       if (!aggregatedData) {
         // 如果没有聚合数据，显示提示
@@ -3166,9 +2685,8 @@
               <div style="font-size: 14px; color: #94a3b8; margin-bottom: 20px;">访问数据将在您浏览网站时自动收集</div>
               <div style="font-size: 12px; color: #cbd5e1; line-height: 1.6;">
                 <div>如果持续显示此提示，请检查：</div>
-                <div style="margin-top: 8px;">1. 您当前的网络环境是否能访问Google Firestore服务</div>
-                <div style="margin-top: 4px;">2. Firestore 安全规则是否允许读取 visits 集合</div>
-                <div style="margin-top: 4px;">3. 浏览器控制台是否有错误信息</div>
+                <div style="margin-top: 8px;">1. Firestore 安全规则是否允许读取 visits 集合</div>
+                <div style="margin-top: 4px;">2. 浏览器控制台是否有错误信息</div>
               </div>
             </div>
           `;
@@ -3213,7 +2731,7 @@
       }
       
       // 创建访问分布地图
-      let countryVisits = aggregatedData.countryVisits || {};
+      const countryVisits = aggregatedData.countryVisits || {};
       if (Object.keys(countryVisits).length === 0) {
         const chartDiv = document.getElementById('chartdiv-analytics');
         if (chartDiv) {
@@ -3221,30 +2739,6 @@
         }
         return;
       }
-      
-      // 清理数据：将 XX 和 Unknown 合并到中国（CN）
-      const cleanedCountryVisits = {};
-      Object.keys(countryVisits).forEach(countryCode => {
-        const data = countryVisits[countryCode];
-        let targetCode = countryCode;
-        let targetCountry = data.country || 'China';
-        
-        // 如果 countryCode 是 XX 或 country 是 Unknown，映射到中国
-        if (countryCode === 'XX' || data.country === 'Unknown' || !countryCode || !data.country) {
-          targetCode = 'CN';
-          targetCountry = 'China';
-        }
-        
-        // 合并到目标国家代码
-        if (!cleanedCountryVisits[targetCode]) {
-          cleanedCountryVisits[targetCode] = {
-            count: 0,
-            country: targetCountry
-          };
-        }
-        cleanedCountryVisits[targetCode].count += (data.count || 0);
-      });
-      countryVisits = cleanedCountryVisits;
       
       // 创建地图区域数据
       const maxCount = Math.max(...Object.values(countryVisits).map(d => d.count || 0));
@@ -3256,40 +2750,12 @@
         
         return {
           id: countryCode,
-          title: data.country || 'China',
+          title: data.country || 'Unknown',
           customData: `${data.count || 0} 次访问`,
           color: color,
           value: data.count || 0
         };
       });
-      
-      // 创建城市标记点数据
-      const cityImages = [];
-      if (aggregatedData.cityLocations && Object.keys(aggregatedData.cityLocations).length > 0) {
-        const maxCityCount = Math.max(...Object.values(aggregatedData.cityLocations).map(d => d.count || 0));
-        
-        Object.keys(aggregatedData.cityLocations).forEach(cityName => {
-          const location = aggregatedData.cityLocations[cityName];
-          if (location.latitude && location.longitude) {
-            // 根据访问次数计算点的大小（8-24像素）
-            const size = Math.max(8, Math.min(24, 8 + (location.count / maxCityCount) * 16));
-            
-            cityImages.push({
-              latitude: location.latitude,
-              longitude: location.longitude,
-              title: cityName,
-              customData: `${location.count} 次访问`,
-              svgPath: "M9,0C4.029,0,0,4.029,0,9s4.029,9,9,9s9-4.029,9-9S13.971,0,9,0z M9,15.93 c-3.83,0-6.93-3.1-6.93-6.93S5.17,2.07,9,2.07s6.93,3.1,6.93,6.93S12.83,15.93,9,15.93 M12.5,9c0,1.933-1.567,3.5-3.5,3.5S5.5,10.933,5.5,9S7.067,5.5,9,5.5 S12.5,7.067,12.5,9z",
-              scale: size / 18, // 归一化缩放
-              color: "#3b82f6", // 蓝色标记点
-              alpha: 0.8,
-              rollOverColor: "#1d4ed8",
-              value: location.count,
-              country: location.country
-            });
-          }
-        });
-      }
       
       maps['analytics'] = AmCharts.makeChart("chartdiv-analytics", {
         "type": "map",
@@ -3300,8 +2766,7 @@
           "zoomLevel": 1.2,
           "zoomLongitude": 20,
           "zoomLatitude": 30,
-          "areas": areas,
-          "images": cityImages // 添加城市标记点
+          "areas": areas
         },
         "areasSettings": {
           "autoZoom": true,
@@ -3312,13 +2777,6 @@
           "unlistedAreasAlpha": 0.1,
           "unlistedAreasColor": "#cbd5e1",
           "balloonText": "<div style='padding:10px; font-family: Inter, sans-serif; line-height:1.6;'><b style='font-size:14px;'>[[title]]</b><br/><span style='font-size:12px; opacity:0.9; margin-top:5px; display:block;'>[[customData]]</span></div>"
-        },
-        "imagesSettings": {
-          "alpha": 0.8,
-          "color": "#3b82f6",
-          "rollOverColor": "#1d4ed8",
-          "balloonText": "<div style='padding:10px; font-family: Inter, sans-serif; line-height:1.6;'><b style='font-size:14px; color:#1e40af;'>📍 [[title]]</b><br/><span style='font-size:12px; opacity:0.9; margin-top:5px; display:block;'>[[customData]]</span><br/><span style='font-size:11px; color:#64748b; margin-top:3px; display:block;'>[[country]]</span></div>",
-          "selectedColor": "#1d4ed8"
         },
         "balloon": {
           "adjustBorderColor": false,
@@ -3347,7 +2805,6 @@
       
       // 添加水印文本到地图（用于显示）
       addWatermarkForExport('analytics');
-      }
     }
 
     // 初始化默认显示的地图

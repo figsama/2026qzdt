@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>坐标质量控制测试</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    .test-container {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #333;
+      border-bottom: 3px solid #3b82f6;
+      padding-bottom: 10px;
+    }
+    h2 {
+      color: #666;
+      margin-top: 0;
+    }
+    .test-case {
+      background: #f9f9f9;
+      padding: 15px;
+      margin: 10px 0;
+      border-left: 4px solid #3b82f6;
+      border-radius: 4px;
+    }
+    .test-case.passed {
+      border-left-color: #10b981;
+      background: #f0fdf4;
+    }
+    .test-case.failed {
+      border-left-color: #ef4444;
+      background: #fef2f2;
+    }
+    .result {
+      margin-top: 10px;
+      padding: 10px;
+      background: white;
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 12px;
+    }
+    .score {
+      font-weight: bold;
+      font-size: 18px;
+      color: #3b82f6;
+    }
+    .score.high { color: #10b981; }
+    .score.medium { color: #f59e0b; }
+    .score.low { color: #ef4444; }
+    button {
+      background: #3b82f6;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+      margin: 10px 5px;
+    }
+    button:hover {
+      background: #2563eb;
+    }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+    .stat-card {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 20px;
+      border-radius: 8px;
+      text-align: center;
+    }
+    .stat-value {
+      font-size: 32px;
+      font-weight: bold;
+    }
+    .stat-label {
+      font-size: 14px;
+      opacity: 0.9;
+    }
+    pre {
+      background: #1e293b;
+      color: #e2e8f0;
+      padding: 15px;
+      border-radius: 4px;
+      overflow-x: auto;
+    }
+  </style>
+</head>
+<body>
+  <h1>🔬 坐标质量控制系统测试</h1>
+  
+  <div class="test-container">
+    <h2>📊 质量评分测试</h2>
+    <button onclick="runQualityTests()">运行质量评分测试</button>
+    <div id="qualityResults"></div>
+  </div>
+  
+  <div class="test-container">
+    <h2>🔧 坐标修正测试</h2>
+    <button onclick="runCorrectionTests()">运行坐标修正测试</button>
+    <div id="correctionResults"></div>
+  </div>
+  
+  <div class="test-container">
+    <h2>🌐 实际API测试</h2>
+    <button onclick="runRealAPITest()">测试真实IP定位API</button>
+    <div id="apiResults"></div>
+  </div>
+
+  <script>
+    // 复制核心逻辑到测试环境
+    const CITY_COORDINATES_DB = {
+      'Beijing-China': { lat: 39.9042, lon: 116.4074 },
+      'Shanghai-China': { lat: 31.2304, lon: 121.4737 },
+      'Shenzhen-China': { lat: 22.5431, lon: 114.0579 },
+      'Wuhan-China': { lat: 30.5928, lon: 114.3055 },
+      "Xi'an-China": { lat: 34.2658, lon: 108.9541 },
+      'Guangzhou-China': { lat: 23.1291, lon: 113.2644 },
+      'Tokyo-Japan': { lat: 35.6762, lon: 139.6503 },
+      'New York-United States': { lat: 40.7128, lon: -74.0060 }
+    };
+    
+    function isDefaultCoordinate(lat, lon) {
+      return (
+        (lat === 0 && lon === 0) ||
+        (Math.abs(lat - 35.8617) < 0.01 && Math.abs(lon - 104.1954) < 0.01) ||
+        (Math.abs(lat - 39.9042) < 0.01 && Math.abs(lon - 116.4074) < 0.01)
+      );
+    }
+    
+    function calculateQualityScore(data, apiName) {
+      let score = 100;
+      
+      if (isDefaultCoordinate(data.latitude, data.longitude)) {
+        score -= 60;
+      }
+      
+      if (!data.city || data.city === 'Unknown' || data.city.toLowerCase() === 'unknown') {
+        score -= 40;
+      }
+      
+      if (/[\u4e00-\u9fa5]/.test(data.city)) {
+        score -= 50;
+      }
+      
+      const latStr = data.latitude.toString();
+      const lonStr = data.longitude.toString();
+      const latPrecision = (latStr.split('.')[1] || '').length;
+      const lonPrecision = (lonStr.split('.')[1] || '').length;
+      
+      if (latPrecision >= 4 && lonPrecision >= 4) {
+        score += 15;
+      } else if (latPrecision < 2 || lonPrecision < 2) {
+        score -= 20;
+      }
+      
+      if (!data.countryCode || data.countryCode === 'XX' || data.countryCode.length !== 2) {
+        score -= 20;
+      }
+      
+      const apiReliability = {
+        'ipapi.co': 20,
+        'ip-api.com': 18,
+        'ipwhois.app': 12,
+        'ipinfo.io': 15
+      };
+      score += apiReliability[apiName] || 0;
+      
+      return Math.max(0, Math.min(100, score));
+    }
+    
+    function correctCityCoordinates(locationData) {
+      const key = `${locationData.city}-${locationData.country}`;
+      const correctCoords = CITY_COORDINATES_DB[key];
+      
+      if (correctCoords && isDefaultCoordinate(locationData.latitude, locationData.longitude)) {
+        locationData.latitude = correctCoords.lat;
+        locationData.longitude = correctCoords.lon;
+        locationData.coordsCorrected = true;
+      }
+      
+      return locationData;
+    }
+    
+    // 测试用例
+    const qualityTestCases = [
+      {
+        name: '高质量数据 - 精确坐标',
+        data: { city: 'Tokyo', country: 'Japan', countryCode: 'JP', latitude: 35.6762, longitude: 139.6503 },
+        apiName: 'ipapi.co',
+        expectedScore: '>80'
+      },
+      {
+        name: '中等质量 - 低精度坐标',
+        data: { city: 'Seoul', country: 'South Korea', countryCode: 'KR', latitude: 37.5, longitude: 126.9 },
+        apiName: 'ipwhois.app',
+        expectedScore: '60-80'
+      },
+      {
+        name: '低质量 - 默认坐标（中国中心）',
+        data: { city: 'Shenzhen', country: 'China', countryCode: 'CN', latitude: 35.8617, longitude: 104.1954 },
+        apiName: 'ip-api.com',
+        expectedScore: '<60'
+      },
+      {
+        name: '不合格 - 中文城市名',
+        data: { city: '深圳', country: 'China', countryCode: 'CN', latitude: 22.5431, longitude: 114.0579 },
+        apiName: 'ip-api.com',
+        expectedScore: '<40'
+      },
+      {
+        name: '不合格 - Unknown城市+0坐标',
+        data: { city: 'Unknown', country: 'Unknown', countryCode: 'XX', latitude: 0, longitude: 0 },
+        apiName: 'unknown',
+        expectedScore: '<20'
+      }
+    ];
+    
+    const correctionTestCases = [
+      {
+        name: '深圳 - 应修正为正确坐标',
+        data: { city: 'Shenzhen', country: 'China', countryCode: 'CN', latitude: 35.8617, longitude: 104.1954 },
+        expectedLat: 22.5431,
+        expectedLon: 114.0579
+      },
+      {
+        name: '武汉 - 应修正为正确坐标',
+        data: { city: 'Wuhan', country: 'China', countryCode: 'CN', latitude: 35.8617, longitude: 104.1954 },
+        expectedLat: 30.5928,
+        expectedLon: 114.3055
+      },
+      {
+        name: '西安 - 应修正为正确坐标',
+        data: { city: "Xi'an", country: 'China', countryCode: 'CN', latitude: 35.8617, longitude: 104.1954 },
+        expectedLat: 34.2658,
+        expectedLon: 108.9541
+      },
+      {
+        name: '已正确坐标 - 不应修改',
+        data: { city: 'Beijing', country: 'China', countryCode: 'CN', latitude: 39.9042, longitude: 116.4074 },
+        expectedLat: 39.9042,
+        expectedLon: 116.4074
+      }
+    ];
+    
+    function runQualityTests() {
+      const container = document.getElementById('qualityResults');
+      let html = '<h3>测试结果:</h3>';
+      let passed = 0;
+      let failed = 0;
+      
+      qualityTestCases.forEach((testCase, index) => {
+        const score = calculateQualityScore(testCase.data, testCase.apiName);
+        const scoreClass = score > 80 ? 'high' : score > 60 ? 'medium' : 'low';
+        
+        let isPassed = false;
+        if (testCase.expectedScore.startsWith('>')) {
+          const threshold = parseInt(testCase.expectedScore.substring(1));
+          isPassed = score > threshold;
+        } else if (testCase.expectedScore.startsWith('<')) {
+          const threshold = parseInt(testCase.expectedScore.substring(1));
+          isPassed = score < threshold;
+        } else if (testCase.expectedScore.includes('-')) {
+          const [min, max] = testCase.expectedScore.split('-').map(s => parseInt(s));
+          isPassed = score >= min && score <= max;
+        }
+        
+        if (isPassed) passed++;
+        else failed++;
+        
+        html += `
+          <div class="test-case ${isPassed ? 'passed' : 'failed'}">
+            <strong>${index + 1}. ${testCase.name}</strong>
+            <div class="result">
+              <div>城市: ${testCase.data.city}, ${testCase.data.country}</div>
+              <div>坐标: (${testCase.data.latitude}, ${testCase.data.longitude})</div>
+              <div>API: ${testCase.apiName}</div>
+              <div>质量评分: <span class="score ${scoreClass}">${score}</span></div>
+              <div>预期范围: ${testCase.expectedScore}</div>
+              <div>结果: ${isPassed ? '✅ 通过' : '❌ 失败'}</div>
+            </div>
+          </div>
+        `;
+      });
+      
+      html = `
+        <div class="stats">
+          <div class="stat-card" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+            <div class="stat-value">${passed}</div>
+            <div class="stat-label">通过</div>
+          </div>
+          <div class="stat-card" style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);">
+            <div class="stat-value">${failed}</div>
+            <div class="stat-label">失败</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">${Math.round(passed/(passed+failed)*100)}%</div>
+            <div class="stat-label">通过率</div>
+          </div>
+        </div>
+      ` + html;
+      
+      container.innerHTML = html;
+    }
+    
+    function runCorrectionTests() {
+      const container = document.getElementById('correctionResults');
+      let html = '<h3>测试结果:</h3>';
+      let passed = 0;
+      let failed = 0;
+      
+      correctionTestCases.forEach((testCase, index) => {
+        const original = JSON.parse(JSON.stringify(testCase.data));
+        const corrected = correctCityCoordinates(testCase.data);
+        
+        const latMatch = Math.abs(corrected.latitude - testCase.expectedLat) < 0.0001;
+        const lonMatch = Math.abs(corrected.longitude - testCase.expectedLon) < 0.0001;
+        const isPassed = latMatch && lonMatch;
+        
+        if (isPassed) passed++;
+        else failed++;
+        
+        html += `
+          <div class="test-case ${isPassed ? 'passed' : 'failed'}">
+            <strong>${index + 1}. ${testCase.name}</strong>
+            <div class="result">
+              <div>城市: ${corrected.city}, ${corrected.country}</div>
+              <div>原坐标: (${original.latitude}, ${original.longitude})</div>
+              <div>修正后: (${corrected.latitude}, ${corrected.longitude})</div>
+              <div>预期值: (${testCase.expectedLat}, ${testCase.expectedLon})</div>
+              <div>是否修正: ${corrected.coordsCorrected ? '是' : '否'}</div>
+              <div>结果: ${isPassed ? '✅ 通过' : '❌ 失败'}</div>
+            </div>
+          </div>
+        `;
+      });
+      
+      html = `
+        <div class="stats">
+          <div class="stat-card" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+            <div class="stat-value">${passed}</div>
+            <div class="stat-label">通过</div>
+          </div>
+          <div class="stat-card" style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);">
+            <div class="stat-value">${failed}</div>
+            <div class="stat-label">失败</div>
+          </div>
+        </div>
+      ` + html;
+      
+      container.innerHTML = html;
+    }
+    
+    async function runRealAPITest() {
+      const container = document.getElementById('apiResults');
+      container.innerHTML = '<p>⏳ 正在测试真实API...</p>';
+      
+      const apis = [
+        {
+          name: 'ipapi.co',
+          url: 'https://ipapi.co/json/',
+          parser: (data) => ({
+            ip: data.ip,
+            country: data.country_name,
+            countryCode: data.country_code,
+            city: data.city,
+            latitude: data.latitude,
+            longitude: data.longitude
+          })
+        },
+        {
+          name: 'ipwhois.app',
+          url: 'https://ipwhois.app/json/',
+          parser: (data) => ({
+            ip: data.ip,
+            country: data.country,
+            countryCode: data.country_code,
+            city: data.city,
+            latitude: parseFloat(data.latitude),
+            longitude: parseFloat(data.longitude)
+          })
+        }
+      ];
+      
+      let html = '<h3>API测试结果:</h3>';
+      
+      for (const api of apis) {
+        try {
+          const response = await fetch(api.url);
+          const data = await response.json();
+          const parsed = api.parser(data);
+          
+          const score = calculateQualityScore(parsed, api.name);
+          const isDefault = isDefaultCoordinate(parsed.latitude, parsed.longitude);
+          const corrected = correctCityCoordinates(JSON.parse(JSON.stringify(parsed)));
+          
+          html += `
+            <div class="test-case passed">
+              <strong>✅ ${api.name}</strong>
+              <div class="result">
+                <div><strong>原始数据:</strong></div>
+                <pre>${JSON.stringify(parsed, null, 2)}</pre>
+                <div><strong>质量评分:</strong> <span class="score ${score > 80 ? 'high' : score > 60 ? 'medium' : 'low'}">${score}</span></div>
+                <div><strong>是否默认坐标:</strong> ${isDefault ? '是 ⚠️' : '否 ✅'}</div>
+                ${corrected.coordsCorrected ? `
+                  <div><strong>修正后坐标:</strong> (${corrected.latitude}, ${corrected.longitude})</div>
+                  <div><strong>新质量评分:</strong> <span class="score high">${score + 30}</span></div>
+                ` : ''}
+              </div>
+            </div>
+          `;
+        } catch (error) {
+          html += `
+            <div class="test-case failed">
+              <strong>❌ ${api.name}</strong>
+              <div class="result">
+                <div>错误: ${error.message}</div>
+              </div>
+            </div>
+          `;
+        }
+      }
+      
+      container.innerHTML = html;
+    }
+  </script>
+</body>
+</html>

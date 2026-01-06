@@ -4,6 +4,26 @@ firebase-debug.log
 firestore-debug.log
 ui-debug.log
 
+# Firebase Admin SDK & Database Management (不提交到GitHub)
+serviceAccountKey.json
+correct_cities.js
+diagnose_and_fix.js
+quick_diagnose.js
+fix_data.sh
+run_full_fix.sh
+setup_proxy.sh
+test_connection.js
+test_api.html
+FIREBASE_DATA_CORRECTION.md
+package.json
+package-lock.json
+修复总结.md
+网络问题解决方案.md
+诊断修复工具使用指南.md
+问题修复说明.md
+快速开始.md
+IP_API_说明.md
+
 # Functions
 functions/node_modules/
 functions/.eslintcache
