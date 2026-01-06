@@ -364,6 +364,9 @@
       <div class="map-header">
         <h2>中国护照全球签证政策地图</h2>
         <p>实时更新 · 免签 / 落地签 / 电子签政策分布</p>
+        <p style="font-size: 12px; color: #64748b; margin-top: 8px; line-height: 1.6;">
+          <strong>说明：</strong>此地图范围为持有中国护照实际可以到达的范围，并不包含一些需要特殊办理手续前往的中国争议领土，不代表中国主张的主权领土范围。
+        </p>
         <div class="map-header-watermark">小红书：无花果先生 https://figsama.github.io/2026qzdt/</div>
       </div>
       <div id="chartdiv-china" class="chartdiv"></div>
@@ -1353,7 +1356,7 @@
       // 从localStorage加载保存的颜色
       const COLORS = {};
       const legendTitleToColorKey = {
-        "中国大陆": "china",
+        "无需额外手续可以前往的中国地区": "china",
         "签证签发国": "issuer",
         "有条件免签": "conditional",
         "有条件过境免签": "transit",
@@ -1369,7 +1372,7 @@
       }
 
       const countryData = {
-        "CN": { title: "中国大陆", visas: ["中国大陆"], color: COLORS.china },
+        "CN": { title: "无需额外手续可以前往的中国地区", visas: ["无需额外手续可以前往的中国地区"], color: COLORS.china },
         "US": { title: "美国", visas: ["美签签发国"], color: "#3b82f6" },
         "GB": { title: "英国", visas: ["英签签发国"], color: "#3b82f6" },
         "JP": { title: "日本", visas: ["日签签发国"], color: "#3b82f6" },
@@ -1626,7 +1629,7 @@
       const defaultColors = { china: "#ef4444", free: "#059669", arrival: "#34D399", evisa: "#A7F3D0", hmt_pass: "#ff9999" };
       const COLORS = {};
       const legendTitleToColorKey = {
-        "中国大陆": "china",
+        "无需额外手续可以前往的中国地区": "china",
         "需办理港澳台通行证": "hmt_pass",
         "免签 (互免/单方面)": "free",
         "落地签": "arrival",
@@ -1639,7 +1642,7 @@
       maps['china'] = AmCharts.makeChart("chartdiv-china", {
         "type": "map", "theme": "light", "projection": "miller",
         "dataProvider": { "map": "worldHigh", "zoomLevel": 1.2, "zoomLongitude": 10, "zoomLatitude": 20, "areas": [
-          { "id": "CN", "title": "中国大陆", "customData": "中国大陆", "color": COLORS.china },
+          { "id": "CN", "title": "无需额外手续可以前往的中国地区", "customData": "无需额外手续可以前往的中国地区", "color": COLORS.china },
           { "id": "HK", "title": "中国香港", "customData": "需办理港澳台通行证", "color": COLORS.hmt_pass },
           { "id": "MO", "title": "中国澳门", "customData": "需办理港澳台通行证", "color": COLORS.hmt_pass },
           { "id": "TW", "title": "中国台湾", "customData": "需办理港澳台通行证", "color": COLORS.hmt_pass },
@@ -1780,7 +1783,7 @@
       const defaultColors = { us: "#3b82f6", visa_free: "#14b8a6", transit: "#60a5fa", china: "#ef4444", cn_free: "#059669", cn_arrival: "#34D399", cn_evisa: "#A7F3D0", hmt_pass: "#ff9999" };
       const COLORS = {};
       const legendTitleToColorKey = {
-        "中国大陆": "china",
+        "无需额外手续可以前往的中国地区": "china",
         "需办理港澳台通行证": "hmt_pass",
         "美签签发国": "us",
         "持美签免签": "visa_free",
@@ -1796,7 +1799,7 @@
       maps['us'] = AmCharts.makeChart("chartdiv-us", {
         "type": "map", "theme": "light", "projection": "miller",
         "dataProvider": { "map": "worldHigh", "zoomLevel": 1.2, "zoomLongitude": 20, "zoomLatitude": 30, "areas": [
-          { "id": "CN", "title": "中国大陆", "customData": "中国大陆", "color": COLORS.china },
+          { "id": "CN", "title": "无需额外手续可以前往的中国地区", "customData": "无需额外手续可以前往的中国地区", "color": COLORS.china },
           { "id": "HK", "title": "中国香港", "customData": "需办理港澳台通行证", "color": COLORS.hmt_pass },
           { "id": "MO", "title": "中国澳门", "customData": "需办理港澳台通行证", "color": COLORS.hmt_pass },
           { "id": "TW", "title": "中国台湾", "customData": "需办理港澳台通行证", "color": COLORS.hmt_pass },
@@ -1964,7 +1967,7 @@
       const defaultColors = { uk: "#3b82f6", visa_free: "#14b8a6", transit: "#60a5fa", china: "#ef4444", cn_free: "#059669", cn_arrival: "#34D399", cn_evisa: "#A7F3D0", hmt_pass: "#ff9999" };
       const COLORS = {};
       const legendTitleToColorKey = {
-        "中国大陆": "china",
+        "无需额外手续可以前往的中国地区": "china",
         "需办理港澳台通行证": "hmt_pass",
         "英签签发国": "uk",
         "持英签免签": "visa_free",
@@ -1980,7 +1983,7 @@
       maps['uk'] = AmCharts.makeChart("chartdiv-uk", {
         "type": "map", "theme": "light", "projection": "miller",
         "dataProvider": { "map": "worldHigh", "zoomLevel": 1.2, "zoomLongitude": 20, "zoomLatitude": 30, "areas": [
-          { "id": "CN", "title": "中国大陆", "customData": "中国大陆", "color": COLORS.china },
+          { "id": "CN", "title": "无需额外手续可以前往的中国地区", "customData": "无需额外手续可以前往的中国地区", "color": COLORS.china },
           { "id": "HK", "title": "中国香港", "customData": "需办理港澳台通行证", "color": COLORS.hmt_pass },
           { "id": "MO", "title": "中国澳门", "customData": "需办理港澳台通行证", "color": COLORS.hmt_pass },
           { "id": "TW", "title": "中国台湾", "customData": "需办理港澳台通行证", "color": COLORS.hmt_pass },
@@ -2139,7 +2142,7 @@
       const defaultColors = { japan: "#3b82f6", visa_free: "#14b8a6", china: "#ef4444", cn_free: "#059669", cn_arrival: "#34D399", cn_evisa: "#A7F3D0", hmt_pass: "#ff9999" };
       const COLORS = {};
       const legendTitleToColorKey = {
-        "中国大陆": "china",
+        "无需额外手续可以前往的中国地区": "china",
         "需办理港澳台通行证": "hmt_pass",
         "日签签发国": "japan",
         "持日签免签": "visa_free",
@@ -2154,7 +2157,7 @@
       maps['japan'] = AmCharts.makeChart("chartdiv-japan", {
         "type": "map", "theme": "light", "projection": "miller",
         "dataProvider": { "map": "worldHigh", "zoomLevel": 1.2, "zoomLongitude": 20, "zoomLatitude": 30, "areas": [
-          { "id": "CN", "title": "中国大陆", "customData": "中国大陆", "color": COLORS.china },
+          { "id": "CN", "title": "无需额外手续可以前往的中国地区", "customData": "无需额外手续可以前往的中国地区", "color": COLORS.china },
           { "id": "HK", "title": "中国香港", "customData": "需办理港澳台通行证", "color": COLORS.hmt_pass },
           { "id": "MO", "title": "中国澳门", "customData": "需办理港澳台通行证", "color": COLORS.hmt_pass },
           { "id": "TW", "title": "中国台湾", "customData": "需办理港澳台通行证", "color": COLORS.hmt_pass },
@@ -2300,7 +2303,7 @@
       const defaultColors = { australia: "#3b82f6", visa_free: "#14b8a6", transit: "#60a5fa", china: "#ef4444", cn_free: "#059669", cn_arrival: "#34D399", cn_evisa: "#A7F3D0", hmt_pass: "#ff9999" };
       const COLORS = {};
       const legendTitleToColorKey = {
-        "中国大陆": "china",
+        "无需额外手续可以前往的中国地区": "china",
         "需办理港澳台通行证": "hmt_pass",
         "澳签签发国": "australia",
         "持澳签免签": "visa_free",
@@ -2316,7 +2319,7 @@
       maps['australia'] = AmCharts.makeChart("chartdiv-australia", {
         "type": "map", "theme": "light", "projection": "miller",
         "dataProvider": { "map": "worldHigh", "zoomLevel": 1.2, "zoomLongitude": 20, "zoomLatitude": 30, "areas": [
-          { "id": "CN", "title": "中国大陆", "customData": "中国大陆", "color": COLORS.china },
+          { "id": "CN", "title": "无需额外手续可以前往的中国地区", "customData": "无需额外手续可以前往的中国地区", "color": COLORS.china },
           { "id": "HK", "title": "中国香港", "customData": "需办理港澳台通行证", "color": COLORS.hmt_pass },
           { "id": "MO", "title": "中国澳门", "customData": "需办理港澳台通行证", "color": COLORS.hmt_pass },
           { "id": "TW", "title": "中国台湾", "customData": "需办理港澳台通行证", "color": COLORS.hmt_pass },
@@ -2464,7 +2467,7 @@
       const defaultColors = { schengen: "#3b82f6", visa_free: "#14b8a6", transit: "#60a5fa", china: "#ef4444", cn_free: "#059669", cn_arrival: "#34D399", cn_evisa: "#A7F3D0", hmt_pass: "#ff9999" };
       const COLORS = {};
       const legendTitleToColorKey = {
-        "中国大陆": "china",
+        "无需额外手续可以前往的中国地区": "china",
         "需办理港澳台通行证": "hmt_pass",
         "申根国": "schengen",
         "持申根签免签": "visa_free",
@@ -2480,7 +2483,7 @@
       maps['schengen'] = AmCharts.makeChart("chartdiv-schengen", {
         "type": "map", "theme": "light", "projection": "miller",
         "dataProvider": { "map": "worldHigh", "zoomLevel": 1.2, "zoomLongitude": 20, "zoomLatitude": 30, "areas": [
-          { "id": "CN", "title": "中国大陆", "customData": "中国大陆", "color": COLORS.china },
+          { "id": "CN", "title": "无需额外手续可以前往的中国地区", "customData": "无需额外手续可以前往的中国地区", "color": COLORS.china },
           { "id": "HK", "title": "中国香港", "customData": "需办理港澳台通行证", "color": COLORS.hmt_pass },
           { "id": "MO", "title": "中国澳门", "customData": "需办理港澳台通行证", "color": COLORS.hmt_pass },
           { "id": "TW", "title": "中国台湾", "customData": "需办理港澳台通行证", "color": COLORS.hmt_pass },
