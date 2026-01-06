@@ -453,12 +453,12 @@
         </div>
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px;">
           <div style="background: white; padding: 15px; border-radius: 8px;">
-            <h3 style="margin: 0 0 15px; font-size: 16px; font-weight: 600;">访问最多的国家</h3>
-            <div id="stat-top-countries" style="font-size: 14px; line-height: 2;"></div>
+            <h3 style="margin: 0 0 15px; font-size: 16px; font-weight: 600;">所有访问国家/地区</h3>
+            <div id="stat-top-countries" style="font-size: 14px; line-height: 2; max-height: 400px; overflow-y: auto;"></div>
           </div>
           <div style="background: white; padding: 15px; border-radius: 8px;">
-            <h3 style="margin: 0 0 15px; font-size: 16px; font-weight: 600;">访问最多的城市</h3>
-            <div id="stat-top-cities" style="font-size: 14px; line-height: 2;"></div>
+            <h3 style="margin: 0 0 15px; font-size: 16px; font-weight: 600;">所有访问城市</h3>
+            <div id="stat-top-cities" style="font-size: 14px; line-height: 2; max-height: 400px; overflow-y: auto;"></div>
           </div>
         </div>
       </div>
@@ -1192,10 +1192,24 @@
             stats.countryVisits[countryCode].count++;
           });
           
+          // 添加所有访问记录的坐标信息（用于在地图上显示点）
+          stats.visitLocations = visits
+            .filter(visit => visit.latitude && visit.longitude && 
+                    !isNaN(visit.latitude) && !isNaN(visit.longitude))
+            .map(visit => ({
+              latitude: visit.latitude,
+              longitude: visit.longitude,
+              city: visit.city || 'Unknown',
+              country: visit.country || 'Unknown',
+              ip: visit.ip || 'N/A',
+              timestamp: visit.timestamp
+            }));
+          
           console.log('成功聚合统计数据:', {
             totalVisits: stats.totalVisits,
             uniqueIPs: stats.uniqueIPs,
-            countriesCount: Object.keys(stats.countries).length
+            countriesCount: Object.keys(stats.countries).length,
+            visitLocationsCount: stats.visitLocations.length
           });
           
           return stats;
@@ -1242,16 +1256,14 @@
           stats.visitsByDate[date] = (stats.visitsByDate[date] || 0) + 1;
         });
         
-        // 获取访问最多的国家
+        // 获取所有访问的国家（按访问量排序）
         stats.topCountries = Object.entries(stats.countries)
           .sort((a, b) => b[1] - a[1])
-          .slice(0, 10)
           .map(([country, count]) => ({ country, count }));
         
-        // 获取访问最多的城市
+        // 获取所有访问的城市（按访问量排序）
         stats.topCities = Object.entries(stats.cities)
           .sort((a, b) => b[1] - a[1])
-          .slice(0, 10)
           .map(([city, count]) => ({ city, count }));
         
         return stats;
@@ -2760,6 +2772,25 @@
         };
       });
       
+      // 准备访问位置标记点数据
+      const visitImages = [];
+      if (aggregatedData.visitLocations && aggregatedData.visitLocations.length > 0) {
+        aggregatedData.visitLocations.forEach((location, index) => {
+          visitImages.push({
+            type: "circle",
+            latitude: location.latitude,
+            longitude: location.longitude,
+            title: location.city,
+            customData: `${location.country}<br/>IP: ${location.ip}<br/>时间: ${new Date(location.timestamp).toLocaleString('zh-CN')}`,
+            scale: 0.5,
+            color: "#ef4444",
+            alpha: 0.8,
+            rollOverColor: "#dc2626",
+            rollOverAlpha: 1
+          });
+        });
+      }
+      
       maps['analytics'] = AmCharts.makeChart("chartdiv-analytics", {
         "type": "map",
         "theme": "light",
@@ -2769,7 +2800,8 @@
           "zoomLevel": 1.2,
           "zoomLongitude": 20,
           "zoomLatitude": 30,
-          "areas": areas
+          "areas": areas,
+          "images": visitImages
         },
         "areasSettings": {
           "autoZoom": true,
@@ -2780,6 +2812,9 @@
           "unlistedAreasAlpha": 0.1,
           "unlistedAreasColor": "#cbd5e1",
           "balloonText": "<div style='padding:10px; font-family: Inter, sans-serif; line-height:1.6;'><b style='font-size:14px;'>[[title]]</b><br/><span style='font-size:12px; opacity:0.9; margin-top:5px; display:block;'>[[customData]]</span></div>"
+        },
+        "imagesSettings": {
+          "balloonText": "<div style='padding:10px; font-family: Inter, sans-serif; line-height:1.6;'><b style='font-size:14px;'>📍 [[title]]</b><br/><span style='font-size:12px; opacity:0.9; margin-top:5px; display:block;'>[[customData]]</span></div>"
         },
         "balloon": {
           "adjustBorderColor": false,
