@@ -1251,8 +1251,10 @@
         };
         
         visits.forEach(visit => {
-          // 统计国家
-          const country = visit.country || 'Unknown';
+          // 标准化国家名称
+          let country = visit.country || 'Unknown';
+          country = this.normalizeCountryName(country);
+          
           stats.countries[country] = (stats.countries[country] || 0) + 1;
           
           // 统计城市
@@ -1275,6 +1277,67 @@
           .map(([city, count]) => ({ city, count }));
         
         return stats;
+      },
+      
+      // 标准化国家名称，处理不同API返回的变体
+      normalizeCountryName(country) {
+        if (!country || country === 'Unknown') return 'Unknown';
+        
+        const normalized = country.toLowerCase().trim();
+        
+        // 荷兰的各种变体
+        if (normalized.includes('netherland') || normalized.includes('holland') || normalized === 'nl') {
+          return '荷兰';
+        }
+        
+        // 其他常见国家名称标准化
+        const countryMap = {
+          'united states': '美国',
+          'usa': '美国',
+          'us': '美国',
+          'america': '美国',
+          'united kingdom': '英国',
+          'uk': '英国',
+          'great britain': '英国',
+          'england': '英国',
+          'china': '中国',
+          'japan': '日本',
+          'korea': '韩国',
+          'south korea': '韩国',
+          'germany': '德国',
+          'france': '法国',
+          'italy': '意大利',
+          'spain': '西班牙',
+          'canada': '加拿大',
+          'australia': '澳大利亚',
+          'singapore': '新加坡',
+          'thailand': '泰国',
+          'vietnam': '越南',
+          'indonesia': '印度尼西亚',
+          'malaysia': '马来西亚',
+          'philippines': '菲律宾',
+          'india': '印度',
+          'russia': '俄罗斯',
+          'brazil': '巴西',
+          'mexico': '墨西哥',
+          'argentina': '阿根廷',
+          'chile': '智利',
+          'peru': '秘鲁',
+          'colombia': '哥伦比亚',
+          'turkey': '土耳其',
+          'saudi arabia': '沙特阿拉伯',
+          'uae': '阿联酋',
+          'united arab emirates': '阿联酋',
+          'south africa': '南非',
+          'egypt': '埃及',
+          'morocco': '摩洛哥',
+          'nigeria': '尼日利亚',
+          'kenya': '肯尼亚',
+          'ghana': '加纳',
+          'ethiopia': '埃塞俄比亚'
+        };
+        
+        return countryMap[normalized] || country;
       }
     };
     
@@ -2790,7 +2853,7 @@
             longitude: location.longitude,
             title: location.city,
             customData: `${location.country}<br/>IP: ${location.ip}<br/>时间: ${new Date(location.timestamp).toLocaleString('zh-CN')}`,
-            scale: 0.5,
+            scale: 0.8,
             color: "#ef4444",
             alpha: 0.8,
             rollOverColor: "#dc2626",
