@@ -451,7 +451,7 @@
             <div style="font-size: 14px; color: #64748b; margin-top: 5px;">国家/地区</div>
           </div>
         </div>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; margin-bottom: 20px;">
           <div style="background: white; padding: 15px; border-radius: 8px;">
             <h3 style="margin: 0 0 15px; font-size: 16px; font-weight: 600;">所有访问国家/地区</h3>
             <div id="stat-top-countries" style="font-size: 14px; line-height: 2; max-height: 400px; overflow-y: auto;"></div>
@@ -460,6 +460,14 @@
             <h3 style="margin: 0 0 15px; font-size: 16px; font-weight: 600;">所有访问城市</h3>
             <div id="stat-top-cities" style="font-size: 14px; line-height: 2; max-height: 400px; overflow-y: auto;"></div>
           </div>
+        </div>
+        <!-- 详细访问记录列表 -->
+        <div style="background: white; padding: 15px; border-radius: 8px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+            <div style="font-size: 16px; font-weight: 600; color: #0f172a;">详细访问记录</div>
+            <input type="text" id="visit-search" placeholder="搜索IP、国家或城市..." style="padding: 8px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 14px; width: 250px; outline: none;" />
+          </div>
+          <div id="visit-details-list" style="max-height: 400px; overflow-y: auto; border: 1px solid #e2e8f0; border-radius: 8px;"></div>
         </div>
       </div>
     </div>
@@ -2843,6 +2851,133 @@
       
       // 添加水印文本到地图（用于显示）
       addWatermarkForExport('analytics');
+      
+      // 显示详细访问记录列表
+      displayVisitDetailsList(aggregatedData.visitLocations || []);
+    }
+    
+    // 显示详细访问记录列表
+    function displayVisitDetailsList(visitLocations) {
+      const listContainer = document.getElementById('visit-details-list');
+      const searchInput = document.getElementById('visit-search');
+      
+      if (!listContainer) return;
+      
+      if (!visitLocations || visitLocations.length === 0) {
+        listContainer.innerHTML = '<div style="padding: 20px; text-align: center; color: #64748b;">暂无访问记录</div>';
+        return;
+      }
+      
+      // 存储所有访问记录供搜索使用
+      window.allVisitLocations = visitLocations;
+      
+      // 渲染列表的函数
+      function renderList(locations) {
+        if (locations.length === 0) {
+          listContainer.innerHTML = '<div style="padding: 20px; text-align: center; color: #64748b;">未找到匹配的记录</div>';
+          return;
+        }
+        
+        // 按时间倒序排列（最新的在前）
+        const sortedLocations = [...locations].sort((a, b) => {
+          const timeA = new Date(a.timestamp).getTime();
+          const timeB = new Date(b.timestamp).getTime();
+          return timeB - timeA;
+        });
+        
+        listContainer.innerHTML = sortedLocations.map((location, index) => {
+          const date = new Date(location.timestamp);
+          const formattedTime = date.toLocaleString('zh-CN', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+          });
+          
+          return `
+            <div class="visit-detail-item" data-index="${index}" data-lat="${location.latitude}" data-lng="${location.longitude}" style="
+              padding: 12px 15px;
+              border-bottom: 1px solid #f1f5f9;
+              cursor: pointer;
+              transition: background 0.2s;
+              display: grid;
+              grid-template-columns: 1fr 1fr 1fr auto;
+              gap: 10px;
+              align-items: center;
+            " onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='white'">
+              <div>
+                <div style="font-size: 13px; color: #64748b; margin-bottom: 2px;">IP地址</div>
+                <div style="font-size: 14px; font-weight: 600; color: #0f172a;">${location.ip}</div>
+              </div>
+              <div>
+                <div style="font-size: 13px; color: #64748b; margin-bottom: 2px;">位置</div>
+                <div style="font-size: 14px; color: #0f172a;">🌍 ${location.country} · ${location.city}</div>
+              </div>
+              <div>
+                <div style="font-size: 13px; color: #64748b; margin-bottom: 2px;">访问时间</div>
+                <div style="font-size: 14px; color: #0f172a;">🕐 ${formattedTime}</div>
+              </div>
+              <div>
+                <button onclick="zoomToVisitLocation(${location.latitude}, ${location.longitude}, '${location.city}', '${location.country}', '${location.ip}', '${formattedTime}')" style="
+                  padding: 6px 12px;
+                  background: #3b82f6;
+                  color: white;
+                  border: none;
+                  border-radius: 6px;
+                  font-size: 13px;
+                  cursor: pointer;
+                  transition: background 0.2s;
+                " onmouseover="this.style.background='#2563eb'" onmouseout="this.style.background='#3b82f6'">
+                  📍 定位
+                </button>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+      
+      // 初始渲染
+      renderList(visitLocations);
+      
+      // 添加搜索功能
+      if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+          const searchTerm = e.target.value.toLowerCase().trim();
+          
+          if (searchTerm === '') {
+            renderList(window.allVisitLocations);
+            return;
+          }
+          
+          const filtered = window.allVisitLocations.filter(location => {
+            return location.ip.toLowerCase().includes(searchTerm) ||
+                   location.country.toLowerCase().includes(searchTerm) ||
+                   location.city.toLowerCase().includes(searchTerm);
+          });
+          
+          renderList(filtered);
+        });
+      }
+    }
+    
+    // 定位到指定的访问位置
+    function zoomToVisitLocation(lat, lng, city, country, ip, time) {
+      const map = maps['analytics'];
+      if (!map) return;
+      
+      // 缩放到指定位置
+      map.dataProvider.zoomLevel = 4;
+      map.dataProvider.zoomLatitude = lat;
+      map.dataProvider.zoomLongitude = lng;
+      map.validateData();
+      
+      // 显示提示信息
+      console.log(`已定位到: ${city}, ${country} (${ip}) - ${time}`);
+      
+      // 可以添加一个临时的高亮标记
+      // 由于AmCharts 3的限制，这里简单地缩放到位置
     }
 
     // 初始化默认显示的地图
